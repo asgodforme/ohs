@@ -1,18 +1,19 @@
 import React from 'react';
 import { connect } from 'dva';
+import { routerRedux } from 'dva/router'
 import ProductList from '../components/ProductList';
 
 const Products = ({ dispatch, products1 }) => {
   function handleDelete(id) {
     dispatch({
-      type: 'products1/fetch',
+      type: 'products1/delete',
       payload: id,
     });
   }
   return (
     <div>
       <h2>List of Products</h2>
-      <ProductList onDelete={handleDelete} products={products1} />
+      <ProductList onDelete={handleDelete()} products={products1} />
     </div>
   );
 };

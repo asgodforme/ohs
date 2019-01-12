@@ -23,9 +23,22 @@ function checkStatus(response) {
  */
 export default function request(url, options) {
   console.log('当前请求后台地址为：' + url);
-  return fetch(url, options)
+  let new_options;
+  if (options != null && (options.method === 'POST' || options.method === 'PUT')) {
+    new_options = {
+      method: options.method,
+      body: JSON.stringify(options.body),
+      headers: {
+        "Content-Type": "application/json;charset=UTF-8",
+      }
+    };
+  } else {
+    new_options = options;
+  }
+  return fetch(url, new_options)
     .then(checkStatus)
     .then(parseJSON)
     .then(data => ({ data }))
     .catch(err => ({ err }));
 }
+

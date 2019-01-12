@@ -13,7 +13,7 @@ function RouterConfig({ history }) {
         <Route path="/" exact component={MainLayout} />
         <Route path="/products" exact component={Products} />
         <Route path="/todos" exact component={Todos} />
-        <Route path="/test" exact component={mainMenu} />
+        <Route path="/user" exact component={mainMenu} />
       </Switch>
     </Router>
   );
