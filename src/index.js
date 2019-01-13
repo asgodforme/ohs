@@ -24,6 +24,7 @@ app.model(require('./models/products').default);
 app.model(require('./models/todos').default);
 app.model(require('./models/menu/menu').default)
 app.model(require('./models/module/SystemConfig').default)
+app.model(require('./models/module/ModuleConfig').default)
 // 4. Router
 app.router(require('./router').default);
 

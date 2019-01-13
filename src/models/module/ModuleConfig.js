@@ -1,28 +1,39 @@
-import { getAllSys, saveSysConfig, deleteById, updateById } from '../../services/example';
+import { getAllModule, saveModuleConfig, deleteById, updateById } from '../../services/moduleConfig';
+import {getAllSys} from '../../services/moduleConfig';
 import { error, success } from '../../components/module/SysCfgQueryFieldAlert'
 
 
 export default {
 
-    namespace: 'systemConfig',
+    namespace: 'moduleConfig',
 
     state: {
-       
+        allSys:[],
+        moduleConfig:[],
+
     },
 
     subscriptions: {
         setup({ dispatch, history }) {
-            
+            const data = dispatch({ type: 'getAllSysWhenInit', payload: { sysAlias: '', sysChineseNme: '' } });
+            data.then(function (result) { dispatch({ type: 'saveAllSys', payload: result }) });
         },
     },
 
     effects: {
-        *getAllSys({ payload }, { call, put }) {
-            const sys = yield call(getAllSys, payload);
-            yield put({ type: 'save', payload: sys });
+        *getAllSysWhenInit({ payload }, { call, put }) {
+            return yield call(getAllSys, payload);
         },
-        *saveSysConfig({ payload }, { call, put }) {
-            const result = yield call(saveSysConfig, payload);
+        *getAllModule({ payload }, { call, put }) {
+            const moduleCfg = yield call(getAllModule, payload);
+            if (moduleCfg.data.status === 500) {
+                error(moduleCfg.data.statusText);
+            } else {
+                yield put({ type: 'save', payload: moduleCfg });
+            }
+        },
+        *saveModuleConfig({ payload }, { call, put }) {
+            const result = yield call(saveModuleConfig, payload);
             if (result.data.status === 500) {
                 error(result.data.statusText);
             } else {
@@ -40,8 +51,6 @@ export default {
             }
         },
         *updateById({ payload }, { call, put }) {
-            console.log("111");
-            console.log(payload);
             const result = yield call(updateById, payload);
             if (result.data.status === 500) {
                 error(result.data.statusText);
@@ -54,24 +63,27 @@ export default {
 
     reducers: {
         save(state, action) {
-            return { ...state, systemConfig: action.payload.data };
+            return { ...state, moduleConfig: action.payload.data };
         },
         saveOne(state, action) {
-            let listData = [...state.systemConfig, action.payload];
-            return Object.assign({}, state, { systemConfig: listData })
+            let listData = [...state.moduleConfig, action.payload];
+            return Object.assign({}, state, { moduleConfig: listData })
+        },
+        saveAllSys(state, action) {
+            return { ...state, allSys: action.payload.data };
         },
         delete(state, action) {
-            return Object.assign({}, state, { systemConfig: state.systemConfig.filter(sys => sys.id !== action.payload.id) })
+            return Object.assign({}, state, { moduleConfig: state.moduleConfig.filter(moduleCfg => moduleCfg.id !== action.payload.id) })
         },
         update(state, action) {
-            let listData = [...state.systemConfig];
+            let listData = [...state.moduleConfig];
             listData = (listData || []).map((item, index) => {
                 if (item.id === action.payload.id) {
                     return action.payload;
                 }
                 return item;
             });
-            return Object.assign({}, state, { systemConfig: listData })
+            return Object.assign({}, state, { moduleConfig: listData })
         }
     },
 

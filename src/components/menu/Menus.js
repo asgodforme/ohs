@@ -3,12 +3,18 @@ import SystemConfig from '../../routes/module/SystemConfig'
 import { Layout, Menu, Icon } from 'antd';
 import { MenuDesc } from './MenuDesc'
 import { SubMenuContent } from './SubMenuContent'
+import ModuleConfig from '../../routes/module/ModuleConfig';
+import UserConfig from '../../routes/module/UserConfig';
+import EnvConfig from '../../routes/module/EnvConfig';
 
 const { SubMenu } = Menu;
-const { Header, Content, Sider, Footer  } = Layout;
+const { Header, Content, Sider, Footer } = Layout;
 
 const componentMapping = {
-    systemConfig:  <SystemConfig />,
+    systemConfig: <SystemConfig />,
+    moduleConfig: <ModuleConfig />,
+    userConfig: <UserConfig />,
+    envConfig: <EnvConfig />,
 };
 
 export class Menus extends React.Component {

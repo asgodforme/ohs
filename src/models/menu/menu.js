@@ -9,8 +9,7 @@ export default {
   },
 
   subscriptions: {
-    setup({ dispatch, history }) { 
-      console.log('loading menu...');
+    setup({ dispatch, history }) {
       const data = dispatch({type: 'getAllMenu'})
       data.then(function (result) { dispatch({type:'save', payload: result}) });
     },
@@ -25,7 +24,6 @@ export default {
 
   reducers: {
     save(state, action) {
-      console.log(action)
       return { ...state, menu: action.payload.data};
     },
   },
