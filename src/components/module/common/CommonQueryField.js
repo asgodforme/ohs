@@ -42,15 +42,27 @@ class AdvancedSearchForm extends React.Component {
     const children = [];
     const queryFields = this.props.queryFields;
     for (let i = 0; i < queryFields.fieldDescs.length; i++) {
-      children.push(
-        <Col span={6} key={i}>
-          <FormItem {...formItemLayout} label={queryFields.fieldDescs[i]}>
-            {getFieldDecorator(queryFields.fieldNames[i])(
-              <Input placeholder={"请输入" + queryFields.fieldDescs[i]} />
-            )}
-          </FormItem>
-        </Col>
-      );
+      if (queryFields.fieldNames[i] === 'password') {
+        children.push(
+          <Col span={6} key={i}>
+            <FormItem {...formItemLayout} label={queryFields.fieldDescs[i]}>
+              {getFieldDecorator(queryFields.fieldNames[i])(
+                <Input placeholder={"不支持输入" + queryFields.fieldDescs[i] + "条件查询"} disabled={true} />
+              )}
+            </FormItem>
+          </Col>
+        );
+      } else {
+        children.push(
+          <Col span={6} key={i}>
+            <FormItem {...formItemLayout} label={queryFields.fieldDescs[i]}>
+              {getFieldDecorator(queryFields.fieldNames[i])(
+                <Input placeholder={"请输入" + queryFields.fieldDescs[i]} />
+              )}
+            </FormItem>
+          </Col>
+        );
+      }
     }
 
     if (queryFields.fieldDescs.length % 4 === 0) {

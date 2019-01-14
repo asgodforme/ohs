@@ -48,36 +48,36 @@ const columns = [{
   key: 'updateDate',
 }];
 
-const UserConfig = ({ dispatch, moduleConfig }) => {
-  function getAllModule(modle) {
+const UserConfig = ({ dispatch, userConfig }) => {
+  function getAllUser(user) {
     dispatch({
-      type: 'moduleConfig/getAllModule',
-      payload: modle,
+      type: 'userConfig/getAllUser',
+      payload: user,
     });
   }
-  function saveModuleConfig(moduleConfig) {
+  function saveUserConfig(userConfig) {
     dispatch({
-      type: 'moduleConfig/saveModuleConfig',
-      payload: moduleConfig,
+      type: 'userConfig/saveUserConfig',
+      payload: userConfig,
     });
   }
-  function deleteModuleConfig(id) {
+  function deleteUserConfig(id) {
     dispatch({
-      type: 'moduleConfig/deleteById',
+      type: 'userConfig/deleteById',
       payload: id,
     })
   }
-  function updateModule(moduleConfig) {
+  function updateUser(userConfig) {
     dispatch({
-      type: 'moduleConfig/updateById',
-      payload: moduleConfig,
+      type: 'userConfig/updateById',
+      payload: userConfig,
     })
   }
 
   return (
     <div>
-      <CommonQueryField query={getAllModule} data={moduleConfig}
-        save={saveModuleConfig} delete={deleteModuleConfig} update={updateModule}
+      <CommonQueryField query={getAllUser} data={userConfig}
+        save={saveUserConfig} delete={deleteUserConfig} update={updateUser}
         queryFields={queryFields} columns={columns}
       />
     </div>
@@ -85,6 +85,6 @@ const UserConfig = ({ dispatch, moduleConfig }) => {
 };
 
 // export default Products;
-export default connect(({ moduleConfig }) => ({
-  moduleConfig,
+export default connect(({ userConfig }) => ({
+  userConfig,
 }))(UserConfig);

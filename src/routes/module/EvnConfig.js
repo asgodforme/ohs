@@ -3,11 +3,11 @@ import { connect } from 'dva';
 import CommonQueryField from '../../components/module/common/CommonQueryField'
 
 const queryFields = {
-  dataName: 'envConfig',
+  dataName: 'evnConfig',
   updateTitle: '修改环境',
   addTitle: '新增环境',
   fieldDescs: ['归属系统码', '归属系统名', '环境别名', '环境名', '环境类型', 'IP地址', '端口号', '接口名', 'DB用户名', 'DB密码'],
-  fieldNames: ['sysAlias', 'sysChineseNme', 'envAlias', 'envName', 'envTyp', 'envIp', 'envPort', 'interfaceNme', 'dbNme', 'dbPwd'],
+  fieldNames: ['sysAlias', 'sysChineseNme', 'evnAlias', 'evnName', 'evnTyp', 'evnIp', 'evnPort', 'interfaceNme', 'dbNme', 'dbPwd'],
 }
 
 const columns = [{
@@ -24,24 +24,24 @@ const columns = [{
   key: 'sysChineseNme',
 }, {
   title: '环境别名',
-  dataIndex: 'envAlias',
-  key: 'envAlias',
+  dataIndex: 'evnAlias',
+  key: 'evnAlias',
 }, {
   title: '环境名',
-  dataIndex: 'envName',
-  key: 'envName',
+  dataIndex: 'evnName',
+  key: 'evnName',
 }, {
   title: '环境类型',
-  dataIndex: 'envTyp',
-  key: 'envTyp',
+  dataIndex: 'evnTyp',
+  key: 'evnTyp',
 }, {
   title: 'IP地址',
-  dataIndex: 'envIp',
-  key: 'envIp',
+  dataIndex: 'evnIp',
+  key: 'evnIp',
 }, {
   title: '端口号',
-  dataIndex: 'envPort',
-  key: 'envPort',
+  dataIndex: 'evnPort',
+  key: 'evnPort',
 }, {
   title: '接口名',
   dataIndex: 'interfaceNme',
@@ -72,36 +72,37 @@ const columns = [{
   key: 'updateDate',
 }];
 
-const EnvConfig = ({ dispatch, moduleConfig }) => {
-  function getAllModule(modle) {
+const EvnConfig = ({ dispatch, evnConfig }) => {
+  function getAllEnv(evn) {
+    console.log("12222");
     dispatch({
-      type: 'moduleConfig/getAllModule',
-      payload: modle,
+      type: 'evnConfig/getAllEvn',
+      payload: evn,
     });
   }
-  function saveModuleConfig(moduleConfig) {
+  function saveEnvConfig(evnConfig) {
     dispatch({
-      type: 'moduleConfig/saveModuleConfig',
-      payload: moduleConfig,
+      type: 'evnConfig/saveEvnConfig',
+      payload: evnConfig,
     });
   }
-  function deleteModuleConfig(id) {
+  function deleteEnvConfig(id) {
     dispatch({
-      type: 'moduleConfig/deleteById',
+      type: 'evnConfig/deleteById',
       payload: id,
     })
   }
-  function updateModule(moduleConfig) {
+  function updateEnv(evnConfig) {
     dispatch({
-      type: 'moduleConfig/updateById',
-      payload: moduleConfig,
+      type: 'evnConfig/updateById',
+      payload: evnConfig,
     })
   }
 
   return (
     <div>
-      <CommonQueryField query={getAllModule} data={moduleConfig}
-        save={saveModuleConfig} delete={deleteModuleConfig} update={updateModule}
+      <CommonQueryField query={getAllEnv} data={evnConfig}
+        save={saveEnvConfig} delete={deleteEnvConfig} update={updateEnv}
         queryFields={queryFields} columns={columns}
       />
     </div>
@@ -109,6 +110,6 @@ const EnvConfig = ({ dispatch, moduleConfig }) => {
 };
 
 // export default Products;
-export default connect(({ moduleConfig }) => ({
-  moduleConfig,
-}))(EnvConfig);
+export default connect(({ evnConfig }) => ({
+  evnConfig,
+}))(EvnConfig);

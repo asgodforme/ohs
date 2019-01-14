@@ -25,6 +25,11 @@ app.model(require('./models/todos').default);
 app.model(require('./models/menu/menu').default)
 app.model(require('./models/module/SystemConfig').default)
 app.model(require('./models/module/ModuleConfig').default)
+app.model(require('./models/module/UserConfig').default)
+app.model(require('./models/module/EvnConfig').default)
+app.model(require('./models/module/data/TableConfig').default)
+app.model(require('./models/module/data/ColumnConfig').default)
+app.model(require('./models/module/data/EnumValueConfig').default)
 // 4. Router
 app.router(require('./router').default);
 

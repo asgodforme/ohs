@@ -5,7 +5,10 @@ import { MenuDesc } from './MenuDesc'
 import { SubMenuContent } from './SubMenuContent'
 import ModuleConfig from '../../routes/module/ModuleConfig';
 import UserConfig from '../../routes/module/UserConfig';
-import EnvConfig from '../../routes/module/EnvConfig';
+import EvnConfig from '../../routes/module/EvnConfig';
+import TableConfig from '../../routes/module/data/TableConfig';
+import ColumnConfig from '../../routes/module/data/ColumnConfig';
+import EnumValueConfig from '../../routes/module/data/EnumValueConfig';
 
 const { SubMenu } = Menu;
 const { Header, Content, Sider, Footer } = Layout;
@@ -14,7 +17,10 @@ const componentMapping = {
     systemConfig: <SystemConfig />,
     moduleConfig: <ModuleConfig />,
     userConfig: <UserConfig />,
-    envConfig: <EnvConfig />,
+    evnConfig: <EvnConfig />,
+    tableConfig: <TableConfig />,
+    columnConfig: <ColumnConfig />,
+    enumValueConfig: <EnumValueConfig />,
 };
 
 export class Menus extends React.Component {
