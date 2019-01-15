@@ -7,7 +7,7 @@ const queryFields = {
   updateTitle: '修改表信息',
   addTitle: '新增表信息',
   fieldDescs: ['归属系统码', '归属系统名', 'Schema名', '表名'],
-  fieldNames: ['sysAlias', 'sysChineseNme', 'schema', 'tableName'],
+  fieldNames: ['sysAlias', 'sysChineseNme', 'schemaName', 'tableName'],
 }
 
 const columns = [{
@@ -24,8 +24,8 @@ const columns = [{
   key: 'sysChineseNme',
 }, {
   title: 'Schema名',
-  dataIndex: 'schema',
-  key: 'schema',
+  dataIndex: 'schemaName',
+  key: 'schemaName',
 }, {
   title: '表名',
   dataIndex: 'tableName',

@@ -6,8 +6,8 @@ const queryFields = {
   dataName: 'columnConfig',
   updateTitle: '修改字段信息',
   addTitle: '新增字段信息',
-  fieldDescs: ['Schema名', '归属表名', '字段名', '字段别名'],
-  fieldNames: ['schema', 'columnName', 'columnName', 'columnAlias'],
+  fieldDescs: ['系统码', '系统名', 'Schema名', '归属表名', '字段名', '字段别名'],
+  fieldNames: ['sysAlias', 'sysChineseNme', 'schemaName', 'tableName', 'columnName', 'columnAlias'],
 }
 
 const columns = [{
@@ -15,13 +15,21 @@ const columns = [{
   dataIndex: 'id',
   key: 'id',
 }, {
+  title: '系统码',
+  dataIndex: 'sysAlias',
+  key: 'sysAlias',
+}, {
+  title: '系统名',
+  dataIndex: 'sysChineseNme',
+  key: 'sysChineseNme',
+}, {
   title: 'Schema名',
-  dataIndex: 'schema',
-  key: 'schema',
+  dataIndex: 'schemaName',
+  key: 'schemaName',
 }, {
   title: '归属表名',
-  dataIndex: 'columnName',
-  key: 'columnName',
+  dataIndex: 'tableName',
+  key: 'tableName',
 }, {
   title: '字段名',
   dataIndex: 'columnName',
