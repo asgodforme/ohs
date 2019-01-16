@@ -11,7 +11,7 @@ import ColumnConfig from '../../routes/module/data/ColumnConfig';
 import EnumValueConfig from '../../routes/module/data/EnumValueConfig';
 
 const { SubMenu } = Menu;
-const { Header, Content, Sider, Footer } = Layout;
+const { Header, Sider, Footer } = Layout;
 
 const componentMapping = {
     systemConfig: <SystemConfig />,

@@ -1,25 +1,59 @@
 import React from 'react';
-import { Button, Modal, Form, Input, Icon, Popconfirm } from 'antd';
+import { Button, Modal, Form, Input, Icon, Popconfirm, Select  } from 'antd';
 import { warning, error } from '../SysCfgQueryFieldAlert';
 const FormItem = Form.Item;
+const Option = Select.Option;
 
 const CollectionCreateForm = Form.create()(
     (props) => {
-        const { visible, onCancel, onCreate, form, records, queryFields } = props;
+        const { visible, onCancel, onCreate, form, records, queryFields, allSys } = props;
         const { getFieldDecorator } = form;
-
+        var handleSelectChange = (value) => {
+            let sysChineseNme;
+            let schemaName;
+            for (let i = 0; i < allSys.length; i++) {
+              if (allSys[i].sysAlias === value) {
+                sysChineseNme = allSys[i].sysChineseNme;
+                schemaName = allSys[i].schemaName;
+                break;
+              }
+            }
+            form.setFieldsValue({
+              sysChineseNme: sysChineseNme,
+              schemaName: schemaName,
+            });
+          }
         const formItem = [];
         for (let i = 0; i < queryFields.fieldNames.length; i++) {
-            formItem.push(
-                <FormItem key={i} label={queryFields.fieldDescs[i]}>
+            if (queryFields.fieldNames[i] === 'sysAlias') {
+                formItem.push(
+                  <FormItem key={i} label={queryFields.fieldDescs[i]}>
                     {getFieldDecorator(queryFields.fieldNames[i], {
-                        initialValue: records[queryFields.fieldNames[i]], //这是用来初始化表单数据的
-                        rules: [{ required: true, message: '请输入' + queryFields.fieldDescs[i] + '!' }],
+                      rules: [{ required: true, message: '请输入' + queryFields.fieldDescs[i] + '!' }],
+                      onChange: handleSelectChange,
                     })(
-                        <Input />
+                      <Select placeholder="请选择系统码">
+                        {
+                          allSys.map(item => {
+                            return <Option key={item.id} value={item.sysAlias}>{item.sysAlias}</Option>
+                          })
+                        }
+                      </Select>
                     )}
-                </FormItem>
-            )
+                  </FormItem>
+                )
+              } else {
+                  formItem.push(
+                      <FormItem key={i} label={queryFields.fieldDescs[i]}>
+                          {getFieldDecorator(queryFields.fieldNames[i], {
+                              initialValue: records[queryFields.fieldNames[i]], //这是用来初始化表单数据的
+                              rules: [{ required: true, message: '请输入' + queryFields.fieldDescs[i] + '!' }],
+                          })(
+                            <Input disabled={queryFields.fieldNames[i]==='sysChineseNme' || queryFields.fieldNames[i]==='schemaName' ? true : false}/>
+                          )}
+                      </FormItem>
+                  )
+              }
         }
 
         return (
@@ -99,6 +133,7 @@ export class CommonUpdateField extends React.Component {
                     onCreate={this.handleCreate}
                     records={this.props.records}
                     queryFields={this.props.queryFields}
+                    allSys={this.props.allSys}
                 />
             </div>
         );

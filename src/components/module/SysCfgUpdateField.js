@@ -1,5 +1,5 @@
 import React from 'react';
-import { Button, Modal, Form, Input, Radio, Icon, Popconfirm } from 'antd';
+import { Button, Modal, Form, Input, Icon, Popconfirm } from 'antd';
 import { warning } from './SysCfgQueryFieldAlert';
 const FormItem = Form.Item;
 
@@ -33,6 +33,14 @@ const CollectionCreateForm = Form.create()(
                             <Input />
                         )}
                     </FormItem>
+                    <FormItem label="Schema">
+                        {getFieldDecorator('schemaName', {
+                            initialValue: records.schemaName,//这是用来初始化表单数据的
+                            rules: [{ required: true, message: '请输入Schema！' }],
+                        })(
+                            <Input />
+                        )}
+                    </FormItem>
                 </Form>
             </Modal>
         );
@@ -55,10 +63,10 @@ export class SysCfgUpdateField extends React.Component {
             if (err) {
                 return;
             }
-            console.log(this.props.records);
-            console.log('Received values of form: ', values);
             const records = this.props.records;
-            if (records.sysAlias !== values.sysAlias || records.sysChineseNme !== values.sysChineseNme) {
+            if (records.sysAlias !== values.sysAlias 
+                || records.sysChineseNme !== values.sysChineseNme
+                || records.schemaName !== values.schemaName) {
                 form.resetFields();
                 this.setState({ visible: false });
                 values.id = records.id;

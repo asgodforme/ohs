@@ -53,7 +53,10 @@ export default {
                 success("更新成功！");
                 yield put({ type: 'update', payload: result.data });
             }
-        }
+        },
+        *getAllSysWhenSysAdd({ payload }, { call, put }) {
+            yield put({ type: 'saveSys', payload: payload });
+        },
     },
 
     reducers: {
@@ -66,6 +69,10 @@ export default {
         },
         saveAllSys(state, action) {
             return { ...state, allSys: action.payload.data };
+        },
+        saveSys(state, action) {
+            let listData = [...state.allSys, { ...action.payload, id: state.allSys.length + 1 }];
+            return Object.assign({}, state, { allSys: listData });
         },
         delete(state, action) {
             return Object.assign({}, state, { enumValueConfig: state.enumValueConfig.filter(moduleCfg => moduleCfg.id !== action.payload.id) })

@@ -14,7 +14,7 @@ export class SubMenuContent extends React.Component {
         };
     }
 
-    componentWillReceiveProps(nextProps) {
+    UNSAFE_componentWillReceiveProps(nextProps) {
         const { panes } = this.state;
         if (panes.find(key => key.key === nextProps.activeKey) == null) {
             panes.push(nextProps.panes[0]);

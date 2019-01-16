@@ -14,12 +14,37 @@ const SystemConfig = ({ dispatch, systemConfig }) => {
       type: 'systemConfig/saveSysConfig',
       payload: sysConfig,
     });
+    // 给模块配置新增添加的系统配置信息
+    dispatch({
+      type: 'moduleConfig/getAllSysWhenSysAdd',
+      payload: sysConfig,
+    });
+    // 给表配置新增添加的系统配置信息
+    dispatch({
+      type: 'tableConfig/getAllSysWhenSysAdd',
+      payload: sysConfig,
+    });
+    // 给字段配置新增添加的系统配置信息
+    dispatch({
+      type: 'columnConfig/getAllSysWhenSysAdd',
+      payload: sysConfig,
+    });
+    // 给枚举值配置新增添加的系统配置信息
+    dispatch({
+      type: 'enumValueConfig/getAllSysWhenSysAdd',
+      payload: sysConfig,
+    });
   }
   function deleteSysConfig(id) {
     dispatch({
       type: 'systemConfig/deleteById',
       payload: id,
-    })
+    });
+    // 删除掉模块配置的系统信息
+    dispatch({
+      type: 'moduleConfig/deleteSys',
+      payload: id,
+    });
   }
   function updateSysConfig(sysConfig) {
     dispatch({

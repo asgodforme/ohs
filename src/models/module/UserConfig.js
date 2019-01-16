@@ -1,5 +1,4 @@
 import { getAllUser, saveUserConfig, deleteById, updateById } from '../../services/userConfig';
-import { getAllSys } from '../../services/moduleConfig';
 import { error, success } from '../../components/module/SysCfgQueryFieldAlert'
 
 

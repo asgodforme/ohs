@@ -1,6 +1,5 @@
 import React from 'react';
 import { connect } from 'dva';
-import { routerRedux } from 'dva/router'
 import ProductList from '../components/ProductList';
 
 const Products = ({ dispatch, products1 }) => {

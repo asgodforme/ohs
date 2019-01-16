@@ -88,7 +88,7 @@ class AdvancedSearchForm extends React.Component {
           </Col>
           <Col span={6} style={{ textAlign: 'center' }}>
             <CommonAddField save={this.props.save} queryFields={this.props.queryFields}
-              data={this.props.data}
+              data={this.props.data} getAllSys={this.props.getAllSys}
             />
           </Col>
         </Row>
@@ -110,7 +110,7 @@ const CommonQueryField = (props) => {
     <div>
       <WrappedAdvancedSearchForm query={props.query} data={props.data}
         save={props.save} delete={props.delete} update={props.update}
-        queryFields={props.queryFields} columns={props.columns}
+        queryFields={props.queryFields} columns={props.columns} getAllSys={props.getAllSys}
       />
     </div>
   );

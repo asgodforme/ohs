@@ -1,4 +1,4 @@
-import { Table, Icon, Popconfirm, Button } from 'antd';
+import { Table } from 'antd';
 import { SysCfgUpdateField } from './SysCfgUpdateField';
 
 export function SysCfgDataField(props) {
@@ -7,7 +7,6 @@ export function SysCfgDataField(props) {
         title: 'id',
         dataIndex: 'id',
         key: 'id',
-        render: text => <a href="#">{text}</a>,
     }, {
         title: '系统名',
         dataIndex: 'sysChineseNme',
@@ -16,6 +15,10 @@ export function SysCfgDataField(props) {
         title: '系统码',
         dataIndex: 'sysAlias',
         key: 'sysAlias',
+    }, {
+        title: 'Schema名',
+        dataIndex: 'schemaName',
+        key: 'schemaName',
     }, {
         title: '创建者',
         dataIndex: 'createUser',
@@ -48,6 +51,7 @@ export function SysCfgDataField(props) {
         sysConfig.createDate = sysConfig.createDate;
         sysConfig.updateUser = sysConfig.updateUser;
         sysConfig.updateDate = sysConfig.updateDate;
+        return sysConfig;
     })
     return <Table columns={columns} dataSource={props.data.systemConfig} bordered />;
 }

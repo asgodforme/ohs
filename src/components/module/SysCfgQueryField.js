@@ -14,7 +14,6 @@ class AdvancedSearchForm extends React.Component {
   handleSearch = (e) => {
     e.preventDefault();
     this.props.form.validateFields((err, values) => {
-      console.log('Received values of form: ', values);
       let querySys = {
         sysAlias: values['sysAlias'],
         sysChineseNme: values['sysChineseNme'],
@@ -40,11 +39,11 @@ class AdvancedSearchForm extends React.Component {
     };
 
     const children = [];
-    const fieldDescs = ['系统码', '系统名'];
-    const fieldNames = ['sysAlias', 'sysChineseNme']
-    for (let i = 0; i < 2; i++) {
+    const fieldDescs = ['系统码', '系统名', 'Schema'];
+    const fieldNames = ['sysAlias', 'sysChineseNme', 'Schema']
+    for (let i = 0; i < fieldDescs.length; i++) {
       children.push(
-        <Col span={6} key={i}>
+        <Col span={4} key={i}>
           <FormItem {...formItemLayout} label={fieldDescs[i]}>
             {getFieldDecorator(fieldNames[i])(
               <Input placeholder={"请输入" + fieldDescs[i]} />
@@ -64,10 +63,9 @@ class AdvancedSearchForm extends React.Component {
           <Col span={6} style={{ textAlign: 'left' }}>
             <Button type="primary" htmlType="submit">查询</Button>
             <Button style={{ marginLeft: 8 }} onClick={this.handleReset}>清空查询条件</Button>
-
           </Col>
           <Col span={6} style={{ textAlign: 'left' }}>
-            <SysCfgAddField save={this.props.save}/>
+            <SysCfgAddField save={this.props.save} />
           </Col>
         </Row>
         <SysCfgDataField data={this.props.data} onDelete={this.handleDelete} onUpdate={this.props.update} />

@@ -7,19 +7,23 @@ export default {
     namespace: 'systemConfig',
 
     state: {
-       
+        systemConfig: []
     },
 
     subscriptions: {
         setup({ dispatch, history }) {
-            
+
         },
     },
 
     effects: {
         *getAllSys({ payload }, { call, put }) {
-            const sys = yield call(getAllSys, payload);
-            yield put({ type: 'save', payload: sys });
+            const result = yield call(getAllSys, payload);
+            if (result.data.status === 500) {
+                error(result.data.statusText);
+            } else {
+                yield put({ type: 'save', payload: result });
+            }
         },
         *saveSysConfig({ payload }, { call, put }) {
             const result = yield call(saveSysConfig, payload);
@@ -40,8 +44,6 @@ export default {
             }
         },
         *updateById({ payload }, { call, put }) {
-            console.log("111");
-            console.log(payload);
             const result = yield call(updateById, payload);
             if (result.data.status === 500) {
                 error(result.data.statusText);

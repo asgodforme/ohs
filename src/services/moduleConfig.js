@@ -13,6 +13,10 @@ export function getAllSys(payload) {
   return request(`/api/sysConfig/getAllSys?${stringify(payload)}`);
 }
 
+export function getAllSysWhenInit(payload) {
+  return request(`/api/sysConfig/getAllSysWhenInit?${stringify(payload)}`);
+}
+
 export function saveModuleConfig(payload) {
   return request(`/api/moduleConfig/saveModuleConfig?${stringify(payload)}`);
 }

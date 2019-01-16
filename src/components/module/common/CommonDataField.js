@@ -1,4 +1,4 @@
-import { Table, Icon, Popconfirm, Button } from 'antd';
+import { Table } from 'antd';
 import { CommonUpdateField } from './CommonUpdateField';
 
 export function CommonDataField(props) {
@@ -9,13 +9,12 @@ export function CommonDataField(props) {
         render: (text, record) => (
             <span>
                 <CommonUpdateField onDelete={props.onDelete} records={record} onUpdate={props.onUpdate}
-                    queryFields={props.queryFields}
+                    queryFields={props.queryFields} allSys={props.data.allSys}
                 />
             </span>
         ),
     });
 
-    console.log(props);
     if (props.data != null) {
         (props.data[props.queryFields['dataName']] || []).map((sysConfig, index) => {
             sysConfig.key = sysConfig.id;
@@ -23,6 +22,7 @@ export function CommonDataField(props) {
             sysConfig.createDate = sysConfig.createDate;
             sysConfig.updateUser = sysConfig.updateUser;
             sysConfig.updateDate = sysConfig.updateDate;
+            return sysConfig;
         })
     }
 

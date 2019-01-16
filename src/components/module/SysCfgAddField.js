@@ -30,6 +30,13 @@ const CollectionCreateForm = Form.create()(
               <Input />
             )}
           </FormItem>
+          <FormItem label="Schema">
+            {getFieldDecorator('schemaName', {
+              rules: [{ required: true, message: '请输入Schema！' }],
+            })(
+              <Input />
+            )}
+          </FormItem>
         </Form>
       </Modal>
     );
@@ -55,7 +62,8 @@ export class SysCfgAddField extends React.Component {
       
       const saveValues = {
           "sysAlias": values.sysAlias,
-          "sysChineseNme": values.sysChineseNme
+          "sysChineseNme": values.sysChineseNme,
+          "schemaName": values.schemaName,
       }
       this.props.save(saveValues);
       form.resetFields();

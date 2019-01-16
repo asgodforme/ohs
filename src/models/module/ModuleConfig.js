@@ -1,5 +1,5 @@
 import { getAllModule, saveModuleConfig, deleteById, updateById } from '../../services/moduleConfig';
-import {getAllSys} from '../../services/moduleConfig';
+import { getAllSysWhenInit } from '../../services/moduleConfig';
 import { error, success } from '../../components/module/SysCfgQueryFieldAlert'
 
 
@@ -8,8 +8,8 @@ export default {
     namespace: 'moduleConfig',
 
     state: {
-        allSys:[],
-        moduleConfig:[],
+        allSys: [],
+        moduleConfig: [],
 
     },
 
@@ -17,19 +17,24 @@ export default {
         setup({ dispatch, history }) {
             const data = dispatch({ type: 'getAllSysWhenInit', payload: { sysAlias: '', sysChineseNme: '' } });
             data.then(function (result) {
-                 dispatch({ type: 'saveAllSys', payload: result });
-                 dispatch({ type: 'userConfig/saveAllSys', payload: result });
-                 dispatch({ type: 'evnConfig/saveAllSys', payload: result });
-                 dispatch({ type: 'tableConfig/saveAllSys', payload: result });
-                 dispatch({ type: 'enumValueConfig/saveAllSys', payload: result });
-                 dispatch({ type: 'columnConfig/saveAllSys', payload: result });
+                console.log(result);
+                dispatch({ type: 'userConfig/saveAllSys', payload: result });
+                dispatch({ type: 'evnConfig/saveAllSys', payload: result });
+                dispatch({ type: 'tableConfig/saveAllSys', payload: result });
+                dispatch({ type: 'enumValueConfig/saveAllSys', payload: result });
+                dispatch({ type: 'columnConfig/saveAllSys', payload: result });
             });
         },
     },
 
     effects: {
         *getAllSysWhenInit({ payload }, { call, put }) {
-            return yield call(getAllSys, payload);
+            const allSyses = yield call(getAllSysWhenInit, payload);
+            yield put({ type: 'saveAllSys', payload: allSyses });
+            return allSyses;
+        },
+        *getAllSysWhenSysAdd({ payload }, { call, put }) {
+            yield put({ type: 'saveSys', payload: payload });
         },
         *getAllModule({ payload }, { call, put }) {
             const moduleCfg = yield call(getAllModule, payload);
@@ -65,7 +70,10 @@ export default {
                 success("更新成功！");
                 yield put({ type: 'update', payload: result.data });
             }
-        }
+        },
+        *deleteSys({ payload }, { call, put }) {
+            yield put({ type: 'deleteSysDelSys', payload: payload });
+        },
     },
 
     reducers: {
@@ -79,6 +87,10 @@ export default {
         saveAllSys(state, action) {
             return { ...state, allSys: action.payload.data };
         },
+        saveSys(state, action) {
+            let listData = [...state.allSys, { ...action.payload, id: state.allSys.length + 1 }];
+            return Object.assign({}, state, { allSys: listData });
+        },
         delete(state, action) {
             return Object.assign({}, state, { moduleConfig: state.moduleConfig.filter(moduleCfg => moduleCfg.id !== action.payload.id) })
         },
@@ -91,7 +103,10 @@ export default {
                 return item;
             });
             return Object.assign({}, state, { moduleConfig: listData })
-        }
+        },
+        deleteSysDelSys(state, action) {
+            return Object.assign({}, state, { allSys: state.allSys.filter(sysCfg => sysCfg.id !== action.payload) })
+        },
     },
 
 };
