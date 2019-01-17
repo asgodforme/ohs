@@ -4,50 +4,54 @@ import { error } from '../SysCfgQueryFieldAlert';
 const FormItem = Form.Item;
 const Option = Select.Option;
 
-
-var provinceData = [];
-var cityData = {};
+let sysInfos = [];
+let sysTableInfos = {};
+let sysTableColumnInfos = {};
+let sysTableColumnChnInfos = {};
 class addCreateForm extends React.Component {
   constructor(props) {
     super();
+    console.log(props.allSys);
     for (let i = 0; i < props.allSys.length; i++) {
-      provinceData.push(props.allSys[i].sysAlias);
-      let cityDatas = [];
-      for (let j = 0; j < props.allSys[i].ohsTableConfigs.length; j++) {
-        cityDatas.push(props.allSys[i].ohsTableConfigs[j].tableName);
+      if (sysInfos.indexOf(props.allSys[i].sysAlias) <= -1) {
+        sysInfos.push(props.allSys[i].sysAlias);
       }
-      cityData[props.allSys[i].sysAlias] = cityDatas;
+      if (props.allSys[i].ohsTableConfigs != null) {
+        let sysTableInfoss = [];
+        for (let j = 0; j < props.allSys[i].ohsTableConfigs.length; j++) {
+          sysTableInfoss.push(props.allSys[i].ohsTableConfigs[j].tableName);
+          // 遍历columns
+          let sysTableColumnInfo = [];
+          let sysTableColumnChnInfo = [];
+          if (props.allSys[i].ohsTableConfigs[j].columns != null) {
+            for (let k = 0; k < props.allSys[i].ohsTableConfigs[j].columns.length; k++) {
+              sysTableColumnInfo.push(props.allSys[i].ohsTableConfigs[j].columns[k].columnName);
+              sysTableColumnChnInfo.push(props.allSys[i].ohsTableConfigs[j].columns[k].columnAlias);
+            }
+          }
+          sysTableColumnInfos[props.allSys[i].ohsTableConfigs[j].tableName] = sysTableColumnInfo;
+          sysTableColumnChnInfos[props.allSys[i].ohsTableConfigs[j].tableName] = sysTableColumnChnInfo;
+        }
+        sysTableInfos[props.allSys[i].sysAlias] = sysTableInfoss;
+      }
     }
+
     this.state = {
-      cities: cityData[provinceData[0]],
-      secondCity: cityData[provinceData[0]][0],
+      tables: [],
+      secondCity: '',
     }
     this.handleProvinceChange = this.handleProvinceChange.bind(this);
   }
 
-  // componentDidMount() {
-  //   console.log('jiangjie')
-  //   for (let i = 0; i < this.props.allSys.length; i++) {
-  //     provinceData.push(this.props.allSys[i].sysAlias);
-  //     let cityDatas = [];
-  //     for (let j = 0; j < this.props.allSys[i].ohsTableConfigs.length; j++) {
-  //       cityDatas.push(this.props.allSys[i].ohsTableConfigs[j].tableName);
-  //     }
-  //     cityData[this.props.allSys[i].sysAlias] = cityDatas;
-  //   }
-  //   this.setState({
-  //     cities: cityData[provinceData[0]],
-  //     secondCity: cityData[provinceData[0]][0],
-  //   })
-  //   console.log(this.state)
-
-  //   console.log(provinceData);
-  //   console.log(cityData);
-  //   console.log(this.state)
-  // }
-
   handleProvinceChange = (value) => {
+    console.log(sysTableColumnInfos);
+    console.log(sysTableColumnChnInfos);
     const { form, queryFields, allSys } = this.props;
+    if ((queryFields.dataName === 'columnConfig' || queryFields.dataName === 'enumValueConfig')
+      && (sysTableInfos[value] == null || (sysTableInfos[value] != null && sysTableInfos[value][0] == null))) {
+      error(value + "系统下不存在表信息，请在“表配置”中先添加对应系统的表信息！");
+      return;
+    }
     let sysChineseNme;
     let schemaName;
     for (let i = 0; i < allSys.length; i++) {
@@ -65,27 +69,40 @@ class addCreateForm extends React.Component {
     if (queryFields.fieldNames.indexOf('schemaName') > -1) {
       fieldsValues.schemaName = schemaName;
     }
-    if (queryFields.fieldNames.indexOf('tableName') > -1) {
-      fieldsValues.tableName = '';
+    if ((sysTableInfos[value] != null && sysTableInfos[value][0] != null)
+      && (queryFields.dataName === 'columnConfig' || queryFields.dataName === 'enumValueConfig')
+      && queryFields.fieldNames.indexOf('tableName') > -1) {
+      // fieldsValues.tableName = sysTableInfos[value][0];
     }
 
     form.setFieldsValue(fieldsValues);
     this.setState(Object.assign({}, this.state, {
-      cities: cityData[value],
-      secondCity: cityData[value][0],
+      tables: sysTableInfos[value],
     }));
   }
   onSecondCityChange = (value) => {
     this.setState({
       secondCity: value,
     });
+    console.log(sysTableColumnInfos);
+    console.log(sysTableColumnChnInfos);
+    const { form, queryFields, allSys } = this.props;
+    if (queryFields.dataName === 'enumValueConfig'
+      && (sysTableColumnInfos[value] == null || (sysTableColumnInfos[value] != null && sysTableColumnInfos[value][0] == null))) {
+      error(value + "该表下不存在字段信息，请在“字段配置”中先添加对应表的字段信息！");
+      return;
+    }
+
+    this.setState(Object.assign({}, this.state, {
+      columns: sysTableColumnInfos[value],
+    }));
   }
 
   render() {
-    const provinceOptions = provinceData.map(province => <Option key={province}>{province}</Option>);
-    const cityOptions = this.state.cities.map(city => <Option key={city}>{city}</Option>);
-
-    const { visible, onCancel, onCreate, form, queryFields, allSys } = this.props;
+    const sysOptions = sysInfos.map(sys => <Option key={sys}>{sys}</Option>);
+    const tableOptions = (this.state.tables || []).map(table => <Option key={table}>{table}</Option>);
+    const columnOptions = (this.state.columns || []).map(column => <Option key={column}>{column}</Option>);
+    const { visible, onCancel, onCreate, form, queryFields } = this.props;
     const { getFieldDecorator } = form;
 
     const formItem = [];
@@ -99,27 +116,41 @@ class addCreateForm extends React.Component {
             })(
               <Select placeholder="请选择系统码">
                 {
-                  provinceOptions
+                  sysOptions
                 }
               </Select>
             )}
           </FormItem>
         )
-      } else if (queryFields.dataName === 'columnConfig' && queryFields.fieldNames[i] === 'tableName') {
+      } else if ((queryFields.dataName === 'columnConfig' || queryFields.dataName === 'enumValueConfig')
+        && queryFields.fieldNames[i] === 'tableName') {
         formItem.push(
           <FormItem key={i} label={queryFields.fieldDescs[i]}>
             {getFieldDecorator(queryFields.fieldNames[i], {
               rules: [{ required: true, message: '请输入' + queryFields.fieldDescs[i] + '!' }],
               onChange: this.onSecondCityChange,
             })(
-              <Select placeholder="请选择表名">
+              <Select placeholder="请选择表名" notFoundContent="当前系统下不存在表信息，请在“表配置”中先添加对应系统的表信息！">
                 {
-                  cityOptions
+                  tableOptions
                 }
               </Select>
             )}
           </FormItem>
         )
+      } else if (queryFields.dataName === 'enumValueConfig' && queryFields.fieldNames[i] === 'columnName') {
+        formItem.push(
+          <FormItem key={i} label={queryFields.fieldDescs[i]}>
+            {getFieldDecorator(queryFields.fieldNames[i], {
+              rules: [{ required: true, message: '请输入' + queryFields.fieldDescs[i] + '!' }],
+            })(
+              <Select placeholder="请选择字段名" notFoundContent="该表下不存在字段信息，请在“字段配置”中先添加对应表的字段信息！">
+                {
+                  columnOptions
+                }
+              </Select>
+            )}
+          </FormItem>)
       } else {
         formItem.push(
           <FormItem key={i} label={queryFields.fieldDescs[i]}>
@@ -152,101 +183,8 @@ class addCreateForm extends React.Component {
     );
   }
 }
+
 const CollectionCreateForm1 = Form.create()(addCreateForm);
-const CollectionCreateForm = Form.create()(
-  (props) => {
-    const { visible, onCancel, onCreate, form, queryFields, allSys } = props;
-    const { getFieldDecorator } = form;
-    var handleSelectChange = (value) => {
-      console.log(allSys);
-      let sysChineseNme;
-      let schemaName;
-      for (let i = 0; i < allSys.length; i++) {
-        if (allSys[i].sysAlias === value) {
-          sysChineseNme = allSys[i].sysChineseNme;
-          schemaName = allSys[i].schemaName;
-          break;
-        }
-      }
-
-      let fieldsValues = {};
-      if (queryFields.fieldNames.indexOf('sysChineseNme') > -1) {
-        fieldsValues.sysChineseNme = sysChineseNme;
-      }
-      if (queryFields.fieldNames.indexOf('schemaName') > -1) {
-        fieldsValues.schemaName = schemaName;
-      }
-
-      form.setFieldsValue(fieldsValues);
-    }
-    const formItem = [];
-    for (let i = 0; i < queryFields.fieldNames.length; i++) {
-      if (queryFields.fieldNames[i] === 'sysAlias') {
-        formItem.push(
-          <FormItem key={i} label={queryFields.fieldDescs[i]}>
-            {getFieldDecorator(queryFields.fieldNames[i], {
-              rules: [{ required: true, message: '请输入' + queryFields.fieldDescs[i] + '!' }],
-              onChange: handleSelectChange,
-            })(
-              <Select placeholder="请选择系统码">
-                {
-                  allSys.map(item => {
-                    return <Option key={item.id} value={item.sysAlias}>{item.sysAlias}</Option>
-                  })
-                }
-              </Select>
-            )}
-          </FormItem>
-        )
-      } else if (queryFields.dataName === 'columnConfig' && queryFields.fieldNames[i] === 'tableName') {
-        formItem.push(
-          <FormItem key={i} label={queryFields.fieldDescs[i]}>
-            {getFieldDecorator(queryFields.fieldNames[i], {
-              rules: [{ required: true, message: '请输入' + queryFields.fieldDescs[i] + '!' }],
-              onChange: handleSelectChange,
-            })(
-              <Select placeholder="请选择系统码">
-                {
-                  allSys.map(item => {
-                    return <Option key={item.id} value={item.sysAlias}>{item.sysAlias}</Option>
-                  })
-                }
-              </Select>
-            )}
-          </FormItem>
-        )
-      } else {
-        formItem.push(
-          <FormItem key={i} label={queryFields.fieldDescs[i]}>
-            {getFieldDecorator(queryFields.fieldNames[i], {
-              rules: [{ required: true, message: '请输入' + queryFields.fieldDescs[i] + '!' }],
-            })(
-              <Input disabled={(queryFields.fieldNames[i] === 'sysChineseNme' || queryFields.fieldNames[i] === 'schemaName') ? true : false} />
-            )}
-          </FormItem>
-        )
-      }
-    }
-    return (
-      <Modal
-        visible={visible}
-        title={queryFields.addTitle}
-        okText="确定"
-        cancelText="取消"
-        onCancel={onCancel}
-        onOk={onCreate}
-      >
-        <Form layout="vertical">
-          {
-            formItem.map((item) => {
-              return item;
-            })
-          }
-        </Form>
-      </Modal>
-    );
-  }
-);
 
 export class CommonAddField extends React.Component {
   state = {

@@ -1,4 +1,5 @@
 import { getAllColumn, saveColumnConfig, deleteById, updateById } from '../../../services/data/columnConfig';
+import { getAllSysWhenInit } from '../../../services/moduleConfig';
 import { error, success } from '../../../components/module/SysCfgQueryFieldAlert'
 
 
@@ -14,11 +15,23 @@ export default {
 
     subscriptions: {
         setup({ dispatch, history }) {
-            
+            const data = dispatch({ type: 'getAllSysWhenInit', payload: { sysAlias: '', sysChineseNme: '' } });
+            data.then(function (result) {
+                dispatch({ type: 'userConfig/saveAllSys', payload: result });
+                dispatch({ type: 'evnConfig/saveAllSys', payload: result });
+                dispatch({ type: 'tableConfig/saveAllSys', payload: result });
+                dispatch({ type: 'enumValueConfig/saveAllSys', payload: result });
+                dispatch({ type: 'saveAllSys', payload: result });
+            });
         },
     },
 
     effects: {
+        *getAllSysWhenInit({ payload }, { call, put }) {
+            const allSyses = yield call(getAllSysWhenInit, payload);
+            yield put({ type: 'saveAllSys', payload: allSyses });
+            return allSyses;
+        },
         *getAllColumn({ payload }, { call, put }) {
             const columnCfg = yield call(getAllColumn, payload);
             if (columnCfg.data.status === 500) {
@@ -26,6 +39,9 @@ export default {
             } else {
                 yield put({ type: 'save', payload: columnCfg });
             }
+        },
+        *getAllTableWhenAdd({ payload }, { call, put }) {
+            yield put({ type: 'saveTable', payload: payload });
         },
         *saveColumnConfig({ payload }, { call, put }) {
             const result = yield call(saveColumnConfig, payload);
@@ -60,6 +76,20 @@ export default {
     },
 
     reducers: {
+        saveTable(state, action) {
+            let allSys = [...state.allSys];
+            allSys.map((item) => {
+                if (item.ohsTableConfigs != null) {
+                    if (item.sysAlias === action.payload.sysAlias && item.sysChineseNme === action.payload.sysChineseNme) {
+                        item.ohsTableConfigs = [...item.ohsTableConfigs, { id: action.payload.tableName, schemaName: action.payload.schemaName, tableName: action.payload.tableName }];
+                    }
+                } else {
+                    item.ohsTableConfigs = [{ id: action.payload.tableName, schemaName: action.payload.schemaName, tableName: action.payload.tableName }];
+                }
+                return item;
+            });
+            return Object.assign({}, state, { allSys: allSys });
+        },
         save(state, action) {
             return { ...state, columnConfig: action.payload.data };
         },

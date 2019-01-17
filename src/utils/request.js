@@ -22,7 +22,6 @@ function checkStatus(response) {
  * @return {object}           An object containing either "data" or "err"
  */
 export default function request(url, options) {
-  console.log('当前请求后台地址为：' + url);
   let new_options;
   if (options != null && (options.method === 'POST' || options.method === 'PUT')) {
     new_options = {

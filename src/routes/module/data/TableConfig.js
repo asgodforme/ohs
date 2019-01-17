@@ -60,6 +60,12 @@ const TableConfig = ({ dispatch, tableConfig }) => {
       type: 'tableConfig/saveTableConfig',
       payload: tableConfig,
     });
+    // 给字段配置中新增对应的表
+    // 给枚举值配置中新增对应的表
+    dispatch({
+      type: 'columnConfig/getAllTableWhenAdd',
+      payload: tableConfig,
+    })
   }
   function deleteTableConfig(id) {
     dispatch({
@@ -73,12 +79,18 @@ const TableConfig = ({ dispatch, tableConfig }) => {
       payload: tableConfig,
     })
   }
+  function getAllSys() {
+    dispatch({
+      type: 'moduleConfig/getAllSysWhenInit',
+      payload: { sysAlias: '', sysChineseNme: '' }
+    });
+  }
 
   return (
     <div>
       <CommonQueryField query={getAllTable} data={tableConfig}
         save={saveTableConfig} delete={deleteTableConfig} update={updateTable}
-        queryFields={queryFields} columns={columns}
+        queryFields={queryFields} columns={columns} getAllSys={getAllSys}
       />
     </div>
   );

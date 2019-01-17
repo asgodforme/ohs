@@ -1,5 +1,6 @@
 import { getAllEnumValue, saveEnumValueConfig, deleteById, updateById } from '../../../services/data/enumValueConfig';
 import { error, success } from '../../../components/module/SysCfgQueryFieldAlert'
+import { getAllSysWhenInit } from '../../../services/moduleConfig';
 
 
 export default {
@@ -14,11 +15,23 @@ export default {
 
     subscriptions: {
         setup({ dispatch, history }) {
-            
+            const data = dispatch({ type: 'getAllSysWhenInit', payload: { sysAlias: '', sysChineseNme: '' } });
+            data.then(function (result) {
+                dispatch({ type: 'userConfig/saveAllSys', payload: result });
+                dispatch({ type: 'evnConfig/saveAllSys', payload: result });
+                dispatch({ type: 'tableConfig/saveAllSys', payload: result });
+                dispatch({ type: 'saveAllSys', payload: result });
+                dispatch({ type: 'columnConfig/saveAllSys', payload: result });
+            });
         },
     },
 
     effects: {
+        *getAllSysWhenInit({ payload }, { call, put }) {
+            const allSyses = yield call(getAllSysWhenInit, payload);
+            yield put({ type: 'saveAllSys', payload: allSyses });
+            return allSyses;
+        },
         *getAllEnumValue({ payload }, { call, put }) {
             const enumValueCfg = yield call(getAllEnumValue, payload);
             if (enumValueCfg.data.status === 500) {

@@ -98,12 +98,17 @@ const EvnConfig = ({ dispatch, evnConfig }) => {
       payload: evnConfig,
     })
   }
-
+  function getAllSys() {
+    dispatch({
+      type: 'moduleConfig/getAllSysWhenInit',
+      payload: { sysAlias: '', sysChineseNme: '' }
+    });
+  }
   return (
     <div>
       <CommonQueryField query={getAllEnv} data={evnConfig}
         save={saveEnvConfig} delete={deleteEnvConfig} update={updateEnv}
-        queryFields={queryFields} columns={columns}
+        queryFields={queryFields} columns={columns}  getAllSys={getAllSys}
       />
     </div>
   );

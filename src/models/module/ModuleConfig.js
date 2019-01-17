@@ -17,7 +17,6 @@ export default {
         setup({ dispatch, history }) {
             const data = dispatch({ type: 'getAllSysWhenInit', payload: { sysAlias: '', sysChineseNme: '' } });
             data.then(function (result) {
-                console.log(result);
                 dispatch({ type: 'userConfig/saveAllSys', payload: result });
                 dispatch({ type: 'evnConfig/saveAllSys', payload: result });
                 dispatch({ type: 'tableConfig/saveAllSys', payload: result });

@@ -1,5 +1,6 @@
 import { getAllTable, saveTableConfig, deleteById, updateById } from '../../../services/data/tableConfig';
 import { error, success } from '../../../components/module/SysCfgQueryFieldAlert'
+import { getAllSysWhenInit } from '../../../services/moduleConfig';
 
 
 export default {
@@ -14,11 +15,23 @@ export default {
 
     subscriptions: {
         setup({ dispatch, history }) {
-            
+            const data = dispatch({ type: 'getAllSysWhenInit', payload: { sysAlias: '', sysChineseNme: '' } });
+            data.then(function (result) {
+                dispatch({ type: 'userConfig/saveAllSys', payload: result });
+                dispatch({ type: 'evnConfig/saveAllSys', payload: result });
+                dispatch({ type: 'saveAllSys', payload: result });
+                dispatch({ type: 'enumValueConfig/saveAllSys', payload: result });
+                dispatch({ type: 'columnConfig/saveAllSys', payload: result });
+            });
         },
     },
 
     effects: {
+        *getAllSysWhenInit({ payload }, { call, put }) {
+            const allSyses = yield call(getAllSysWhenInit, payload);
+            yield put({ type: 'saveAllSys', payload: allSyses });
+            return allSyses;
+        },
         *getAllTable({ payload }, { call, put }) {
             const tableCfg = yield call(getAllTable, payload);
             if (tableCfg.data.status === 500) {

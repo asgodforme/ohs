@@ -81,12 +81,18 @@ const ColumnConfig = ({ dispatch, columnConfig }) => {
       payload: columnConfig,
     })
   }
+  function getAllSys() {
+    dispatch({
+      type: 'moduleConfig/getAllSysWhenInit',
+      payload: { sysAlias: '', sysChineseNme: '' }
+    });
+  }
 
   return (
     <div>
       <CommonQueryField query={getAllColumn} data={columnConfig}
         save={saveColumnConfig} delete={deleteColumnConfig} update={updateColumn}
-        queryFields={queryFields} columns={columns}
+        queryFields={queryFields} columns={columns} getAllSys={getAllSys}
       />
     </div>
   );
