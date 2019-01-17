@@ -1,5 +1,5 @@
 import React from 'react';
-import { Button, Modal, Form, Input, Icon, Popconfirm, Select  } from 'antd';
+import { Button, Modal, Form, Input, Icon, Popconfirm, Select } from 'antd';
 import { warning, error } from '../SysCfgQueryFieldAlert';
 const FormItem = Form.Item;
 const Option = Select.Option;
@@ -12,48 +12,49 @@ const CollectionCreateForm = Form.create()(
             let sysChineseNme;
             let schemaName;
             for (let i = 0; i < allSys.length; i++) {
-              if (allSys[i].sysAlias === value) {
-                sysChineseNme = allSys[i].sysChineseNme;
-                schemaName = allSys[i].schemaName;
-                break;
-              }
+                if (allSys[i].sysAlias === value) {
+                    sysChineseNme = allSys[i].sysChineseNme;
+                    schemaName = allSys[i].schemaName;
+                    break;
+                }
             }
             form.setFieldsValue({
-              sysChineseNme: sysChineseNme,
-              schemaName: schemaName,
+                sysChineseNme: sysChineseNme,
+                schemaName: schemaName,
             });
-          }
+        }
         const formItem = [];
         for (let i = 0; i < queryFields.fieldNames.length; i++) {
             if (queryFields.fieldNames[i] === 'sysAlias') {
                 formItem.push(
-                  <FormItem key={i} label={queryFields.fieldDescs[i]}>
-                    {getFieldDecorator(queryFields.fieldNames[i], {
-                      rules: [{ required: true, message: '请输入' + queryFields.fieldDescs[i] + '!' }],
-                      onChange: handleSelectChange,
-                    })(
-                      <Select placeholder="请选择系统码">
-                        {
-                          allSys.map(item => {
-                            return <Option key={item.id} value={item.sysAlias}>{item.sysAlias}</Option>
-                          })
-                        }
-                      </Select>
-                    )}
-                  </FormItem>
+                    <FormItem key={i} label={queryFields.fieldDescs[i]}>
+                        {getFieldDecorator(queryFields.fieldNames[i], {
+                            initialValue: records[queryFields.fieldNames[i]], //这是用来初始化表单数据的
+                            rules: [{ required: true, message: '请输入' + queryFields.fieldDescs[i] + '!' }],
+                            onChange: handleSelectChange,
+                        })(
+                            <Select placeholder="请选择系统码">
+                                {
+                                    allSys.map(item => {
+                                        return <Option key={item.id} value={item.sysAlias}>{item.sysAlias}</Option>
+                                    })
+                                }
+                            </Select>
+                        )}
+                    </FormItem>
                 )
-              } else {
-                  formItem.push(
-                      <FormItem key={i} label={queryFields.fieldDescs[i]}>
-                          {getFieldDecorator(queryFields.fieldNames[i], {
-                              initialValue: records[queryFields.fieldNames[i]], //这是用来初始化表单数据的
-                              rules: [{ required: true, message: '请输入' + queryFields.fieldDescs[i] + '!' }],
-                          })(
-                            <Input disabled={queryFields.fieldNames[i]==='sysChineseNme' || queryFields.fieldNames[i]==='schemaName' ? true : false}/>
-                          )}
-                      </FormItem>
-                  )
-              }
+            } else {
+                formItem.push(
+                    <FormItem key={i} label={queryFields.fieldDescs[i]}>
+                        {getFieldDecorator(queryFields.fieldNames[i], {
+                            initialValue: records[queryFields.fieldNames[i]], //这是用来初始化表单数据的
+                            rules: [{ required: true, message: '请输入' + queryFields.fieldDescs[i] + '!' }],
+                        })(
+                            <Input disabled={queryFields.fieldNames[i] === 'sysChineseNme' || queryFields.fieldNames[i] === 'schemaName' ? true : false} />
+                        )}
+                    </FormItem>
+                )
+            }
         }
 
         return (

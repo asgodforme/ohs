@@ -26,7 +26,7 @@ class addCreateForm extends React.Component {
           if (props.allSys[i].ohsTableConfigs[j].columns != null) {
             for (let k = 0; k < props.allSys[i].ohsTableConfigs[j].columns.length; k++) {
               sysTableColumnInfo.push(props.allSys[i].ohsTableConfigs[j].columns[k].columnName);
-              sysTableColumnChnInfo.push(props.allSys[i].ohsTableConfigs[j].columns[k].columnAlias);
+              sysTableColumnChnInfo[props.allSys[i].ohsTableConfigs[j].columns[k].columnName] = props.allSys[i].ohsTableConfigs[j].columns[k].columnAlias;
             }
           }
           sysTableColumnInfos[props.allSys[i].ohsTableConfigs[j].tableName] = sysTableColumnInfo;
@@ -92,10 +92,20 @@ class addCreateForm extends React.Component {
       error(value + "该表下不存在字段信息，请在“字段配置”中先添加对应表的字段信息！");
       return;
     }
-
     this.setState(Object.assign({}, this.state, {
       columns: sysTableColumnInfos[value],
+      columnsChns: sysTableColumnChnInfos[value],
     }));
+  }
+
+
+  onColumnAliasChange = (value) => {
+    const { form, queryFields } = this.props;
+    let fieldsValues = {};
+    if (queryFields.dataName === 'enumValueConfig' && queryFields.fieldNames.indexOf('columnAlias') > -1) {
+      fieldsValues.columnAlias = this.state.columnsChns[value];
+    }
+    form.setFieldsValue(fieldsValues);
   }
 
   render() {
@@ -143,6 +153,7 @@ class addCreateForm extends React.Component {
           <FormItem key={i} label={queryFields.fieldDescs[i]}>
             {getFieldDecorator(queryFields.fieldNames[i], {
               rules: [{ required: true, message: '请输入' + queryFields.fieldDescs[i] + '!' }],
+              onChange: this.onColumnAliasChange
             })(
               <Select placeholder="请选择字段名" notFoundContent="该表下不存在字段信息，请在“字段配置”中先添加对应表的字段信息！">
                 {
@@ -157,7 +168,13 @@ class addCreateForm extends React.Component {
             {getFieldDecorator(queryFields.fieldNames[i], {
               rules: [{ required: true, message: '请输入' + queryFields.fieldDescs[i] + '!' }],
             })(
-              <Input disabled={(queryFields.fieldNames[i] === 'sysChineseNme' || queryFields.fieldNames[i] === 'schemaName') ? true : false} />
+              <Input disabled={
+                (
+                  queryFields.fieldNames[i] === 'sysChineseNme' || queryFields.fieldNames[i] === 'schemaName'
+                || (queryFields.fieldNames[i] === 'columnAlias' && queryFields.dataName === 'enumValueConfig')  
+                ) 
+                ? true : false} 
+              />
             )}
           </FormItem>
         )

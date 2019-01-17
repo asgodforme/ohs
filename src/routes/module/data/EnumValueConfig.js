@@ -7,7 +7,7 @@ const queryFields = {
   updateTitle: '修改枚举值信息',
   addTitle: '新增枚举值信息',
   fieldDescs: ['系统码', '系统名', 'Schema名', '归属表名', '字段名', '字段别名', '枚举值', '中文注释'],
-  fieldNames: ['sysAlias', 'sysChineseNme', 'schemaName', 'tableName', 'columnName', 'columnAliascd ', 'enumValue', 'enumChineseValue'],
+  fieldNames: ['sysAlias', 'sysChineseNme', 'schemaName', 'tableName', 'columnName', 'columnAlias', 'enumValue', 'enumChineseValue'],
 }
 
 const columns = [{
