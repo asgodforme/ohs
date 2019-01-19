@@ -44,6 +44,7 @@ export default {
             yield put({ type: 'saveTable', payload: payload });
         },
         *saveColumnConfig({ payload }, { call, put }) {
+            console.log(payload);
             const result = yield call(saveColumnConfig, payload);
             if (result.data.status === 500) {
                 error(result.data.statusText);

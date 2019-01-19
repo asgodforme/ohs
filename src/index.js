@@ -30,6 +30,7 @@ app.model(require('./models/module/EvnConfig').default)
 app.model(require('./models/module/data/TableConfig').default)
 app.model(require('./models/module/data/ColumnConfig').default)
 app.model(require('./models/module/data/EnumValueConfig').default)
+app.model(require('./models/module/data/SingleSqlConfig').default)
 // 4. Router
 app.router(require('./router').default);
 

@@ -9,6 +9,7 @@ import EvnConfig from '../../routes/module/EvnConfig';
 import TableConfig from '../../routes/module/data/TableConfig';
 import ColumnConfig from '../../routes/module/data/ColumnConfig';
 import EnumValueConfig from '../../routes/module/data/EnumValueConfig';
+import SingleSqlConfig from '../../routes/module/data/SingleSqlConfig';
 
 const { SubMenu } = Menu;
 const { Header, Sider, Footer } = Layout;
@@ -21,6 +22,7 @@ const componentMapping = {
     tableConfig: <TableConfig />,
     columnConfig: <ColumnConfig />,
     enumValueConfig: <EnumValueConfig />,
+    singleSqlConfig: <SingleSqlConfig />,
 };
 
 export class Menus extends React.Component {

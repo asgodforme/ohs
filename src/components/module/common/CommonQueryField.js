@@ -1,9 +1,10 @@
 import React from 'react';
 
-import { Form, Row, Col, Input, Button } from 'antd';
+import { Form, Row, Col, Input, Button, Radio } from 'antd';
 import { CommonDataField } from './CommonDataField';
 import { CommonAddField } from './CommonAddField';
 const FormItem = Form.Item;
+const RadioGroup = Radio.Group;
 
 class AdvancedSearchForm extends React.Component {
 
@@ -14,6 +15,7 @@ class AdvancedSearchForm extends React.Component {
   handleSearch = (e) => {
     e.preventDefault();
     this.props.form.validateFields((err, values) => {
+      console.log(values)
       let querySys = {};
       const queryFields = this.props.queryFields;
       for (let i = 0; i < queryFields.fieldNames.length; i++) {
@@ -52,6 +54,18 @@ class AdvancedSearchForm extends React.Component {
             </FormItem>
           </Col>
         );
+      } else if (queryFields.dataName === 'columnConfig' && queryFields.fieldNames[i] === 'isHide') {
+        children.push(
+          <Col span={6} key={i}>
+            <FormItem {...formItemLayout} label={queryFields.fieldDescs[i]}>
+              {getFieldDecorator(queryFields.fieldNames[i])(
+                <RadioGroup>
+                  <Radio value={"1"}>{'是'}</Radio>
+                  <Radio value={"0"}>{'否'}</Radio>
+                </RadioGroup>
+              )}
+            </FormItem>
+          </Col>);
       } else {
         children.push(
           <Col span={6} key={i}>

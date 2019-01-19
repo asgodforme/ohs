@@ -1,11 +1,15 @@
 import React from 'react';
-import { Button, Modal, Form, Input, Select } from 'antd';
+import { Button, Modal, Form, Input, Select, Radio } from 'antd';
 import { error } from '../SysCfgQueryFieldAlert';
 const FormItem = Form.Item;
 const Option = Select.Option;
+const RadioGroup = Radio.Group;
 
 let sysInfos = [];
 let sysTableInfos = {};
+let sysTableChnInfos = {};
+let moduleInfos = {};
+let moduleChnInfos = {};
 let sysTableColumnInfos = {};
 let sysTableColumnChnInfos = {};
 class addCreateForm extends React.Component {
@@ -17,9 +21,21 @@ class addCreateForm extends React.Component {
         sysInfos.push(props.allSys[i].sysAlias);
       }
       if (props.allSys[i].ohsTableConfigs != null) {
+        let moduleInfo = [];
+        let moduleChnInfo = [];
+
+        for (let j = 0; j < props.allSys[i].ohsModuleConfigs.length; j++) {
+          moduleInfo.push(props.allSys[i].ohsModuleConfigs[j].moduleAlias);
+          moduleChnInfo[props.allSys[i].ohsModuleConfigs[j].moduleAlias] = props.allSys[i].ohsModuleConfigs[j].moduleName;
+        }
+        moduleInfos[props.allSys[i].sysAlias] = moduleInfo;
+        moduleChnInfos[props.allSys[i].sysAlias] = moduleChnInfo;
+
         let sysTableInfoss = [];
+        let sysTableChnInfo = {};
         for (let j = 0; j < props.allSys[i].ohsTableConfigs.length; j++) {
           sysTableInfoss.push(props.allSys[i].ohsTableConfigs[j].tableName);
+          sysTableChnInfo[props.allSys[i].ohsTableConfigs[j].tableName] = props.allSys[i].ohsTableConfigs[j].tableChnName;
           // 遍历columns
           let sysTableColumnInfo = [];
           let sysTableColumnChnInfo = [];
@@ -33,23 +49,27 @@ class addCreateForm extends React.Component {
           sysTableColumnChnInfos[props.allSys[i].ohsTableConfigs[j].tableName] = sysTableColumnChnInfo;
         }
         sysTableInfos[props.allSys[i].sysAlias] = sysTableInfoss;
+        sysTableChnInfos[props.allSys[i].sysAlias] = sysTableChnInfo;
       }
     }
+    
 
     this.state = {
       tables: [],
       secondCity: '',
     }
-    this.handleProvinceChange = this.handleProvinceChange.bind(this);
+    this.handleSysAlias = this.handleSysAlias.bind(this);
   }
 
-  handleProvinceChange = (value) => {
-    console.log(sysTableColumnInfos);
-    console.log(sysTableColumnChnInfos);
+  handleSysAlias = (value) => {
     const { form, queryFields, allSys } = this.props;
-    if ((queryFields.dataName === 'columnConfig' || queryFields.dataName === 'enumValueConfig')
+    if ((queryFields.dataName === 'columnConfig' || queryFields.dataName === 'enumValueConfig' || queryFields.dataName === 'singleSqlConfig')
       && (sysTableInfos[value] == null || (sysTableInfos[value] != null && sysTableInfos[value][0] == null))) {
-      error(value + "系统下不存在表信息，请在“表配置”中先添加对应系统的表信息！");
+      error(value + "系统下不存在表信息，请在“数据定制化配置-表配置”中先添加对应系统的表信息！");
+      return;
+    }
+    if ((queryFields.dataName === 'singleSqlConfig') && moduleInfos[value].length === 0 ) {
+      error(value + "系统下不存在模块信息，请在“公共参数配置-模块配置”中先添加对应系统的模块信息！");
       return;
     }
     let sysChineseNme;
@@ -78,20 +98,28 @@ class addCreateForm extends React.Component {
     form.setFieldsValue(fieldsValues);
     this.setState(Object.assign({}, this.state, {
       tables: sysTableInfos[value],
+      tableChns: sysTableChnInfos[value],
+      modules: moduleInfos[value],
+      moduleChns: moduleChnInfos[value],
     }));
   }
   onSecondCityChange = (value) => {
+    console.log(value);
+    console.log(sysTableChnInfos);
     this.setState({
       secondCity: value,
     });
-    console.log(sysTableColumnInfos);
-    console.log(sysTableColumnChnInfos);
-    const { form, queryFields, allSys } = this.props;
+    const { form, queryFields } = this.props;
     if (queryFields.dataName === 'enumValueConfig'
       && (sysTableColumnInfos[value] == null || (sysTableColumnInfos[value] != null && sysTableColumnInfos[value][0] == null))) {
       error(value + "该表下不存在字段信息，请在“字段配置”中先添加对应表的字段信息！");
       return;
     }
+    let fieldsValues = {};
+    if (queryFields.dataName === 'singleSqlConfig' && queryFields.fieldNames.indexOf('tableChnName') > -1) {
+      fieldsValues.tableChnName = this.state.tableChns[value];
+    }
+    form.setFieldsValue(fieldsValues);
     this.setState(Object.assign({}, this.state, {
       columns: sysTableColumnInfos[value],
       columnsChns: sysTableColumnChnInfos[value],
@@ -108,10 +136,30 @@ class addCreateForm extends React.Component {
     form.setFieldsValue(fieldsValues);
   }
 
+  onIsHideChange = (e) => {
+    const { form, queryFields } = this.props;
+    let fieldsValues = {};
+    if (queryFields.dataName === 'columnConfig' && queryFields.fieldNames.indexOf('isHide') > -1) {
+      console.log(e.target.value)
+      fieldsValues.isHide = e.target.value;
+    }
+    form.setFieldsValue(fieldsValues);
+  }
+
+  onModuleAliasChange = (value) => {
+    const { form, queryFields } = this.props;
+    let fieldsValues = {};
+    if (queryFields.dataName === 'singleSqlConfig' && queryFields.fieldNames.indexOf('moduleAlias') > -1) {
+      fieldsValues.moduleName = this.state.moduleChns[value];
+    }
+    form.setFieldsValue(fieldsValues);
+  }
+
   render() {
     const sysOptions = sysInfos.map(sys => <Option key={sys}>{sys}</Option>);
     const tableOptions = (this.state.tables || []).map(table => <Option key={table}>{table}</Option>);
     const columnOptions = (this.state.columns || []).map(column => <Option key={column}>{column}</Option>);
+    const moduleOptions = (this.state.modules || []).map(modle => <Option key={modle}>{modle}</Option>)
     const { visible, onCancel, onCreate, form, queryFields } = this.props;
     const { getFieldDecorator } = form;
 
@@ -122,7 +170,7 @@ class addCreateForm extends React.Component {
           <FormItem key={i} label={queryFields.fieldDescs[i]}>
             {getFieldDecorator(queryFields.fieldNames[i], {
               rules: [{ required: true, message: '请输入' + queryFields.fieldDescs[i] + '!' }],
-              onChange: this.handleProvinceChange,
+              onChange: this.handleSysAlias,
             })(
               <Select placeholder="请选择系统码">
                 {
@@ -132,7 +180,7 @@ class addCreateForm extends React.Component {
             )}
           </FormItem>
         )
-      } else if ((queryFields.dataName === 'columnConfig' || queryFields.dataName === 'enumValueConfig')
+      } else if ((queryFields.dataName === 'columnConfig' || queryFields.dataName === 'enumValueConfig' || queryFields.dataName === 'singleSqlConfig')
         && queryFields.fieldNames[i] === 'tableName') {
         formItem.push(
           <FormItem key={i} label={queryFields.fieldDescs[i]}>
@@ -162,6 +210,43 @@ class addCreateForm extends React.Component {
               </Select>
             )}
           </FormItem>)
+      } else if (queryFields.dataName === 'columnConfig' && queryFields.fieldNames[i] === 'isHide') {
+        formItem.push(
+          <FormItem key={i} label={queryFields.fieldDescs[i]}>
+            {getFieldDecorator(queryFields.fieldNames[i], {
+              rules: [{ required: true, message: '请输入' + queryFields.fieldDescs[i] + '!' }],
+              onChange: this.onIsHideChange
+            })(
+              <RadioGroup>
+                <Radio value={"1"}>{'是'}</Radio>
+                <Radio value={"0"}>{'否'}</Radio>
+              </RadioGroup>
+            )}
+          </FormItem>)
+      } else if (queryFields.dataName === 'singleSqlConfig' && queryFields.fieldNames[i] === 'moduleAlias') {
+        formItem.push(
+          <FormItem key={i} label={queryFields.fieldDescs[i]}>
+            {getFieldDecorator(queryFields.fieldNames[i], {
+              rules: [{ required: true, message: '请输入' + queryFields.fieldDescs[i] + '!' }],
+              onChange: this.onModuleAliasChange
+            })(
+              <Select placeholder="请选择模块名" notFoundContent="该表下不存在模块信息，请在“模块配置”中先添加对应系统的模块信息！">
+                {
+                  moduleOptions
+                }
+              </Select>
+            )}
+          </FormItem>)
+      
+      } else if (queryFields.dataName === 'singleSqlConfig' && queryFields.fieldNames[i] === 'singleTableSql') {
+        formItem.push(
+          <FormItem key={i} label={queryFields.fieldDescs[i]}>
+            {getFieldDecorator(queryFields.fieldNames[i], {
+              initialValue: '点击确认后，会根据字段配置信息，生成对应的单表查询语句。'
+            })(
+              <Input  disabled={true}/>
+            )}
+          </FormItem>)
       } else {
         formItem.push(
           <FormItem key={i} label={queryFields.fieldDescs[i]}>
@@ -171,9 +256,11 @@ class addCreateForm extends React.Component {
               <Input disabled={
                 (
                   queryFields.fieldNames[i] === 'sysChineseNme' || queryFields.fieldNames[i] === 'schemaName'
-                || (queryFields.fieldNames[i] === 'columnAlias' && queryFields.dataName === 'enumValueConfig')  
-                ) 
-                ? true : false} 
+                  || (queryFields.fieldNames[i] === 'tableChnName' && queryFields.dataName === 'singleSqlConfig')
+                  || (queryFields.fieldNames[i] === 'moduleName' && queryFields.dataName === 'singleSqlConfig')
+                  || (queryFields.fieldNames[i] === 'columnAlias' && queryFields.dataName === 'enumValueConfig')
+                )
+                  ? true : false}
               />
             )}
           </FormItem>
@@ -191,9 +278,7 @@ class addCreateForm extends React.Component {
       >
         <Form layout="vertical">
           {
-            formItem.map((item) => {
-              return item;
-            })
+            formItem
           }
         </Form>
       </Modal>
@@ -216,10 +301,15 @@ export class CommonAddField extends React.Component {
     this.setState({ visible: true });
   }
   handleCancel = () => {
+    const form = this.form;
+    form.resetFields();
     this.setState({ visible: false });
   }
   handleCreate = () => {
+    console.log("1")
     const form = this.form;
+    console.log(form)
+
     form.validateFields((err, values) => {
       if (err) {
         error(err);
@@ -229,6 +319,9 @@ export class CommonAddField extends React.Component {
       form.resetFields();
       this.setState({ visible: false });
     });
+
+    console.log("2")
+
   }
   saveFormRef = (form) => {
     this.form = form;

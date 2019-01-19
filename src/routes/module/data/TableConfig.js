@@ -6,8 +6,8 @@ const queryFields = {
   dataName: 'tableConfig',
   updateTitle: '修改表信息',
   addTitle: '新增表信息',
-  fieldDescs: ['归属系统码', '归属系统名', 'Schema名', '表名'],
-  fieldNames: ['sysAlias', 'sysChineseNme', 'schemaName', 'tableName'],
+  fieldDescs: ['归属系统码', '归属系统名', 'Schema名', '表名', '表中文名'],
+  fieldNames: ['sysAlias', 'sysChineseNme', 'schemaName', 'tableName', 'tableChnName'],
 }
 
 const columns = [{
@@ -30,6 +30,10 @@ const columns = [{
   title: '表名',
   dataIndex: 'tableName',
   key: 'tableName',
+}, {
+  title: '表中文名',
+  dataIndex: 'tableChnName',
+  key: 'tableChnName',
 }, {
   title: '创建者',
   dataIndex: 'createUser',
@@ -98,5 +102,5 @@ const TableConfig = ({ dispatch, tableConfig }) => {
 
 // export default Products;
 export default connect(({ tableConfig }) => ({
-    tableConfig,
+  tableConfig,
 }))(TableConfig);

@@ -6,8 +6,8 @@ const queryFields = {
   dataName: 'columnConfig',
   updateTitle: '修改字段信息',
   addTitle: '新增字段信息',
-  fieldDescs: ['系统码', '系统名', 'Schema名', '归属表名', '字段名', '字段别名'],
-  fieldNames: ['sysAlias', 'sysChineseNme', 'schemaName', 'tableName', 'columnName', 'columnAlias'],
+  fieldDescs: ['系统码', '系统名', 'Schema名', '归属表名', '字段名', '字段别名', '是否显示'],
+  fieldNames: ['sysAlias', 'sysChineseNme', 'schemaName', 'tableName', 'columnName', 'columnAlias', 'isHide'],
 }
 
 const columns = [{
@@ -38,6 +38,11 @@ const columns = [{
   title: '字段别名',
   dataIndex: 'columnAlias',
   key: 'columnAlias',
+}, {
+  title: '是否显示',
+  dataIndex: 'isHide',
+  key: 'isHide',
+  render: (text) => text === '1' ? '是' : '否',
 }, {
   title: '创建者',
   dataIndex: 'createUser',
@@ -100,5 +105,5 @@ const ColumnConfig = ({ dispatch, columnConfig }) => {
 
 // export default Products;
 export default connect(({ columnConfig }) => ({
-    columnConfig,
+  columnConfig,
 }))(ColumnConfig);

@@ -1,8 +1,9 @@
 import React from 'react';
-import { Button, Modal, Form, Input, Icon, Popconfirm, Select } from 'antd';
+import { Button, Modal, Form, Input, Icon, Popconfirm, Select, Radio } from 'antd';
 import { warning, error } from '../SysCfgQueryFieldAlert';
 const FormItem = Form.Item;
 const Option = Select.Option;
+const RadioGroup = Radio.Group;
 
 const CollectionCreateForm = Form.create()(
     (props) => {
@@ -22,7 +23,18 @@ const CollectionCreateForm = Form.create()(
                 sysChineseNme: sysChineseNme,
                 schemaName: schemaName,
             });
+        };
+
+        var onIsHideChange = (e) => {
+            const { form, queryFields } = props;
+            let fieldsValues = {};
+            if (queryFields.dataName === 'columnConfig' && queryFields.fieldNames.indexOf('isHide') > -1) {
+                console.log(e.target.value)
+                fieldsValues.isHide = e.target.value;
+            }
+            form.setFieldsValue(fieldsValues);
         }
+
         const formItem = [];
         for (let i = 0; i < queryFields.fieldNames.length; i++) {
             if (queryFields.fieldNames[i] === 'sysAlias') {
@@ -43,6 +55,20 @@ const CollectionCreateForm = Form.create()(
                         )}
                     </FormItem>
                 )
+            } else if (queryFields.dataName === 'columnConfig' && queryFields.fieldNames[i] === 'isHide') {
+                formItem.push(
+                    <FormItem key={i} label={queryFields.fieldDescs[i]}>
+                        {getFieldDecorator(queryFields.fieldNames[i], {
+                            initialValue: records[queryFields.fieldNames[i]],
+                            rules: [{ required: true, message: '请输入' + queryFields.fieldDescs[i] + '!' }],
+                            onChange: onIsHideChange
+                        })(
+                            <RadioGroup>
+                                <Radio value={"1"}>{'是'}</Radio>
+                                <Radio value={"0"}>{'否'}</Radio>
+                            </RadioGroup>
+                        )}
+                    </FormItem>)
             } else {
                 formItem.push(
                     <FormItem key={i} label={queryFields.fieldDescs[i]}>

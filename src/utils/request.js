@@ -1,4 +1,5 @@
 import fetch from 'dva/fetch';
+import { error } from '../components/module/SysCfgQueryFieldAlert';
 
 function parseJSON(response) {
   return response.json();
@@ -37,7 +38,7 @@ export default function request(url, options) {
   return fetch(url, new_options)
     .then(checkStatus)
     .then(parseJSON)
-    .then(data => ({ data }))
-    .catch(err => ({ err }));
+    .then(data => ({ data })).catch(err => (error(err.message)));
+  // .catch(err => ({ err }));
 }
 

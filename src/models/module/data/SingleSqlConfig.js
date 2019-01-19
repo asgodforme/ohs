@@ -1,15 +1,15 @@
-import { getAllModule, saveModuleConfig, deleteById, updateById } from '../../services/moduleConfig';
-import { getAllSysWhenInit } from '../../services/moduleConfig';
-import { error, success } from '../../components/module/SysCfgQueryFieldAlert'
+import { getAllSingleSql, saveSingleSqlConfig, deleteById, updateById } from '../../../services/data/singleSqlConfig';
+import { getAllSysWhenInit } from '../../../services/moduleConfig';
+import { error, success } from '../../../components/module/SysCfgQueryFieldAlert'
 
 
 export default {
 
-    namespace: 'moduleConfig',
+    namespace: 'singleSqlConfig',
 
     state: {
         allSys: [],
-        moduleConfig: [],
+        singleSqlConfig: [],
 
     },
 
@@ -21,7 +21,6 @@ export default {
                 dispatch({ type: 'evnConfig/saveAllSys', payload: result });
                 dispatch({ type: 'tableConfig/saveAllSys', payload: result });
                 dispatch({ type: 'enumValueConfig/saveAllSys', payload: result });
-                dispatch({ type: 'columnConfig/saveAllSys', payload: result });
                 dispatch({ type: 'saveAllSys', payload: result });
             });
         },
@@ -33,19 +32,20 @@ export default {
             yield put({ type: 'saveAllSys', payload: allSyses });
             return allSyses;
         },
-        *getAllSysWhenSysAdd({ payload }, { call, put }) {
-            yield put({ type: 'saveSys', payload: payload });
-        },
-        *getAllModule({ payload }, { call, put }) {
-            const moduleCfg = yield call(getAllModule, payload);
-            if (moduleCfg.data.status === 500) {
-                error(moduleCfg.data.statusText);
+        *getAllSingleSql({ payload }, { call, put }) {
+            const singleSqlCfg = yield call(getAllSingleSql, payload);
+            if (singleSqlCfg.data.status === 500 || singleSqlCfg.data.status === 404) {
+                error(singleSqlCfg.data.statusText);
             } else {
-                yield put({ type: 'save', payload: moduleCfg });
+                yield put({ type: 'save', payload: singleSqlCfg });
             }
         },
-        *saveModuleConfig({ payload }, { call, put }) {
-            const result = yield call(saveModuleConfig, payload);
+        *getAllTableWhenAdd({ payload }, { call, put }) {
+            yield put({ type: 'saveTable', payload: payload });
+        },
+        *saveSingleSqlConfig({ payload }, { call, put }) {
+            console.log(payload);
+            const result = yield call(saveSingleSqlConfig, payload);
             if (result.data.status === 500) {
                 error(result.data.statusText);
             } else {
@@ -71,18 +71,32 @@ export default {
                 yield put({ type: 'update', payload: result.data });
             }
         },
-        *deleteSys({ payload }, { call, put }) {
-            yield put({ type: 'deleteSysDelSys', payload: payload });
+        *getAllSysWhenSysAdd({ payload }, { call, put }) {
+            yield put({ type: 'saveSys', payload: payload });
         },
     },
 
     reducers: {
+        saveTable(state, action) {
+            let allSys = [...state.allSys];
+            allSys.map((item) => {
+                if (item.ohsTableConfigs != null) {
+                    if (item.sysAlias === action.payload.sysAlias && item.sysChineseNme === action.payload.sysChineseNme) {
+                        item.ohsTableConfigs = [...item.ohsTableConfigs, { id: action.payload.tableName, schemaName: action.payload.schemaName, tableName: action.payload.tableName }];
+                    }
+                } else {
+                    item.ohsTableConfigs = [{ id: action.payload.tableName, schemaName: action.payload.schemaName, tableName: action.payload.tableName }];
+                }
+                return item;
+            });
+            return Object.assign({}, state, { allSys: allSys });
+        },
         save(state, action) {
-            return { ...state, moduleConfig: action.payload.data };
+            return { ...state, singleSqlConfig: action.payload.data };
         },
         saveOne(state, action) {
-            let listData = [...state.moduleConfig, action.payload];
-            return Object.assign({}, state, { moduleConfig: listData })
+            let listData = [...state.singleSqlConfig, action.payload];
+            return Object.assign({}, state, { singleSqlConfig: listData })
         },
         saveAllSys(state, action) {
             return { ...state, allSys: action.payload.data };
@@ -92,21 +106,18 @@ export default {
             return Object.assign({}, state, { allSys: listData });
         },
         delete(state, action) {
-            return Object.assign({}, state, { moduleConfig: state.moduleConfig.filter(moduleCfg => moduleCfg.id !== action.payload.id) })
+            return Object.assign({}, state, { singleSqlConfig: state.singleSqlConfig.filter(moduleCfg => moduleCfg.id !== action.payload.id) })
         },
         update(state, action) {
-            let listData = [...state.moduleConfig];
+            let listData = [...state.singleSqlConfig];
             listData = (listData || []).map((item, index) => {
                 if (item.id === action.payload.id) {
                     return action.payload;
                 }
                 return item;
             });
-            return Object.assign({}, state, { moduleConfig: listData })
-        },
-        deleteSysDelSys(state, action) {
-            return Object.assign({}, state, { allSys: state.allSys.filter(sysCfg => sysCfg.id !== action.payload) })
-        },
+            return Object.assign({}, state, { singleSqlConfig: listData })
+        }
     },
 
 };
