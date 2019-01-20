@@ -35,7 +35,8 @@ export default {
             }
         },
         *deleteById({ payload }, { call, put }) {
-            const result = yield call(deleteById, payload);
+            console.log(payload);
+            const result = yield call(deleteById, payload.id);
             if (result.data.status === 500) {
                 error(result.data.statusText);
             } else {

@@ -6,8 +6,8 @@ const queryFields = {
   dataName: 'singleSqlConfig',
   updateTitle: '修改单表SQL',
   addTitle: '新增单表SQL',
-  fieldDescs: ['系统码', '系统名','模块别名', '模块名', '表名', '表中文名', '备注', '单表SQL'],
-  fieldNames: ['sysAlias', 'sysChineseNme', 'moduleAlias', 'moduleName',  'tableName', 'tableChnName', 'remark', 'singleTableSql'],
+  fieldDescs: ['系统码', '系统名','模块别名', '模块名', '表名', '表中文名', '查询key', '查询key中文', '备注', '单表SQL'],
+  fieldNames: ['sysAlias', 'sysChineseNme', 'moduleAlias', 'moduleName',  'tableName', 'tableChnName', 'columnName', 'columnAlias', 'remark', 'singleTableSql'],
 }
 
 const columns = [{
@@ -38,6 +38,14 @@ const columns = [{
   title: '表中文名',
   dataIndex: 'tableChnName',
   key: 'tableChnName',
+}, {
+  title: '查询key',
+  dataIndex: 'columnName',
+  key: 'columnName',
+}, {
+  title: '查询key中文',
+  dataIndex: 'columnAlias',
+  key: 'columnAlias',
 }, {
   title: '备注',
   dataIndex: 'remark',

@@ -15,14 +15,15 @@ export default {
 
     subscriptions: {
         setup({ dispatch, history }) {
-            const data = dispatch({ type: 'getAllSysWhenInit', payload: { sysAlias: '', sysChineseNme: '' } });
-            data.then(function (result) {
-                dispatch({ type: 'userConfig/saveAllSys', payload: result });
-                dispatch({ type: 'evnConfig/saveAllSys', payload: result });
-                dispatch({ type: 'tableConfig/saveAllSys', payload: result });
-                dispatch({ type: 'enumValueConfig/saveAllSys', payload: result });
-                dispatch({ type: 'saveAllSys', payload: result });
-            });
+            // 同一加载
+            // const data = dispatch({ type: 'getAllSysWhenInit', payload: { sysAlias: '', sysChineseNme: '' } });
+            // data.then(function (result) {
+            //     dispatch({ type: 'userConfig/saveAllSys', payload: result });
+            //     dispatch({ type: 'evnConfig/saveAllSys', payload: result });
+            //     dispatch({ type: 'tableConfig/saveAllSys', payload: result });
+            //     dispatch({ type: 'enumValueConfig/saveAllSys', payload: result });
+            //     dispatch({ type: 'saveAllSys', payload: result });
+            // });
         },
     },
 
@@ -74,9 +75,31 @@ export default {
         *getAllSysWhenSysAdd({ payload }, { call, put }) {
             yield put({ type: 'saveSys', payload: payload });
         },
+        *deleteSys({ payload }, { call, put }) {
+            yield put({ type: 'deleteSysDelSys', payload: payload });
+        },
+        *saveModuleConfig({ payload }, { put }) {
+            yield put({ type: 'saveNewModuleConfig', payload: payload });
+        }
     },
 
     reducers: {
+        saveNewModuleConfig(state, action) {
+            console.log(state)
+            console.log(action)
+            let allSys = [...state.allSys];
+            allSys.map((item) => {
+                if(item.ohsModuleConfigs != null) {
+                    if (item.sysAlias === action.payload.sysAlias && item.sysChineseNme === action.payload.sysChineseNme) {
+                        item.ohsModuleConfigs = [...item.ohsModuleConfigs, { id: action.payload.moduleAlias, moduleAlias: action.payload.moduleAlias, moduleName: action.payload.moduleName }];
+                    }
+                } else {
+                    item.ohsModuleConfigs = [{ id: action.payload.moduleAlias, moduleAlias: action.payload.moduleAlias, moduleName: action.payload.moduleName }]
+                }
+                return item;
+            });
+            return Object.assign({}, state, { allSys: allSys });
+        },
         saveTable(state, action) {
             let allSys = [...state.allSys];
             allSys.map((item) => {
@@ -117,7 +140,12 @@ export default {
                 return item;
             });
             return Object.assign({}, state, { singleSqlConfig: listData })
-        }
+        },
+        deleteSysDelSys(state, action) {
+            console.log(state)
+            console.log(action)
+            return Object.assign({}, state, { allSys: state.allSys.filter(sysCfg => sysCfg.sysAlias !== action.payload.sysAlias && sysCfg.sysChineseNme !== action.payload.sysChineseNme) })
+        },
     },
 
 };

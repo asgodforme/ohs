@@ -15,6 +15,7 @@ export default {
 
     subscriptions: {
         setup({ dispatch, history }) {
+            // 加载所有系统配置信息，并分发给各个模块
             const data = dispatch({ type: 'getAllSysWhenInit', payload: { sysAlias: '', sysChineseNme: '' } });
             data.then(function (result) {
                 dispatch({ type: 'userConfig/saveAllSys', payload: result });
@@ -22,6 +23,7 @@ export default {
                 dispatch({ type: 'tableConfig/saveAllSys', payload: result });
                 dispatch({ type: 'enumValueConfig/saveAllSys', payload: result });
                 dispatch({ type: 'columnConfig/saveAllSys', payload: result });
+                dispatch({ type: 'singleSqlConfig/saveAllSys', payload: result });
                 dispatch({ type: 'saveAllSys', payload: result });
             });
         },
@@ -105,7 +107,9 @@ export default {
             return Object.assign({}, state, { moduleConfig: listData })
         },
         deleteSysDelSys(state, action) {
-            return Object.assign({}, state, { allSys: state.allSys.filter(sysCfg => sysCfg.id !== action.payload) })
+            console.log(state)
+            console.log(action)
+            return Object.assign({}, state, { allSys: state.allSys.filter(sysCfg => sysCfg.sysAlias !== action.payload.sysAlias && sysCfg.sysChineseNme !== action.payload.sysChineseNme ) })
         },
     },
 

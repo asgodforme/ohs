@@ -85,7 +85,7 @@ export class SysCfgUpdateField extends React.Component {
                 <Button type="primary" onClick={this.showModal}>修改<Icon type="edit" /></Button>
                 <span className="ant-divider" />
                 &nbsp;&nbsp;&nbsp;
-                <Popconfirm title="确定删除吗?" onConfirm={() => this.props.onDelete(this.props.records.id)} okText="确定" cancelText="取消">
+                <Popconfirm title="确定删除吗?" onConfirm={() => this.props.onDelete(this.props.records)} okText="确定" cancelText="取消">
                     <Button>删除<Icon type="delete" /></Button>
                     <span className="ant-divider" />
                 </Popconfirm>

@@ -54,7 +54,13 @@ export default {
                 success("更新成功！");
                 yield put({ type: 'update', payload: result.data });
             }
-        }
+        },
+        *deleteSys({ payload }, { call, put }) {
+            yield put({ type: 'deleteSysDelSys', payload: payload });
+        },
+        *getAllSysWhenSysAdd({ payload }, { call, put }) {
+            yield put({ type: 'saveSys', payload: payload });
+        },
     },
 
     reducers: {
@@ -68,6 +74,10 @@ export default {
         saveAllSys(state, action) {
             return { ...state, allSys: action.payload.data };
         },
+        saveSys(state, action) {
+            let listData = [...state.allSys, { ...action.payload, id: state.allSys.length + 1 }];
+            return Object.assign({}, state, { allSys: listData });
+        },
         delete(state, action) {
             return Object.assign({}, state, { evnConfig: state.evnConfig.filter(moduleCfg => moduleCfg.id !== action.payload.id) })
         },
@@ -80,7 +90,12 @@ export default {
                 return item;
             });
             return Object.assign({}, state, { evnConfig: listData })
-        }
+        }, 
+        deleteSysDelSys(state, action) {
+            console.log(state)
+            console.log(action)
+            return Object.assign({}, state, { allSys: state.allSys.filter(sysCfg => sysCfg.sysAlias !== action.payload.sysAlias && sysCfg.sysChineseNme !== action.payload.sysChineseNme ) })
+        },
     },
 
 };

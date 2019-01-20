@@ -60,6 +60,11 @@ const ModuleConfig = ({ dispatch, moduleConfig }) => {
       type: 'moduleConfig/saveModuleConfig',
       payload: moduleConfig,
     });
+    // 给单表SQL配置新增新增的模块信息
+    dispatch({
+      type: 'singleSqlConfig/saveModuleConfig',
+      payload: moduleConfig,
+    });
   }
   function deleteModuleConfig(id) {
     dispatch({

@@ -15,14 +15,15 @@ export default {
 
     subscriptions: {
         setup({ dispatch, history }) {
-            const data = dispatch({ type: 'getAllSysWhenInit', payload: { sysAlias: '', sysChineseNme: '' } });
-            data.then(function (result) {
-                dispatch({ type: 'userConfig/saveAllSys', payload: result });
-                dispatch({ type: 'evnConfig/saveAllSys', payload: result });
-                dispatch({ type: 'tableConfig/saveAllSys', payload: result });
-                dispatch({ type: 'enumValueConfig/saveAllSys', payload: result });
-                dispatch({ type: 'saveAllSys', payload: result });
-            });
+             // 同一加载
+            // const data = dispatch({ type: 'getAllSysWhenInit', payload: { sysAlias: '', sysChineseNme: '' } });
+            // data.then(function (result) {
+            //     dispatch({ type: 'userConfig/saveAllSys', payload: result });
+            //     dispatch({ type: 'evnConfig/saveAllSys', payload: result });
+            //     dispatch({ type: 'tableConfig/saveAllSys', payload: result });
+            //     dispatch({ type: 'enumValueConfig/saveAllSys', payload: result });
+            //     dispatch({ type: 'saveAllSys', payload: result });
+            // });
         },
     },
 
@@ -74,6 +75,9 @@ export default {
         *getAllSysWhenSysAdd({ payload }, { call, put }) {
             yield put({ type: 'saveSys', payload: payload });
         },
+        *deleteSys({ payload }, { call, put }) {
+            yield put({ type: 'deleteSysDelSys', payload: payload });
+        },
     },
 
     reducers: {
@@ -117,7 +121,12 @@ export default {
                 return item;
             });
             return Object.assign({}, state, { columnConfig: listData })
-        }
+        },
+        deleteSysDelSys(state, action) {
+            console.log(state)
+            console.log(action)
+            return Object.assign({}, state, { allSys: state.allSys.filter(sysCfg => sysCfg.sysAlias !== action.payload.sysAlias && sysCfg.sysChineseNme !== action.payload.sysChineseNme ) })
+        },
     },
 
 };

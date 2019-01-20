@@ -26,8 +26,8 @@ class AdvancedSearchForm extends React.Component {
     this.props.form.resetFields();
   }
 
-  handleDelete = (id) => {
-    this.props.delete(id);
+  handleDelete = (sysCfg) => {
+    this.props.delete(sysCfg);
   }
 
   render() {

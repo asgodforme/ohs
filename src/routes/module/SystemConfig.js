@@ -19,6 +19,11 @@ const SystemConfig = ({ dispatch, systemConfig }) => {
       type: 'moduleConfig/getAllSysWhenSysAdd',
       payload: sysConfig,
     });
+    // 给环境配置新增添加的系统配置信息
+    dispatch({
+      type: 'evnConfig/getAllSysWhenSysAdd',
+      payload: sysConfig,
+    });
     // 给表配置新增添加的系统配置信息
     dispatch({
       type: 'tableConfig/getAllSysWhenSysAdd',
@@ -34,16 +39,46 @@ const SystemConfig = ({ dispatch, systemConfig }) => {
       type: 'enumValueConfig/getAllSysWhenSysAdd',
       payload: sysConfig,
     });
+    // 给单表SQL配置新增添加的系统配置信息
+    dispatch({
+      type: 'singleSqlConfig/getAllSysWhenSysAdd',
+      payload: sysConfig,
+    });
   }
-  function deleteSysConfig(id) {
+  function deleteSysConfig(sysConfig) {
     dispatch({
       type: 'systemConfig/deleteById',
-      payload: id,
+      payload: sysConfig,
     });
     // 删除掉模块配置的系统信息
     dispatch({
       type: 'moduleConfig/deleteSys',
-      payload: id,
+      payload: sysConfig,
+    });
+    // 删除掉环境配置的系统信息
+    dispatch({
+      type: 'evnConfig/deleteSys',
+      payload: sysConfig,
+    });
+    // 删除掉表配置的系统信息
+    dispatch({
+      type: 'tableConfig/deleteSys',
+      payload: sysConfig,
+    });
+    // 删除掉字段配置的系统信息
+    dispatch({
+      type: 'columnConfig/deleteSys',
+      payload: sysConfig,
+    });
+    // 删除掉枚举值配置的系统信息
+    dispatch({
+      type: 'enumValueConfig/deleteSys',
+      payload: sysConfig,
+    });
+    // 删除掉单表SQL配置的系统信息
+    dispatch({
+      type: 'singleSqlConfig/deleteSys',
+      payload: sysConfig,
     });
   }
   function updateSysConfig(sysConfig) {
