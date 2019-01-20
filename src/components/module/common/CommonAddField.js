@@ -8,10 +8,7 @@ const RadioGroup = Radio.Group;
 class addCreateForm extends React.Component {
   constructor(props) {
     super();
-    console.log(props.allSys);
-    console.log("sysInfos->");
     let sysInfos = [];
-    console.log(sysInfos)
     let sysTableInfos = {};
     let sysTableChnInfos = {};
     let moduleInfos = {};
@@ -43,7 +40,9 @@ class addCreateForm extends React.Component {
           let sysTableColumnChnInfo = [];
           if (props.allSys[i].ohsTableConfigs[j].columns != null) {
             for (let k = 0; k < props.allSys[i].ohsTableConfigs[j].columns.length; k++) {
-              sysTableColumnInfo.push(props.allSys[i].ohsTableConfigs[j].columns[k].columnName);
+              if (sysTableColumnInfo.indexOf(props.allSys[i].ohsTableConfigs[j].columns[k].columnName) === -1) {
+                sysTableColumnInfo.push(props.allSys[i].ohsTableConfigs[j].columns[k].columnName);
+              }
               sysTableColumnChnInfo[props.allSys[i].ohsTableConfigs[j].columns[k].columnName] = props.allSys[i].ohsTableConfigs[j].columns[k].columnAlias;
             }
           }
@@ -53,10 +52,7 @@ class addCreateForm extends React.Component {
         sysTableInfos[props.allSys[i].sysAlias] = sysTableInfoss;
         sysTableChnInfos[props.allSys[i].sysAlias] = sysTableChnInfo;
       }
-    } 
-    console.log(sysTableInfos);
-
-
+    }
     this.state = {
       tables: [],
       secondCity: '',
@@ -118,11 +114,8 @@ class addCreateForm extends React.Component {
     }));
   }
   onSecondCityChange = (value) => {
-    let sysTableChnInfos = this.state.sysTableChnInfos;
     let sysTableColumnInfos = this.state.sysTableColumnInfos;
     let sysTableColumnChnInfos = this.state.sysTableColumnChnInfos;
-    console.log(value);
-    console.log(sysTableChnInfos);
     this.setState({
       secondCity: value,
     });
@@ -158,7 +151,6 @@ class addCreateForm extends React.Component {
     const { form, queryFields } = this.props;
     let fieldsValues = {};
     if (queryFields.dataName === 'columnConfig' && queryFields.fieldNames.indexOf('isHide') > -1) {
-      console.log(e.target.value)
       fieldsValues.isHide = e.target.value;
     }
     form.setFieldsValue(fieldsValues);

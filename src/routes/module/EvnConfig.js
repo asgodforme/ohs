@@ -3,6 +3,7 @@ import { connect } from 'dva';
 import CommonQueryField from '../../components/module/common/CommonQueryField'
 
 const queryFields = {
+  scroll: {},
   dataName: 'evnConfig',
   updateTitle: '修改环境',
   addTitle: '新增环境',
@@ -86,10 +87,10 @@ const EvnConfig = ({ dispatch, evnConfig }) => {
       payload: evnConfig,
     });
   }
-  function deleteEnvConfig(id) {
+  function deleteEnvConfig(evnConfig) {
     dispatch({
       type: 'evnConfig/deleteById',
-      payload: id,
+      payload: evnConfig,
     })
   }
   function updateEnv(evnConfig) {

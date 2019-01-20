@@ -3,6 +3,7 @@ import { connect } from 'dva';
 import CommonQueryField from '../../../components/module/common/CommonQueryField'
 
 const queryFields = {
+  scroll: {},
   dataName: 'enumValueConfig',
   updateTitle: '修改枚举值信息',
   addTitle: '新增枚举值信息',
@@ -77,10 +78,10 @@ const EnumValueConfig = ({ dispatch, enumValueConfig }) => {
       payload: enumValueConfig,
     });
   }
-  function deleteEnumValueConfig(id) {
+  function deleteEnumValueConfig(enumValueConfig) {
     dispatch({
       type: 'enumValueConfig/deleteById',
-      payload: id,
+      payload: enumValueConfig,
     })
   }
   function updateEnumValue(enumValueConfig) {

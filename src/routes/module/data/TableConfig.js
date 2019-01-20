@@ -3,6 +3,7 @@ import { connect } from 'dva';
 import CommonQueryField from '../../../components/module/common/CommonQueryField'
 
 const queryFields = {
+  scroll: {},
   dataName: 'tableConfig',
   updateTitle: '修改表信息',
   addTitle: '新增表信息',
@@ -71,10 +72,21 @@ const TableConfig = ({ dispatch, tableConfig }) => {
       payload: tableConfig,
     })
   }
-  function deleteTableConfig(id) {
+  function deleteTableConfig(tableConfig) {
     dispatch({
       type: 'tableConfig/deleteById',
-      payload: id,
+      payload: tableConfig,
+    })
+
+    // 给字段配置删除掉对应的表
+    dispatch({
+      type: 'columnConfig/deleteTableConfig',
+      payload: tableConfig,
+    })
+    // 给枚举值配置删除掉对应的表
+    dispatch({
+      type: 'enumValueConfig/deleteTableConfig',
+      payload: tableConfig,
     })
   }
   function updateTable(tableConfig) {

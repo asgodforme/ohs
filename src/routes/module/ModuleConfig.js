@@ -3,6 +3,7 @@ import { connect } from 'dva';
 import CommonQueryField from '../../components/module/common/CommonQueryField'
 
 const queryFields = {
+  scroll: {},
   dataName: 'moduleConfig',
   updateTitle: '修改模块',
   addTitle: '新增模块',
@@ -66,10 +67,15 @@ const ModuleConfig = ({ dispatch, moduleConfig }) => {
       payload: moduleConfig,
     });
   }
-  function deleteModuleConfig(id) {
+  function deleteModuleConfig(moduleConfig) {
     dispatch({
       type: 'moduleConfig/deleteById',
-      payload: id,
+      payload: moduleConfig,
+    })
+    // 给单表SQL配置信息删除模块信息
+    dispatch({
+      type: 'singleSqlConfig/deleteModuleConfig',
+      payload: moduleConfig,
     })
   }
   function updateModule(moduleConfig) {

@@ -55,7 +55,7 @@ export default {
             }
         },
         *deleteById({ payload }, { call, put }) {
-            const result = yield call(deleteById, payload);
+            const result = yield call(deleteById, payload.id);
             if (result.data.status === 500) {
                 error(result.data.statusText);
             } else {
@@ -80,16 +80,95 @@ export default {
         },
         *saveModuleConfig({ payload }, { put }) {
             yield put({ type: 'saveNewModuleConfig', payload: payload });
-        }
+        },
+        *deleteModuleConfig({ payload }, { put }) {
+            yield put({ type: 'deleteOldModuleConfig', payload: payload });
+        },
+        *saveColumnCfg({ payload }, { put }) {
+            yield put({ type: 'saveNewColumnConfig', payload: payload });
+        },
+        *deleteColumnConfig({ payload }, { put }) {
+            yield put({ type: 'deleteOldColumnConfig', payload: payload });
+        },
     },
 
     reducers: {
+        deleteOldColumnConfig(state, action) {
+            let allSys = [...state.allSys];
+            allSys.map((item) => {
+                if (item.ohsTableConfigs != null) {
+                    if (item.sysAlias === action.payload.sysAlias && item.sysChineseNme === action.payload.sysChineseNme && item.schemaName === action.payload.schemaName) {
+                        item.ohsTableConfigs.map((table) => {
+                            if (table.schemaName === action.payload.schemaName && table.tableName === action.payload.tableName) {
+                                if (table.columns != null) {
+                                    table.columns = table.columns.filter(column => column.columnName !== action.payload.columnName && column.columnAlias !== action.payload.columnAlias)
+                                } 
+                            }
+                            return table;
+                        })
+                    }
+                }
+                return item;
+            });
+            return Object.assign({}, state, { allSys: allSys });
+        },
+        saveNewColumnConfig(state, action) {
+            let allSys = [...state.allSys];
+            allSys.map((item) => {
+                if (item.ohsTableConfigs != null) {
+                    if (item.sysAlias === action.payload.sysAlias && item.sysChineseNme === action.payload.sysChineseNme && item.schemaName === action.payload.schemaName) {
+                        item.ohsTableConfigs.map((table) => {
+                            if (table.schemaName === action.payload.schemaName && table.tableName === action.payload.tableName) {
+                                if (table.columns != null) {
+                                    table.columns = [...table.columns, { id: action.payload.columnName, columnName: action.payload.columnName, columnAlias: action.payload.columnAlias }]
+                                } else {
+                                    table.columns = [
+                                        {
+                                            id: action.payload.columnName, 
+                                            columnName: action.payload.columnName, 
+                                            columnAlias: action.payload.columnAlias
+                                        }
+                                    ]
+                                }
+                            }
+                            return table;
+                        })
+                    }
+                } else {
+                    if (item.sysAlias === action.payload.sysAlias && item.sysChineseNme === action.payload.sysChineseNme && item.schemaName === action.payload.schemaName) {
+                        item.ohsTableConfigs = [{
+                            schemaName: action.payload.schemaName, 
+                            tableName: action.payload.tableName,
+                            columns: [{
+                                id: action.payload.columnName, columnName: action.payload.columnName, columnAlias: action.payload.columnAlias
+                            }],
+                        }];
+                    }
+                }
+                return item;
+            });
+            return Object.assign({}, state, { allSys: allSys });
+        },
+        deleteOldModuleConfig(state, action) {
+            console.log(state);
+            console.log(action);
+            let allSys = [...state.allSys];
+            allSys.map((item) => {
+                if (item.ohsModuleConfigs != null) {
+                    if (item.sysAlias === action.payload.sysAlias && item.sysChineseNme === action.payload.sysChineseNme) {
+                        item.ohsModuleConfigs = item.ohsModuleConfigs.filter(ohsModuleConfig => ohsModuleConfig.moduleName !== action.payload.moduleName && ohsModuleConfig.moduleAlias !== action.payload.moduleAlias);
+                    }
+                } 
+                return item;
+            });
+            return Object.assign({}, state, { allSys: allSys });
+        },
         saveNewModuleConfig(state, action) {
             console.log(state)
             console.log(action)
             let allSys = [...state.allSys];
             allSys.map((item) => {
-                if(item.ohsModuleConfigs != null) {
+                if (item.ohsModuleConfigs != null) {
                     if (item.sysAlias === action.payload.sysAlias && item.sysChineseNme === action.payload.sysChineseNme) {
                         item.ohsModuleConfigs = [...item.ohsModuleConfigs, { id: action.payload.moduleAlias, moduleAlias: action.payload.moduleAlias, moduleName: action.payload.moduleName }];
                     }
@@ -142,8 +221,6 @@ export default {
             return Object.assign({}, state, { singleSqlConfig: listData })
         },
         deleteSysDelSys(state, action) {
-            console.log(state)
-            console.log(action)
             return Object.assign({}, state, { allSys: state.allSys.filter(sysCfg => sysCfg.sysAlias !== action.payload.sysAlias && sysCfg.sysChineseNme !== action.payload.sysChineseNme) })
         },
     },

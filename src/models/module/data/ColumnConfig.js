@@ -55,7 +55,7 @@ export default {
             }
         },
         *deleteById({ payload }, { call, put }) {
-            const result = yield call(deleteById, payload);
+            const result = yield call(deleteById, payload.id);
             if (result.data.status === 500) {
                 error(result.data.statusText);
             } else {
@@ -78,10 +78,28 @@ export default {
         *deleteSys({ payload }, { call, put }) {
             yield put({ type: 'deleteSysDelSys', payload: payload });
         },
+        *deleteTableConfig({payload}, {put}) {
+            yield put({ type: 'deleteOldTableConfig', payload: payload });
+        },
     },
 
     reducers: {
+        deleteOldTableConfig(state, action) {
+            console.log(state)
+            console.log(action)
+            let allSys = [...state.allSys];
+            allSys.map((item) => {
+                if (item.ohsTableConfigs != null) {
+                    if (item.sysAlias === action.payload.sysAlias && item.sysChineseNme === action.payload.sysChineseNme) {
+                        item.ohsTableConfigs = item.ohsTableConfigs.filter(ohsTableConfig => ohsTableConfig.tableName !== action.payload.tableName && ohsTableConfig.tableChnName !== action.payload.tableChnName);
+                    }
+                } 
+                return item;
+            });
+            return Object.assign({}, state, { allSys: allSys });
+        },
         saveTable(state, action) {
+            console.log(state)
             let allSys = [...state.allSys];
             allSys.map((item) => {
                 if (item.ohsTableConfigs != null) {

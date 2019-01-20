@@ -6,6 +6,8 @@ export function CommonDataField(props) {
     columns.push({
         title: '操作',
         key: 'action',
+        fixed: 'right',
+        width: 220,
         render: (text, record) => (
             <span>
                 <CommonUpdateField onDelete={props.onDelete} records={record} onUpdate={props.onUpdate}
@@ -26,5 +28,6 @@ export function CommonDataField(props) {
         })
     }
 
-    return <Table columns={columns} dataSource={props.data != null?props.data[props.queryFields['dataName']]:null} bordered />;
+    return <Table columns={columns} dataSource={props.data != null?props.data[props.queryFields['dataName']]:null} 
+    bordered scroll={props.queryFields.scroll}/>;
 }

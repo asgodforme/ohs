@@ -15,7 +15,7 @@ export default {
 
     subscriptions: {
         setup({ dispatch, history }) {
-             // 同一加载
+            // 同一加载
             // const data = dispatch({ type: 'getAllSysWhenInit', payload: { sysAlias: '', sysChineseNme: '' } });
             // data.then(function (result) {
             //     dispatch({ type: 'userConfig/saveAllSys', payload: result });
@@ -51,7 +51,7 @@ export default {
             }
         },
         *deleteById({ payload }, { call, put }) {
-            const result = yield call(deleteById, payload);
+            const result = yield call(deleteById, payload.id);
             if (result.data.status === 500) {
                 error(result.data.statusText);
             } else {
@@ -74,9 +74,74 @@ export default {
         *deleteSys({ payload }, { call, put }) {
             yield put({ type: 'deleteSysDelSys', payload: payload });
         },
+        *deleteTableConfig({ payload }, { put }) {
+            yield put({ type: 'deleteOldTableConfig', payload: payload });
+        },
+        *saveColumnConfig({ payload }, { put }) {
+            yield put({ type: 'saveNewColumnConfig', payload: payload });
+        },
+        *deleteColumnConfig({ payload }, { put }) {
+            yield put({ type: 'deleteOldColumnConfig', payload: payload });
+        },
     },
 
     reducers: {
+        deleteOldColumnConfig(state, action) {
+            let allSys = [...state.allSys];
+            allSys.map((item) => {
+                if (item.ohsTableConfigs != null) {
+                    if (item.sysAlias === action.payload.sysAlias && item.sysChineseNme === action.payload.sysChineseNme && item.schemaName === action.payload.schemaName) {
+                        item.ohsTableConfigs.map((table) => {
+                            if (table.schemaName === action.payload.schemaName && table.tableName === action.payload.tableName) {
+                                if (table.columns != null) {
+                                    table.columns = table.columns.filter(column => column.columnName !== action.payload.columnName && column.columnAlias !== action.payload.columnAlias)
+                                } 
+                            }
+                            return table;
+                        })
+                    }
+                }
+                return item;
+            });
+            return Object.assign({}, state, { allSys: allSys });
+        },
+        saveNewColumnConfig(state, action) {
+            let allSys = [...state.allSys];
+            allSys.map((item) => {
+                if (item.ohsTableConfigs != null) {
+                    if (item.sysAlias === action.payload.sysAlias && item.sysChineseNme === action.payload.sysChineseNme && item.schemaName === action.payload.schemaName) {
+                        item.ohsTableConfigs.map((table) => {
+                            if (table.schemaName === action.payload.schemaName && table.tableName === action.payload.tableName) {
+                                if (table.columns != null) {
+                                    table.columns = [...table.columns, { id: action.payload.columnName, columnName: action.payload.columnName, columnAlias: action.payload.columnAlias }]
+                                } else {
+                                    table.columns = [
+                                        {
+                                            id: action.payload.columnName, 
+                                            columnName: action.payload.columnName, 
+                                            columnAlias: action.payload.columnAlias
+                                        }
+                                    ]
+                                }
+                            }
+                            return table;
+                        })
+                    }
+                } else {
+                    if (item.sysAlias === action.payload.sysAlias && item.sysChineseNme === action.payload.sysChineseNme && item.schemaName === action.payload.schemaName) {
+                        item.ohsTableConfigs = [{
+                            schemaName: action.payload.schemaName, 
+                            tableName: action.payload.tableName,
+                            columns: [{
+                                id: action.payload.columnName, columnName: action.payload.columnName, columnAlias: action.payload.columnAlias
+                            }],
+                        }];
+                    }
+                }
+                return item;
+            });
+            return Object.assign({}, state, { allSys: allSys });
+        },
         save(state, action) {
             return { ...state, enumValueConfig: action.payload.data };
         },
@@ -107,8 +172,20 @@ export default {
         deleteSysDelSys(state, action) {
             console.log(state)
             console.log(action)
-            return Object.assign({}, state, { allSys: state.allSys.filter(sysCfg => sysCfg.sysAlias !== action.payload.sysAlias && sysCfg.sysChineseNme !== action.payload.sysChineseNme ) })
+            return Object.assign({}, state, { allSys: state.allSys.filter(sysCfg => sysCfg.sysAlias !== action.payload.sysAlias && sysCfg.sysChineseNme !== action.payload.sysChineseNme) })
         },
+        deleteOldTableConfig(state, action) {
+            let allSys = [...state.allSys];
+            allSys.map((item) => {
+                if (item.ohsTableConfigs != null) {
+                    if (item.sysAlias === action.payload.sysAlias && item.sysChineseNme === action.payload.sysChineseNme) {
+                        item.ohsTableConfigs = item.ohsTableConfigs.filter(ohsTableConfig => ohsTableConfig.tableName !== action.payload.tableName && ohsTableConfig.tableChnName !== action.payload.tableChnName);
+                    }
+                }
+                return item;
+            });
+            return Object.assign({}, state, { allSys: allSys });
+        }
     },
 
 };

@@ -3,6 +3,7 @@ import { connect } from 'dva';
 import CommonQueryField from '../../components/module/common/CommonQueryField'
 
 const queryFields = {
+  scroll: {},
   dataName: 'userConfig',
   updateTitle: '修改用户',
   addTitle: '新增用户',

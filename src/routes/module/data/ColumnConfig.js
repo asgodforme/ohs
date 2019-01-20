@@ -73,12 +73,33 @@ const ColumnConfig = ({ dispatch, columnConfig }) => {
       type: 'columnConfig/saveColumnConfig',
       payload: columnConfig,
     });
+    // 字段新增时给枚举值配置新增对应字段
+    dispatch({
+      type: 'enumValueConfig/saveColumnConfig',
+      payload: columnConfig,
+    });
+    //字段新增时给单表sql配置新增对应的字段
+    dispatch({
+      type: 'singleSqlConfig/saveColumnCfg',
+      payload: columnConfig,
+    });
+
   }
-  function deleteColumnConfig(id) {
+  function deleteColumnConfig(columnConfig) {
     dispatch({
       type: 'columnConfig/deleteById',
-      payload: id,
+      payload: columnConfig,
     })
+    // 字段删除时给枚举值配置删除对应字段
+    dispatch({
+      type: 'enumValueConfig/deleteColumnConfig',
+      payload: columnConfig,
+    });
+    // 字段删除时给单表sql配置删除对应的字段
+    dispatch({
+      type: 'singleSqlConfig/deleteColumnConfig',
+      payload: columnConfig,
+    });
   }
   function updateColumn(columnConfig) {
     dispatch({
