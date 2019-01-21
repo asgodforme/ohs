@@ -7,6 +7,7 @@ const RadioGroup = Radio.Group;
 
 class addCreateForm extends React.Component {
   constructor(props) {
+    console.log(props.allSys)
     super();
     let sysInfos = [];
     let sysTableInfos = {};
@@ -19,38 +20,42 @@ class addCreateForm extends React.Component {
       if (sysInfos.indexOf(props.allSys[i].sysAlias) <= -1) {
         sysInfos.push(props.allSys[i].sysAlias);
       }
-      if (props.allSys[i].ohsTableConfigs != null) {
+
+      if (props.allSys[i].ohsModuleConfigs != null) {
         let moduleInfo = [];
         let moduleChnInfo = [];
-
         for (let j = 0; j < props.allSys[i].ohsModuleConfigs.length; j++) {
           moduleInfo.push(props.allSys[i].ohsModuleConfigs[j].moduleAlias);
           moduleChnInfo[props.allSys[i].ohsModuleConfigs[j].moduleAlias] = props.allSys[i].ohsModuleConfigs[j].moduleName;
         }
         moduleInfos[props.allSys[i].sysAlias] = moduleInfo;
         moduleChnInfos[props.allSys[i].sysAlias] = moduleChnInfo;
+      }
 
+      if (props.allSys[i].ohsTableConfigs != null) {
         let sysTableInfoss = [];
         let sysTableChnInfo = {};
-        for (let j = 0; j < props.allSys[i].ohsTableConfigs.length; j++) {
-          sysTableInfoss.push(props.allSys[i].ohsTableConfigs[j].tableName);
-          sysTableChnInfo[props.allSys[i].ohsTableConfigs[j].tableName] = props.allSys[i].ohsTableConfigs[j].tableChnName;
-          // 遍历columns
-          let sysTableColumnInfo = [];
-          let sysTableColumnChnInfo = [];
-          if (props.allSys[i].ohsTableConfigs[j].columns != null) {
-            for (let k = 0; k < props.allSys[i].ohsTableConfigs[j].columns.length; k++) {
-              if (sysTableColumnInfo.indexOf(props.allSys[i].ohsTableConfigs[j].columns[k].columnName) === -1) {
-                sysTableColumnInfo.push(props.allSys[i].ohsTableConfigs[j].columns[k].columnName);
+        if (props.allSys[i].ohsTableConfigs != null) {
+          for (let j = 0; j < props.allSys[i].ohsTableConfigs.length; j++) {
+            sysTableInfoss.push(props.allSys[i].ohsTableConfigs[j].tableName);
+            sysTableChnInfo[props.allSys[i].ohsTableConfigs[j].tableName] = props.allSys[i].ohsTableConfigs[j].tableChnName;
+            if (props.allSys[i].ohsTableConfigs[j].columns != null) {
+              // 遍历columns
+              let sysTableColumnInfo = [];
+              let sysTableColumnChnInfo = [];
+              for (let k = 0; k < props.allSys[i].ohsTableConfigs[j].columns.length; k++) {
+                if (sysTableColumnInfo.indexOf(props.allSys[i].ohsTableConfigs[j].columns[k].columnName) === -1) {
+                  sysTableColumnInfo.push(props.allSys[i].ohsTableConfigs[j].columns[k].columnName);
+                }
+                sysTableColumnChnInfo[props.allSys[i].ohsTableConfigs[j].columns[k].columnName] = props.allSys[i].ohsTableConfigs[j].columns[k].columnAlias;
               }
-              sysTableColumnChnInfo[props.allSys[i].ohsTableConfigs[j].columns[k].columnName] = props.allSys[i].ohsTableConfigs[j].columns[k].columnAlias;
+              sysTableColumnInfos[props.allSys[i].ohsTableConfigs[j].tableName] = sysTableColumnInfo;
+              sysTableColumnChnInfos[props.allSys[i].ohsTableConfigs[j].tableName] = sysTableColumnChnInfo;
             }
           }
-          sysTableColumnInfos[props.allSys[i].ohsTableConfigs[j].tableName] = sysTableColumnInfo;
-          sysTableColumnChnInfos[props.allSys[i].ohsTableConfigs[j].tableName] = sysTableColumnChnInfo;
+          sysTableInfos[props.allSys[i].sysAlias] = sysTableInfoss;
+          sysTableChnInfos[props.allSys[i].sysAlias] = sysTableChnInfo;
         }
-        sysTableInfos[props.allSys[i].sysAlias] = sysTableInfoss;
-        sysTableChnInfos[props.allSys[i].sysAlias] = sysTableChnInfo;
       }
     }
     this.state = {
@@ -60,7 +65,7 @@ class addCreateForm extends React.Component {
       sysTableInfos: sysTableInfos,
       sysTableChnInfos: sysTableChnInfos,
       moduleInfos: moduleInfos,
-      moduleChnInfos:  moduleChnInfos,
+      moduleChnInfos: moduleChnInfos,
       sysTableColumnInfos: sysTableColumnInfos,
       sysTableColumnChnInfos: sysTableColumnChnInfos,
     }
@@ -114,6 +119,7 @@ class addCreateForm extends React.Component {
     }));
   }
   onSecondCityChange = (value) => {
+    console.log(this.state.tableChns)
     let sysTableColumnInfos = this.state.sysTableColumnInfos;
     let sysTableColumnChnInfos = this.state.sysTableColumnChnInfos;
     this.setState({
@@ -126,7 +132,8 @@ class addCreateForm extends React.Component {
       return;
     }
     let fieldsValues = {};
-    if (queryFields.dataName === 'singleSqlConfig' && queryFields.fieldNames.indexOf('tableChnName') > -1) {
+    if ((queryFields.dataName === 'singleSqlConfig' || queryFields.dataName === 'columnConfig' || queryFields.dataName === 'enumValueConfig')
+    && queryFields.fieldNames.indexOf('tableChnName') > -1) {
       fieldsValues.tableChnName = this.state.tableChns[value];
     }
     form.setFieldsValue(fieldsValues);
@@ -281,6 +288,8 @@ class addCreateForm extends React.Component {
                 (
                   queryFields.fieldNames[i] === 'sysChineseNme' || queryFields.fieldNames[i] === 'schemaName'
                   || (queryFields.fieldNames[i] === 'tableChnName' && queryFields.dataName === 'singleSqlConfig')
+                  || (queryFields.fieldNames[i] === 'tableChnName' && queryFields.dataName === 'columnConfig')
+                  || (queryFields.fieldNames[i] === 'tableChnName' && queryFields.dataName === 'enumValueConfig')
                   || (queryFields.fieldNames[i] === 'moduleName' && queryFields.dataName === 'singleSqlConfig')
                   || (queryFields.fieldNames[i] === 'columnAlias' && queryFields.dataName === 'singleSqlConfig')
                   || (queryFields.fieldNames[i] === 'columnAlias' && queryFields.dataName === 'enumValueConfig')
@@ -336,6 +345,7 @@ export class CommonAddField extends React.Component {
     console.log(form)
 
     form.validateFields((err, values) => {
+      console.log(values);
       if (err) {
         error(err);
         return;

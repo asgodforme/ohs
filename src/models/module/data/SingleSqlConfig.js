@@ -139,6 +139,7 @@ export default {
                         item.ohsTableConfigs = [{
                             schemaName: action.payload.schemaName, 
                             tableName: action.payload.tableName,
+                            tableChnName: action.payload.tableChnName,
                             columns: [{
                                 id: action.payload.columnName, columnName: action.payload.columnName, columnAlias: action.payload.columnAlias
                             }],

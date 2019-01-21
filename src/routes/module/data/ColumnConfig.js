@@ -3,11 +3,12 @@ import { connect } from 'dva';
 import CommonQueryField from '../../../components/module/common/CommonQueryField'
 
 const queryFields = {
+  scroll: {},
   dataName: 'columnConfig',
   updateTitle: '修改字段信息',
   addTitle: '新增字段信息',
-  fieldDescs: ['系统码', '系统名', 'Schema名', '归属表名', '字段名', '字段别名', '是否显示'],
-  fieldNames: ['sysAlias', 'sysChineseNme', 'schemaName', 'tableName', 'columnName', 'columnAlias', 'isHide'],
+  fieldDescs: ['系统码', '系统名', 'Schema名', '归属表名', '表中文名', '字段名', '字段别名', '是否显示'],
+  fieldNames: ['sysAlias', 'sysChineseNme', 'schemaName', 'tableName', 'tableChnName', 'columnName', 'columnAlias', 'isHide'],
 }
 
 const columns = [{
@@ -30,6 +31,10 @@ const columns = [{
   title: '归属表名',
   dataIndex: 'tableName',
   key: 'tableName',
+}, {
+  title: '表中文名',
+  dataIndex: 'tableChnName',
+  key: 'tableChnName',
 }, {
   title: '字段名',
   dataIndex: 'columnName',
