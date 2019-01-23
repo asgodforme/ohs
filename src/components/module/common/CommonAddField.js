@@ -7,7 +7,6 @@ const RadioGroup = Radio.Group;
 
 class addCreateForm extends React.Component {
   constructor(props) {
-    console.log(props.allSys)
     super();
     let sysInfos = [];
     let sysTableInfos = {};
