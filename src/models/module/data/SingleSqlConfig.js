@@ -245,7 +245,8 @@ export default {
             let listData = [...state.singleSqlConfig];
             listData = (listData || []).map((item, index) => {
                 if (item.id === action.payload.id) {
-                    return action.payload;
+                    item.columnAlias = "|" + action.payload.columnAlias.replace(",", "|");
+                    item.columnName = "|" + action.payload.columnName.replace(",", "|");
                 }
                 return item;
             });

@@ -132,7 +132,7 @@ class addCreateForm extends React.Component {
     }
     let fieldsValues = {};
     if ((queryFields.dataName === 'singleSqlConfig' || queryFields.dataName === 'columnConfig' || queryFields.dataName === 'enumValueConfig')
-    && queryFields.fieldNames.indexOf('tableChnName') > -1) {
+      && queryFields.fieldNames.indexOf('tableChnName') > -1) {
       fieldsValues.tableChnName = this.state.tableChns[value];
     }
     form.setFieldsValue(fieldsValues);
@@ -148,7 +148,7 @@ class addCreateForm extends React.Component {
     let fieldsValues = {};
     if ((queryFields.dataName === 'enumValueConfig' || queryFields.dataName === 'singleSqlConfig')
       && queryFields.fieldNames.indexOf('columnAlias') > -1) {
-      fieldsValues.columnAlias = this.state.columnsChns[value];
+      fieldsValues.columnName = this.state.columnsChns[value];
     }
     form.setFieldsValue(fieldsValues);
   }
@@ -226,7 +226,7 @@ class addCreateForm extends React.Component {
               </Select>
             )}
           </FormItem>)
-      } else if (queryFields.dataName === 'singleSqlConfig' && queryFields.fieldNames[i] === 'columnName') {
+      } else if (queryFields.dataName === 'singleSqlConfig' && queryFields.fieldNames[i] === 'columnAlias') {
         formItem.push(
           <FormItem key={i} label={queryFields.fieldDescs[i]}>
             {getFieldDecorator(queryFields.fieldNames[i], {
@@ -267,7 +267,15 @@ class addCreateForm extends React.Component {
               </Select>
             )}
           </FormItem>)
-
+      } else if (queryFields.dataName === 'singleSqlConfig' && queryFields.fieldNames[i] === 'remark') {
+        formItem.push(
+          <FormItem key={i} label={queryFields.fieldDescs[i] + '(新增时，如果不存在新增表的单表SQL，则此备注有效，否则无效)'}>
+            {getFieldDecorator(queryFields.fieldNames[i], {
+              rules: [{ required: true, message: '新增时，如果不存在新增表的单表SQL，则此备注有效，否则无效' }],
+            })(
+              <Input />
+            )}
+          </FormItem>)
       } else if (queryFields.dataName === 'singleSqlConfig' && queryFields.fieldNames[i] === 'singleTableSql') {
         formItem.push(
           <FormItem key={i} label={queryFields.fieldDescs[i]}>
@@ -290,7 +298,7 @@ class addCreateForm extends React.Component {
                   || (queryFields.fieldNames[i] === 'tableChnName' && queryFields.dataName === 'columnConfig')
                   || (queryFields.fieldNames[i] === 'tableChnName' && queryFields.dataName === 'enumValueConfig')
                   || (queryFields.fieldNames[i] === 'moduleName' && queryFields.dataName === 'singleSqlConfig')
-                  || (queryFields.fieldNames[i] === 'columnAlias' && queryFields.dataName === 'singleSqlConfig')
+                  || (queryFields.fieldNames[i] === 'columnName' && queryFields.dataName === 'singleSqlConfig')
                   || (queryFields.fieldNames[i] === 'columnAlias' && queryFields.dataName === 'enumValueConfig')
                 )
                   ? true : false}

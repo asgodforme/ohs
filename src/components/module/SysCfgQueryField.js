@@ -3,6 +3,7 @@ import React from 'react';
 import { Form, Row, Col, Input, Button } from 'antd';
 import { SysCfgDataField } from './SysCfgDataField';
 import { SysCfgAddField } from './SysCfgAddField';
+import { info } from './SysCfgQueryFieldAlert';
 const FormItem = Form.Item;
 
 class AdvancedSearchForm extends React.Component {
@@ -11,17 +12,57 @@ class AdvancedSearchForm extends React.Component {
     super();
     this.state = {
       queryParm: props.data.queryParm,
+      ohsPagination: {
+        current: props.data.systemConfig.number + 1,
+        pageSize: props.data.systemConfig.size,
+        onChange: this.doPagination,
+        total: props.data.systemConfig.totalElements,
+      },
+      sysAlias: '',
+      sysChineseNme: '',
+      schemaName: '',
     }
+
+    if (props.data.systemConfig.content.length === 0) {
+      info("无数据显示，请点击查询按钮查询！");
+    }
+
+    console.log('constructor')
+    console.log(props);
+    console.log('state...')
+    console.log(this.state)
+  }
+
+  doPagination = (page, pageSize) => {
+    console.log(page)
+    console.log(pageSize)
+    let querySys = {
+      sysAlias: this.state.sysAlias,
+      sysChineseNme: this.state.sysChineseNme,
+      schemaName: this.state.schemaName,
+      current: page,
+      pageSize: pageSize,
+    }
+    this.props.query(querySys);
   }
 
   handleSearch = (e) => {
     e.preventDefault();
+    console.log(e);
     this.props.form.validateFields((err, values) => {
+      console.log(values);
       let querySys = {
         sysAlias: values['sysAlias'],
         sysChineseNme: values['sysChineseNme'],
         schemaName: values['schemaName'],
+        current: this.state.ohsPagination.current,
+        pageSize: this.state.ohsPagination.pageSize,
       }
+      this.setState(Object.assign({}, this.state, {
+        sysAlias: values['sysAlias'],
+        sysChineseNme: values['sysChineseNme'],
+        schemaName: values['schemaName'],
+      }));
       this.props.query(querySys);
     });
 
@@ -81,8 +122,7 @@ class AdvancedSearchForm extends React.Component {
             <SysCfgAddField save={this.props.save} />
           </Col>
         </Row>
-        <SysCfgDataField data={this.props.data} onDelete={this.handleDelete} onUpdate={this.props.update} />
-
+        <SysCfgDataField data={this.props.data} onDelete={this.handleDelete} onUpdate={this.props.update} ohsPagination={this.state.ohsPagination} />
       </Form>
     );
   }

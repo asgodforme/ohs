@@ -321,9 +321,19 @@ export class CommonUpdateField extends React.Component {
         form.validateFields((err, values) => {
             console.log(values);
             if (this.props.queryFields.dataName === 'singleSqlConfig') {
-
+                let columnAliasArray =  values.columnAlias;
+                let columnAliasStr = '';
+                let columnNameStr = '';
+                columnAliasArray.filter(d => d).map((col, i) => {
+                    columnAliasStr += col;
+                    columnAliasStr += ',';
+                    columnNameStr += values.columnName[i];
+                    columnNameStr += ',';
+                    return col;
+                })
+                values.columnName = columnNameStr;
+                values.columnAlias = columnAliasStr;
             }
-            return;
             if (err) {
                 error(err);
                 return;

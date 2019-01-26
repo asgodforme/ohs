@@ -7,7 +7,13 @@ export default {
     namespace: 'systemConfig',
 
     state: {
-        systemConfig: []
+        systemConfig: {
+            content: [],
+            number: 0,
+            totalElements: 10,
+            size: 10,
+            isFirstLoad: true,
+        }
     },
 
     subscriptions: {
@@ -36,7 +42,6 @@ export default {
             }
         },
         *deleteById({ payload }, { call, put }) {
-            console.log(payload);
             const result = yield call(deleteById, payload.id);
             if (result.data.status === 500) {
                 error(result.data.statusText);
@@ -61,14 +66,26 @@ export default {
             return { ...state, queryParm: action.payload };
         },
         save(state, action) {
+            console.log(action)
             return { ...state, systemConfig: action.payload.data };
         },
         saveOne(state, action) {
-            let listData = [...state.systemConfig, action.payload];
-            return Object.assign({}, state, { systemConfig: listData })
+            let listData = [...state.systemConfig.content, action.payload];
+            let totalElements = state.systemConfig.totalElements;
+            return Object.assign({}, state, { systemConfig: Object.assign({}, state.systemConfig, { content: listData, totalElements: totalElements + 1 }) })
         },
         delete(state, action) {
-            return Object.assign({}, state, { systemConfig: state.systemConfig.filter(sys => sys.id !== action.payload.id) })
+            console.log(state);
+            let totalElements = state.systemConfig.totalElements;
+            let number = 0;
+            if (totalElements > state.systemConfig.size) {
+                number = (totalElements - 1) % state.systemConfig.size === 0 ? state.systemConfig.number - 1 : state.systemConfig.number;
+            } else {
+                number = state.systemConfig.number;
+            }
+            console.log("----------------------")
+            console.log(number)
+            return Object.assign({}, state, { systemConfig:  Object.assign({}, state.systemConfig, { content: state.systemConfig.content.filter(sys => sys.id !== action.payload.id), totalElements: totalElements - 1, number: number }) })
         },
         update(state, action) {
             let listData = [...state.systemConfig];

@@ -1,6 +1,7 @@
 import { Table } from 'antd';
 import { SysCfgUpdateField } from './SysCfgUpdateField';
 
+
 export function SysCfgDataField(props) {
 
     const columns = [{
@@ -45,7 +46,7 @@ export function SysCfgDataField(props) {
         ),
     }];
 
-    (props.data.systemConfig || []).map((sysConfig, index) => {
+    (props.data.systemConfig.content || []).map((sysConfig, index) => {
         sysConfig.key = sysConfig.id;
         sysConfig.createUser = sysConfig.createUser;
         sysConfig.createDate = sysConfig.createDate;
@@ -53,5 +54,5 @@ export function SysCfgDataField(props) {
         sysConfig.updateDate = sysConfig.updateDate;
         return sysConfig;
     })
-    return <Table columns={columns} dataSource={props.data.systemConfig} bordered />;
+    return <Table columns={columns} dataSource={props.data.systemConfig.content} bordered pagination={props.ohsPagination}/>;
 }
