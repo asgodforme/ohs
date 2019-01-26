@@ -39,6 +39,7 @@ export default {
                 error(enumValueCfg.data.statusText);
             } else {
                 yield put({ type: 'save', payload: enumValueCfg });
+                yield put({ type: 'saveQueryParm', payload: payload });
             }
         },
         *saveEnumValueConfig({ payload }, { call, put }) {
@@ -86,6 +87,9 @@ export default {
     },
 
     reducers: {
+        saveQueryParm(state, action) {
+            return { ...state, queryParm: action.payload };
+        },
         deleteOldColumnConfig(state, action) {
             let allSys = [...state.allSys];
             allSys.map((item) => {

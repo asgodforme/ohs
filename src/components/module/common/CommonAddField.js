@@ -339,10 +339,7 @@ export class CommonAddField extends React.Component {
     this.setState({ visible: false });
   }
   handleCreate = () => {
-    console.log("1")
     const form = this.form;
-    console.log(form)
-
     form.validateFields((err, values) => {
       console.log(values);
       if (err) {

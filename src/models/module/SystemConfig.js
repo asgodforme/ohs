@@ -23,6 +23,7 @@ export default {
                 error(result.data.statusText);
             } else {
                 yield put({ type: 'save', payload: result });
+                yield put({ type: 'saveQueryParm', payload: payload });
             }
         },
         *saveSysConfig({ payload }, { call, put }) {
@@ -56,6 +57,9 @@ export default {
     },
 
     reducers: {
+        saveQueryParm(state, action) {
+            return { ...state, queryParm: action.payload };
+        },
         save(state, action) {
             return { ...state, systemConfig: action.payload.data };
         },

@@ -9,6 +9,9 @@ class AdvancedSearchForm extends React.Component {
 
   constructor(props) {
     super();
+    this.state = {
+      queryParm: props.data.queryParm,
+    }
   }
 
   handleSearch = (e) => {
@@ -17,13 +20,21 @@ class AdvancedSearchForm extends React.Component {
       let querySys = {
         sysAlias: values['sysAlias'],
         sysChineseNme: values['sysChineseNme'],
+        schemaName: values['schemaName'],
       }
       this.props.query(querySys);
     });
+
   }
 
   handleReset = () => {
     this.props.form.resetFields();
+    let fieldsValues = {
+      sysAlias: '',
+      sysChineseNme: '',
+      schemaName: '',
+    }
+    this.props.form.setFieldsValue(fieldsValues);
   }
 
   handleDelete = (sysCfg) => {
@@ -40,12 +51,14 @@ class AdvancedSearchForm extends React.Component {
 
     const children = [];
     const fieldDescs = ['系统码', '系统名', 'Schema'];
-    const fieldNames = ['sysAlias', 'sysChineseNme', 'Schema']
+    const fieldNames = ['sysAlias', 'sysChineseNme', 'schemaName']
     for (let i = 0; i < fieldDescs.length; i++) {
       children.push(
         <Col span={4} key={i}>
           <FormItem {...formItemLayout} label={fieldDescs[i]}>
-            {getFieldDecorator(fieldNames[i])(
+            {getFieldDecorator(fieldNames[i], {
+              initialValue: this.state.queryParm ? this.state.queryParm[fieldNames[i]] : null,
+            })(
               <Input placeholder={"请输入" + fieldDescs[i]} />
             )}
           </FormItem>
@@ -80,7 +93,8 @@ const SysCfgQueryField = (props) => {
   const WrappedAdvancedSearchForm = Form.create()(AdvancedSearchForm);
   return (
     <div>
-      <WrappedAdvancedSearchForm query={props.query} data={props.data} save={props.save} delete={props.delete} update={props.update} />
+      <WrappedAdvancedSearchForm query={props.query} data={props.data} save={props.save} delete={props.delete} update={props.update}
+      />
     </div>
   );
 };

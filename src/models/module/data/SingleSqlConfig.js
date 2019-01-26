@@ -39,13 +39,13 @@ export default {
                 error(singleSqlCfg.data.statusText);
             } else {
                 yield put({ type: 'save', payload: singleSqlCfg });
+                yield put({ type: 'saveQueryParm', payload: payload });
             }
         },
         *getAllTableWhenAdd({ payload }, { call, put }) {
             yield put({ type: 'saveTable', payload: payload });
         },
         *saveSingleSqlConfig({ payload }, { call, put }) {
-            console.log(payload);
             const result = yield call(saveSingleSqlConfig, payload);
             if (result.data.status === 500) {
                 error(result.data.statusText);
@@ -93,6 +93,9 @@ export default {
     },
 
     reducers: {
+        saveQueryParm(state, action) {
+            return { ...state, queryParm: action.payload };
+        },
         deleteOldColumnConfig(state, action) {
             let allSys = [...state.allSys];
             allSys.map((item) => {
@@ -198,7 +201,34 @@ export default {
             return { ...state, singleSqlConfig: action.payload.data };
         },
         saveOne(state, action) {
-            let listData = [...state.singleSqlConfig, action.payload];
+            let listData;
+            // 新增已经存在的单表sql配置不返回主键
+            if (action.payload.id === null || action.payload.id === '') {
+                listData = [...state.singleSqlConfig];
+                // 遍历当前数据域，加新增的字段附加到已经存在的节点上
+                listData.map(singleSqlCfg => {
+                    if (action.payload.sysAlias === singleSqlCfg.sysAlias 
+                        && action.payload.sysChineseNme === singleSqlCfg.sysChineseNme
+                        && action.payload.moduleAlias === singleSqlCfg.moduleAlias
+                        && action.payload.moduleName === singleSqlCfg.moduleName
+                        && action.payload.tableName === singleSqlCfg.tableName
+                        && action.payload.tableChnName === singleSqlCfg.tableChnName) {
+                            if (singleSqlCfg.columnAlias.indexOf("|") > -1) {
+                                singleSqlCfg.columnAlias = singleSqlCfg.columnAlias + action.payload.columnAlias + "|";
+                                singleSqlCfg.columnName = singleSqlCfg.columnName + action.payload.columnName + "|";
+                            } else {
+                                singleSqlCfg.columnAlias = "|" + singleSqlCfg.columnAlias + "|" + action.payload.columnAlias + "|";
+                                singleSqlCfg.columnName = "|" + singleSqlCfg.columnName + "|" + action.payload.columnName + "|";
+                            }
+                        }
+                    return singleSqlCfg;
+                });
+            } else {
+                // 新增加的单表SQL配置返回了主键，直接附加到当前state上
+                action.payload.columnAlias = "|" + action.payload.columnAlias + "|";
+                action.payload.columnName = "|" + action.payload.columnName + "|";
+                listData = [...state.singleSqlConfig, action.payload];
+            }
             return Object.assign({}, state, { singleSqlConfig: listData })
         },
         saveAllSys(state, action) {

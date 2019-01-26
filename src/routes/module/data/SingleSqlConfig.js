@@ -8,7 +8,7 @@ const queryFields = {
   updateTitle: '修改单表SQL',
   addTitle: '新增单表SQL',
   fieldDescs: ['系统码', '系统名', '模块别名', '模块名', '表名', '表中文名', '查询key', '查询key中文', '备注', '单表SQL'],
-  fieldNames: ['sysAlias', 'sysChineseNme', 'moduleAlias', 'moduleName', 'tableName', 'tableChnName', 'columnName', 'columnAlias', 'remark', 'singleTableSql'],
+  fieldNames: ['sysAlias', 'sysChineseNme', 'moduleAlias', 'moduleName', 'tableName', 'tableChnName', 'columnAlias', 'columnName', 'remark', 'singleTableSql'],
 }
 
 const columns = [{
@@ -50,13 +50,13 @@ const columns = [{
 }, {
   title: '查询key',
   width: 250,
-  dataIndex: 'columnName',
-  key: 'columnName',
+  dataIndex: 'columnAlias',
+  key: 'columnAlias',
 }, {
   title: '查询key中文',
   width: 250,
-  dataIndex: 'columnAlias',
-  key: 'columnAlias',
+  dataIndex: 'columnName',
+  key: 'columnName',
 }, {
   title: '备注',
   width: 300,

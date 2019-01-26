@@ -39,6 +39,7 @@ export default {
                 error(tableCfg.data.statusText);
             } else {
                 yield put({ type: 'save', payload: tableCfg });
+                yield put({ type: 'saveQueryParm', payload: payload });
             }
         },
         *saveTableConfig({ payload }, { call, put }) {
@@ -77,6 +78,9 @@ export default {
     },
 
     reducers: {
+        saveQueryParm(state, action) {
+            return { ...state, queryParm: action.payload };
+        },
         save(state, action) {
             return { ...state, tableConfig: action.payload.data };
         },

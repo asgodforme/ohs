@@ -1,9 +1,10 @@
 import React from 'react';
-import { Button, Modal, Form, Input, Icon, Popconfirm, Select, Radio } from 'antd';
+import { Button, Modal, Form, Input, Icon, Popconfirm, Select, Radio, Card, Checkbox } from 'antd';
 import { warning, error } from '../SysCfgQueryFieldAlert';
 const FormItem = Form.Item;
 const Option = Select.Option;
 const RadioGroup = Radio.Group;
+const CheckboxGroup = Checkbox.Group;
 
 class UpdateCreateForm extends React.Component {
 
@@ -164,6 +165,17 @@ class UpdateCreateForm extends React.Component {
         const { getFieldDecorator } = form;
 
         const formItem = [];
+        if (queryFields.dataName === 'singleSqlConfig') {
+            formItem.push(
+                <FormItem key={-1}>
+                    <Card title="温馨提示">
+                        <p>不支持系统，模块，表信息修改</p>
+                        <p>支持查询key的修改</p>
+                        <p>如有需要，请删除重新配置</p>
+                    </Card>
+                </FormItem>
+            );
+        }
         for (let i = 0; i < queryFields.fieldNames.length; i++) {
             if (queryFields.fieldNames[i] === 'sysAlias') {
                 formItem.push(
@@ -173,7 +185,7 @@ class UpdateCreateForm extends React.Component {
                             rules: [{ required: true, message: '请输入' + queryFields.fieldDescs[i] + '!' }],
                             onChange: this.handleSelectChange,
                         })(
-                            <Select placeholder="请选择系统码">
+                            <Select placeholder="请选择系统码" disabled={queryFields.dataName === 'singleSqlConfig' ? true : false}>
                                 {
                                     allSys.map(item => {
                                         return <Option key={item.id} value={item.sysAlias}>{item.sysAlias}</Option>
@@ -192,7 +204,9 @@ class UpdateCreateForm extends React.Component {
                             rules: [{ required: true, message: '请输入' + queryFields.fieldDescs[i] + '!' }],
                             onChange: this.onSelectTableChange,
                         })(
-                            <Select placeholder="请选择表名" notFoundContent="当前系统下不存在表信息，请在“表配置”中先添加对应系统的表信息！">
+                            <Select placeholder="请选择表名" notFoundContent="当前系统下不存在表信息，请在“表配置”中先添加对应系统的表信息！"
+                                disabled={queryFields.dataName === 'singleSqlConfig' ? true : false}
+                            >
                                 {
                                     (this.state.sysTableInfos[this.state.currentSys] || []).map(table => <Option key={table}>{table}</Option>)
                                 }
@@ -214,7 +228,7 @@ class UpdateCreateForm extends React.Component {
                             </RadioGroup>
                         )}
                     </FormItem>)
-            } else if ((queryFields.dataName === 'singleSqlConfig' || queryFields.dataName === 'enumValueConfig') && queryFields.fieldNames[i] === 'columnName') {
+            } else if ((queryFields.dataName === 'enumValueConfig') && queryFields.fieldNames[i] === 'columnName') {
                 formItem.push(
                     <FormItem key={i} label={queryFields.fieldDescs[i]}>
                         {getFieldDecorator(queryFields.fieldNames[i], {
@@ -230,26 +244,42 @@ class UpdateCreateForm extends React.Component {
                         )}
                     </FormItem>)
             } else {
-                formItem.push(
-                    <FormItem key={i} label={queryFields.fieldDescs[i]}>
-                        {getFieldDecorator(queryFields.fieldNames[i], {
-                            initialValue: records[queryFields.fieldNames[i]], //这是用来初始化表单数据的
-                            rules: [{ required: true, message: '请输入' + queryFields.fieldDescs[i] + '!' }],
+                if (((queryFields.fieldNames[i] === 'columnAlias' || queryFields.fieldNames[i] === 'columnName')
+                    && queryFields.dataName === 'singleSqlConfig')) {
+                    formItem.push(
+                        <FormItem key={i} label={queryFields.fieldNames[i] === 'columnAlias' ?
+                            queryFields.fieldDescs[i] + "(请勾选需要做条件的key)" : queryFields.fieldDescs[i] + "(仅仅作为对应查询key的中文展示)"
+                        }>{getFieldDecorator(queryFields.fieldNames[i], {
+                            initialValue: records[queryFields.fieldNames[i]].split('|').filter(d => d),
+                            rules: [{ required: true, message: '请勾选' + queryFields.fieldDescs[i] + '!' }],
                         })(
-                            <Input disabled={
-                                (
-                                    queryFields.fieldNames[i] === 'sysChineseNme' || queryFields.fieldNames[i] === 'schemaName'
-                                    || (queryFields.fieldNames[i] === 'tableChnName' && queryFields.dataName === 'singleSqlConfig')
-                                    || (queryFields.fieldNames[i] === 'tableChnName' && queryFields.dataName === 'columnConfig')
-                                    || (queryFields.fieldNames[i] === 'tableChnName' && queryFields.dataName === 'enumValueConfig')
-                                    || (queryFields.fieldNames[i] === 'moduleName' && queryFields.dataName === 'singleSqlConfig')
-                                    || (queryFields.fieldNames[i] === 'columnAlias' && queryFields.dataName === 'singleSqlConfig')
-                                    || (queryFields.fieldNames[i] === 'columnAlias' && queryFields.dataName === 'enumValueConfig')
-                                )
-                                    ? true : false} />
-                        )}
-                    </FormItem>
-                )
+                            <CheckboxGroup options={records[queryFields.fieldNames[i]].split('|').filter(d => d)}
+                                disabled={queryFields.fieldNames[i] === 'columnAlias' ? false : true}
+                            />)}
+                        </FormItem>
+                    );
+                } else {
+                    formItem.push(
+                        <FormItem key={i} label={queryFields.fieldDescs[i]}>
+                            {getFieldDecorator(queryFields.fieldNames[i], {
+                                initialValue: records[queryFields.fieldNames[i]], //这是用来初始化表单数据的
+                                rules: [{ required: true, message: '请输入' + queryFields.fieldDescs[i] + '!' }],
+                            })(
+                                <Input disabled={
+                                    (
+                                        queryFields.fieldNames[i] === 'sysChineseNme' || queryFields.fieldNames[i] === 'schemaName'
+                                        || (queryFields.fieldNames[i] === 'tableChnName' && queryFields.dataName === 'singleSqlConfig')
+                                        || (queryFields.fieldNames[i] === 'tableChnName' && queryFields.dataName === 'columnConfig')
+                                        || (queryFields.fieldNames[i] === 'tableChnName' && queryFields.dataName === 'enumValueConfig')
+                                        || (queryFields.fieldNames[i] === 'moduleName' && queryFields.dataName === 'singleSqlConfig')
+                                        || (queryFields.fieldNames[i] === 'moduleAlias' && queryFields.dataName === 'singleSqlConfig')
+                                        || (queryFields.fieldNames[i] === 'columnAlias' && queryFields.dataName === 'enumValueConfig')
+                                    )
+                                        ? true : false} />
+                            )}
+                        </FormItem>
+                    )
+                }
             }
         }
 
@@ -289,6 +319,11 @@ export class CommonUpdateField extends React.Component {
     handleCreate = () => {
         const form = this.form;
         form.validateFields((err, values) => {
+            console.log(values);
+            if (this.props.queryFields.dataName === 'singleSqlConfig') {
+
+            }
+            return;
             if (err) {
                 error(err);
                 return;

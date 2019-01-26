@@ -10,12 +10,15 @@ class AdvancedSearchForm extends React.Component {
 
   constructor(props) {
     super();
+    this.state = {
+      queryParm: props.data.queryParm,
+    }
+    console.log(props);
   }
 
   handleSearch = (e) => {
     e.preventDefault();
     this.props.form.validateFields((err, values) => {
-      console.log(values)
       let querySys = {};
       const queryFields = this.props.queryFields;
       for (let i = 0; i < queryFields.fieldNames.length; i++) {
@@ -27,6 +30,12 @@ class AdvancedSearchForm extends React.Component {
 
   handleReset = () => {
     this.props.form.resetFields();
+    let fieldValues = {};
+    const queryFields = this.props.queryFields;
+    for (let i = 0; i < queryFields.fieldNames.length; i++) {
+      fieldValues[queryFields.fieldNames[i]] = '';
+    }
+    this.props.form.setFieldsValue(fieldValues);
   }
 
   handleDelete = (id) => {
@@ -70,7 +79,9 @@ class AdvancedSearchForm extends React.Component {
         children.push(
           <Col span={6} key={i}>
             <FormItem {...formItemLayout} label={queryFields.fieldDescs[i]}>
-              {getFieldDecorator(queryFields.fieldNames[i])(
+              {getFieldDecorator(queryFields.fieldNames[i], {
+                initialValue: this.state.queryParm ? this.state.queryParm[queryFields.fieldNames[i]] : null,
+              })(
                 <Input placeholder={"请输入" + queryFields.fieldDescs[i]} />
               )}
             </FormItem>

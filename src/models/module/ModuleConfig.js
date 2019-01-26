@@ -44,6 +44,7 @@ export default {
                 error(moduleCfg.data.statusText);
             } else {
                 yield put({ type: 'save', payload: moduleCfg });
+                yield put({ type: 'saveQueryParm', payload: payload });
             }
         },
         *saveModuleConfig({ payload }, { call, put }) {
@@ -79,6 +80,9 @@ export default {
     },
 
     reducers: {
+        saveQueryParm(state, action) {
+            return { ...state, queryParm: action.payload };
+        },
         save(state, action) {
             return { ...state, moduleConfig: action.payload.data };
         },

@@ -39,6 +39,7 @@ export default {
                 error(columnCfg.data.statusText);
             } else {
                 yield put({ type: 'save', payload: columnCfg });
+                yield put({ type: 'saveQueryParm', payload: payload });
             }
         },
         *getAllTableWhenAdd({ payload }, { call, put }) {
@@ -84,6 +85,9 @@ export default {
     },
 
     reducers: {
+        saveQueryParm(state, action) {
+            return { ...state, queryParm: action.payload };
+        },
         deleteOldTableConfig(state, action) {
             console.log(state)
             console.log(action)
