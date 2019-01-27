@@ -8,13 +8,18 @@ export default {
 
     state: {
         allSys: [],
-        userConfig: [],
+        userConfig: {
+            content: [],
+            number: 0,
+            totalElements: 0,
+            size: 8,
+        }
 
     },
 
     subscriptions: {
         setup({ dispatch, history }) {
-           
+
         },
     },
 
@@ -25,6 +30,7 @@ export default {
                 error(userCfg.data.statusText);
             } else {
                 yield put({ type: 'save', payload: userCfg });
+                yield put({ type: 'saveQueryParm', payload: payload });
             }
         },
         *saveUserConfig({ payload }, { call, put }) {
@@ -37,7 +43,7 @@ export default {
             }
         },
         *deleteById({ payload }, { call, put }) {
-            const result = yield call(deleteById, payload);
+            const result = yield call(deleteById, payload.id);
             if (result.data.status === 500) {
                 error(result.data.statusText);
             } else {
@@ -57,28 +63,39 @@ export default {
     },
 
     reducers: {
+        saveQueryParm(state, action) {
+            return { ...state, queryParm: action.payload };
+        },
         save(state, action) {
             return { ...state, userConfig: action.payload.data };
         },
         saveOne(state, action) {
-            let listData = [...state.userConfig, action.payload];
-            return Object.assign({}, state, { userConfig: listData })
+            let listData = [...state.userConfig.content, action.payload];
+            let totalElements = state.userConfig.totalElements;
+            return Object.assign({}, state, { userConfig: Object.assign({}, state.userConfig, { content: listData, totalElements: totalElements + 1 }) })
         },
         saveAllSys(state, action) {
             return { ...state, allSys: action.payload.data };
         },
         delete(state, action) {
-            return Object.assign({}, state, { userConfig: state.userConfig.filter(moduleCfg => moduleCfg.id !== action.payload.id) })
+            let totalElements = state.userConfig.totalElements;
+            let number = 0;
+            if (totalElements > state.userConfig.size) {
+                number = (totalElements - 1) % state.userConfig.size === 0 ? state.userConfig.number - 1 : state.userConfig.number;
+            } else {
+                number = state.userConfig.number;
+            }
+            return Object.assign({}, state, { userConfig: Object.assign({}, state.userConfig, { content: state.userConfig.content.filter(userCfg => userCfg.id !== action.payload.id), totalElements: totalElements - 1, number: number }) })
         },
         update(state, action) {
-            let listData = [...state.userConfig];
+            let listData = [...state.userConfig.content];
             listData = (listData || []).map((item, index) => {
                 if (item.id === action.payload.id) {
                     return action.payload;
                 }
                 return item;
             });
-            return Object.assign({}, state, { userConfig: listData })
+            return Object.assign({}, state, { userConfig: Object.assign({}, state.userConfig, { content: listData }) })
         }
     },
 

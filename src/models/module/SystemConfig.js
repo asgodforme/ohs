@@ -65,7 +65,11 @@ export default {
             return { ...state, queryParm: action.payload };
         },
         save(state, action) {
-            return { ...state, systemConfig: action.payload.data };
+            if (action.payload != null) {
+                return { ...state, systemConfig: action.payload.data };
+            } else {
+                return state;
+            }
         },
         saveOne(state, action) {
             let listData = [...state.systemConfig.content, action.payload];
