@@ -148,7 +148,7 @@ class addCreateForm extends React.Component {
     let fieldsValues = {};
     if ((queryFields.dataName === 'enumValueConfig' || queryFields.dataName === 'singleSqlConfig')
       && queryFields.fieldNames.indexOf('columnAlias') > -1) {
-      fieldsValues.columnName = this.state.columnsChns[value];
+      fieldsValues.columnAlias = this.state.columnsChns[value];
     }
     form.setFieldsValue(fieldsValues);
   }

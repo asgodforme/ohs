@@ -9,7 +9,12 @@ export default {
 
     state: {
         allSys: [],
-        singleSqlConfig: [],
+        singleSqlConfig: {
+            content: [],
+            number: 0,
+            totalElements: 0,
+            size: 5,
+        },
 
     },
 
@@ -105,7 +110,7 @@ export default {
                             if (table.schemaName === action.payload.schemaName && table.tableName === action.payload.tableName) {
                                 if (table.columns != null) {
                                     table.columns = table.columns.filter(column => column.columnName !== action.payload.columnName && column.columnAlias !== action.payload.columnAlias)
-                                } 
+                                }
                             }
                             return table;
                         })
@@ -127,8 +132,8 @@ export default {
                                 } else {
                                     table.columns = [
                                         {
-                                            id: action.payload.columnName, 
-                                            columnName: action.payload.columnName, 
+                                            id: action.payload.columnName,
+                                            columnName: action.payload.columnName,
                                             columnAlias: action.payload.columnAlias
                                         }
                                     ]
@@ -140,7 +145,7 @@ export default {
                 } else {
                     if (item.sysAlias === action.payload.sysAlias && item.sysChineseNme === action.payload.sysChineseNme && item.schemaName === action.payload.schemaName) {
                         item.ohsTableConfigs = [{
-                            schemaName: action.payload.schemaName, 
+                            schemaName: action.payload.schemaName,
                             tableName: action.payload.tableName,
                             tableChnName: action.payload.tableChnName,
                             columns: [{
@@ -162,7 +167,7 @@ export default {
                     if (item.sysAlias === action.payload.sysAlias && item.sysChineseNme === action.payload.sysChineseNme) {
                         item.ohsModuleConfigs = item.ohsModuleConfigs.filter(ohsModuleConfig => ohsModuleConfig.moduleName !== action.payload.moduleName && ohsModuleConfig.moduleAlias !== action.payload.moduleAlias);
                     }
-                } 
+                }
                 return item;
             });
             return Object.assign({}, state, { allSys: allSys });
@@ -204,32 +209,33 @@ export default {
             let listData;
             // 新增已经存在的单表sql配置不返回主键
             if (action.payload.id === null || action.payload.id === '') {
-                listData = [...state.singleSqlConfig];
+                listData = [...state.singleSqlConfig.content];
                 // 遍历当前数据域，加新增的字段附加到已经存在的节点上
                 listData.map(singleSqlCfg => {
-                    if (action.payload.sysAlias === singleSqlCfg.sysAlias 
+                    if (action.payload.sysAlias === singleSqlCfg.sysAlias
                         && action.payload.sysChineseNme === singleSqlCfg.sysChineseNme
                         && action.payload.moduleAlias === singleSqlCfg.moduleAlias
                         && action.payload.moduleName === singleSqlCfg.moduleName
                         && action.payload.tableName === singleSqlCfg.tableName
                         && action.payload.tableChnName === singleSqlCfg.tableChnName) {
-                            if (singleSqlCfg.columnAlias.indexOf("|") > -1) {
-                                singleSqlCfg.columnAlias = singleSqlCfg.columnAlias + action.payload.columnAlias + "|";
-                                singleSqlCfg.columnName = singleSqlCfg.columnName + action.payload.columnName + "|";
-                            } else {
-                                singleSqlCfg.columnAlias = "|" + singleSqlCfg.columnAlias + "|" + action.payload.columnAlias + "|";
-                                singleSqlCfg.columnName = "|" + singleSqlCfg.columnName + "|" + action.payload.columnName + "|";
-                            }
+                        if (singleSqlCfg.columnAlias.indexOf("|") > -1) {
+                            singleSqlCfg.columnAlias = singleSqlCfg.columnAlias + action.payload.columnAlias + "|";
+                            singleSqlCfg.columnName = singleSqlCfg.columnName + action.payload.columnName + "|";
+                        } else {
+                            singleSqlCfg.columnAlias = "|" + singleSqlCfg.columnAlias + "|" + action.payload.columnAlias + "|";
+                            singleSqlCfg.columnName = "|" + singleSqlCfg.columnName + "|" + action.payload.columnName + "|";
                         }
+                    }
                     return singleSqlCfg;
                 });
             } else {
                 // 新增加的单表SQL配置返回了主键，直接附加到当前state上
                 action.payload.columnAlias = "|" + action.payload.columnAlias + "|";
                 action.payload.columnName = "|" + action.payload.columnName + "|";
-                listData = [...state.singleSqlConfig, action.payload];
+                listData = [...state.singleSqlConfig.content, action.payload];
             }
-            return Object.assign({}, state, { singleSqlConfig: listData })
+            let totalElements = state.singleSqlConfig.totalElements;
+            return Object.assign({}, state, { singleSqlConfig: Object.assign({}, state.singleSqlConfig, { content: listData, totalElements: totalElements + 1 }) })
         },
         saveAllSys(state, action) {
             return { ...state, allSys: action.payload.data };
@@ -239,10 +245,17 @@ export default {
             return Object.assign({}, state, { allSys: listData });
         },
         delete(state, action) {
-            return Object.assign({}, state, { singleSqlConfig: state.singleSqlConfig.filter(moduleCfg => moduleCfg.id !== action.payload.id) })
+            let totalElements = state.singleSqlConfig.totalElements;
+            let number = 0;
+            if (totalElements > state.singleSqlConfig.size) {
+                number = (totalElements - 1) % state.singleSqlConfig.size === 0 ? state.singleSqlConfig.number - 1 : state.singleSqlConfig.number;
+            } else {
+                number = state.singleSqlConfig.number;
+            }
+            return Object.assign({}, state, { singleSqlConfig: Object.assign({}, state.singleSqlConfig, { content: state.singleSqlConfig.content.filter(singleSqlCfg => singleSqlCfg.id !== action.payload.id), totalElements: totalElements - 1, number: number }) })
         },
         update(state, action) {
-            let listData = [...state.singleSqlConfig];
+            let listData = [...state.singleSqlConfig.content];
             listData = (listData || []).map((item, index) => {
                 if (item.id === action.payload.id) {
                     item.columnAlias = "|" + action.payload.columnAlias.replace(",", "|");
@@ -250,7 +263,7 @@ export default {
                 }
                 return item;
             });
-            return Object.assign({}, state, { singleSqlConfig: listData })
+            return Object.assign({}, state, { singleSqlConfig: Object.assign({}, state.singleSqlConfig, { content: listData }) })
         },
         deleteSysDelSys(state, action) {
             return Object.assign({}, state, { allSys: state.allSys.filter(sysCfg => sysCfg.sysAlias !== action.payload.sysAlias && sysCfg.sysChineseNme !== action.payload.sysChineseNme) })

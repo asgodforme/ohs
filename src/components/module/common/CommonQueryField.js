@@ -93,7 +93,9 @@ class AdvancedSearchForm extends React.Component {
         children.push(
           <Col span={6} key={i}>
             <FormItem {...formItemLayout} label={queryFields.fieldDescs[i]}>
-              {getFieldDecorator(queryFields.fieldNames[i])(
+              {getFieldDecorator(queryFields.fieldNames[i], {
+                initialValue: this.state.queryParm ? this.state.queryParm[queryFields.fieldNames[i]] : null,
+              })(
                 <RadioGroup>
                   <Radio value={"1"}>{'是'}</Radio>
                   <Radio value={"0"}>{'否'}</Radio>

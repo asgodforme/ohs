@@ -9,7 +9,12 @@ export default {
 
     state: {
         allSys: [],
-        enumValueConfig: [],
+        enumValueConfig: {
+            content: [],
+            number: 0,
+            totalElements: 0,
+            size: 5,
+        },
 
     },
 
@@ -99,7 +104,7 @@ export default {
                             if (table.schemaName === action.payload.schemaName && table.tableName === action.payload.tableName) {
                                 if (table.columns != null) {
                                     table.columns = table.columns.filter(column => column.columnName !== action.payload.columnName && column.columnAlias !== action.payload.columnAlias)
-                                } 
+                                }
                             }
                             return table;
                         })
@@ -121,8 +126,8 @@ export default {
                                 } else {
                                     table.columns = [
                                         {
-                                            id: action.payload.columnName, 
-                                            columnName: action.payload.columnName, 
+                                            id: action.payload.columnName,
+                                            columnName: action.payload.columnName,
                                             columnAlias: action.payload.columnAlias
                                         }
                                     ]
@@ -134,7 +139,7 @@ export default {
                 } else {
                     if (item.sysAlias === action.payload.sysAlias && item.sysChineseNme === action.payload.sysChineseNme && item.schemaName === action.payload.schemaName) {
                         item.ohsTableConfigs = [{
-                            schemaName: action.payload.schemaName, 
+                            schemaName: action.payload.schemaName,
                             tableName: action.payload.tableName,
                             tableChnName: action.payload.tableChnName,
                             columns: [{
@@ -151,8 +156,9 @@ export default {
             return { ...state, enumValueConfig: action.payload.data };
         },
         saveOne(state, action) {
-            let listData = [...state.enumValueConfig, action.payload];
-            return Object.assign({}, state, { enumValueConfig: listData })
+            let listData = [...state.enumValueConfig.content, action.payload];
+            let totalElements = state.enumValueConfig.totalElements;
+            return Object.assign({}, state, { enumValueConfig: Object.assign({}, state.enumValueConfig, { content: listData, totalElements: totalElements + 1 }) })
         },
         saveAllSys(state, action) {
             return { ...state, allSys: action.payload.data };
@@ -162,21 +168,26 @@ export default {
             return Object.assign({}, state, { allSys: listData });
         },
         delete(state, action) {
-            return Object.assign({}, state, { enumValueConfig: state.enumValueConfig.filter(moduleCfg => moduleCfg.id !== action.payload.id) })
+            let totalElements = state.enumValueConfig.totalElements;
+            let number = 0;
+            if (totalElements > state.enumValueConfig.size) {
+                number = (totalElements - 1) % state.enumValueConfig.size === 0 ? state.enumValueConfig.number - 1 : state.enumValueConfig.number;
+            } else {
+                number = state.enumValueConfig.number;
+            }
+            return Object.assign({}, state, { enumValueConfig: Object.assign({}, state.enumValueConfig, { content: state.enumValueConfig.content.filter(enumCfg => enumCfg.id !== action.payload.id), totalElements: totalElements - 1, number: number }) })
         },
         update(state, action) {
-            let listData = [...state.enumValueConfig];
+            let listData = [...state.enumValueConfig.content];
             listData = (listData || []).map((item, index) => {
                 if (item.id === action.payload.id) {
                     return action.payload;
                 }
                 return item;
             });
-            return Object.assign({}, state, { enumValueConfig: listData })
+            return Object.assign({}, state, { enumValueConfig: Object.assign({}, state.enumValueConfig, { content: listData }) })
         },
         deleteSysDelSys(state, action) {
-            console.log(state)
-            console.log(action)
             return Object.assign({}, state, { allSys: state.allSys.filter(sysCfg => sysCfg.sysAlias !== action.payload.sysAlias && sysCfg.sysChineseNme !== action.payload.sysChineseNme) })
         },
         deleteOldTableConfig(state, action) {

@@ -9,13 +9,18 @@ export default {
 
     state: {
         allSys: [],
-        columnConfig: [],
+        columnConfig: {
+            content: [],
+            number: 0,
+            totalElements: 0,
+            size: 5,
+        },
 
     },
 
     subscriptions: {
         setup({ dispatch, history }) {
-             // 同一加载
+            // 同一加载
             // const data = dispatch({ type: 'getAllSysWhenInit', payload: { sysAlias: '', sysChineseNme: '' } });
             // data.then(function (result) {
             //     dispatch({ type: 'userConfig/saveAllSys', payload: result });
@@ -79,7 +84,7 @@ export default {
         *deleteSys({ payload }, { call, put }) {
             yield put({ type: 'deleteSysDelSys', payload: payload });
         },
-        *deleteTableConfig({payload}, {put}) {
+        *deleteTableConfig({ payload }, { put }) {
             yield put({ type: 'deleteOldTableConfig', payload: payload });
         },
     },
@@ -89,21 +94,18 @@ export default {
             return { ...state, queryParm: action.payload };
         },
         deleteOldTableConfig(state, action) {
-            console.log(state)
-            console.log(action)
             let allSys = [...state.allSys];
             allSys.map((item) => {
                 if (item.ohsTableConfigs != null) {
                     if (item.sysAlias === action.payload.sysAlias && item.sysChineseNme === action.payload.sysChineseNme) {
                         item.ohsTableConfigs = item.ohsTableConfigs.filter(ohsTableConfig => ohsTableConfig.tableName !== action.payload.tableName && ohsTableConfig.tableChnName !== action.payload.tableChnName);
                     }
-                } 
+                }
                 return item;
             });
             return Object.assign({}, state, { allSys: allSys });
         },
         saveTable(state, action) {
-            console.log(state)
             let allSys = [...state.allSys];
             allSys.map((item) => {
                 if (item.ohsTableConfigs != null) {
@@ -123,8 +125,9 @@ export default {
             return { ...state, columnConfig: action.payload.data };
         },
         saveOne(state, action) {
-            let listData = [...state.columnConfig, action.payload];
-            return Object.assign({}, state, { columnConfig: listData })
+            let listData = [...state.columnConfig.content, action.payload];
+            let totalElements = state.columnConfig.totalElements;
+            return Object.assign({}, state, { columnConfig: Object.assign({}, state.columnConfig, { content: listData, totalElements: totalElements + 1 }) })
         },
         saveAllSys(state, action) {
             return { ...state, allSys: action.payload.data };
@@ -134,22 +137,27 @@ export default {
             return Object.assign({}, state, { allSys: listData });
         },
         delete(state, action) {
-            return Object.assign({}, state, { columnConfig: state.columnConfig.filter(moduleCfg => moduleCfg.id !== action.payload.id) })
+            let totalElements = state.columnConfig.totalElements;
+            let number = 0;
+            if (totalElements > state.columnConfig.size) {
+                number = (totalElements - 1) % state.columnConfig.size === 0 ? state.columnConfig.number - 1 : state.columnConfig.number;
+            } else {
+                number = state.columnConfig.number;
+            }
+            return Object.assign({}, state, { columnConfig: Object.assign({}, state.columnConfig, { content: state.columnConfig.content.filter(columnCfg => columnCfg.id !== action.payload.id), totalElements: totalElements - 1, number: number }) })
         },
         update(state, action) {
-            let listData = [...state.columnConfig];
+            let listData = [...state.columnConfig.content];
             listData = (listData || []).map((item, index) => {
                 if (item.id === action.payload.id) {
                     return action.payload;
                 }
                 return item;
             });
-            return Object.assign({}, state, { columnConfig: listData })
+            return Object.assign({}, state, { columnConfig: Object.assign({}, state.columnConfig, { content: listData }) })
         },
         deleteSysDelSys(state, action) {
-            console.log(state)
-            console.log(action)
-            return Object.assign({}, state, { allSys: state.allSys.filter(sysCfg => sysCfg.sysAlias !== action.payload.sysAlias && sysCfg.sysChineseNme !== action.payload.sysChineseNme ) })
+            return Object.assign({}, state, { allSys: state.allSys.filter(sysCfg => sysCfg.sysAlias !== action.payload.sysAlias && sysCfg.sysChineseNme !== action.payload.sysChineseNme) })
         },
     },
 

@@ -9,7 +9,12 @@ export default {
 
     state: {
         allSys: [],
-        tableConfig: [],
+        tableConfig: {
+            content: [],
+            number: 0,
+            totalElements: 0,
+            size: 5,
+        },
 
     },
 
@@ -85,8 +90,9 @@ export default {
             return { ...state, tableConfig: action.payload.data };
         },
         saveOne(state, action) {
-            let listData = [...state.tableConfig, action.payload];
-            return Object.assign({}, state, { tableConfig: listData })
+            let listData = [...state.tableConfig.content, action.payload];
+            let totalElements = state.tableConfig.totalElements;
+            return Object.assign({}, state, { tableConfig: Object.assign({}, state.tableConfig, { content: listData, totalElements: totalElements + 1 }) })
         },
         saveAllSys(state, action) {
             return { ...state, allSys: action.payload.data };
@@ -96,22 +102,27 @@ export default {
             return Object.assign({}, state, { allSys: listData });
         },
         delete(state, action) {
-            return Object.assign({}, state, { tableConfig: state.tableConfig.filter(moduleCfg => moduleCfg.id !== action.payload.id) })
+            let totalElements = state.tableConfig.totalElements;
+            let number = 0;
+            if (totalElements > state.tableConfig.size) {
+                number = (totalElements - 1) % state.tableConfig.size === 0 ? state.tableConfig.number - 1 : state.tableConfig.number;
+            } else {
+                number = state.tableConfig.number;
+            }
+            return Object.assign({}, state, { tableConfig: Object.assign({}, state.tableConfig, { content: state.tableConfig.content.filter(tableCfg => tableCfg.id !== action.payload.id), totalElements: totalElements - 1, number: number }) })
         },
         update(state, action) {
-            let listData = [...state.tableConfig];
+            let listData = [...state.tableConfig.content];
             listData = (listData || []).map((item, index) => {
                 if (item.id === action.payload.id) {
                     return action.payload;
                 }
                 return item;
             });
-            return Object.assign({}, state, { tableConfig: listData })
+            return Object.assign({}, state, { tableConfig: Object.assign({}, state.tableConfig, { content: listData }) })
         },
         deleteSysDelSys(state, action) {
-            console.log(state)
-            console.log(action)
-            return Object.assign({}, state, { allSys: state.allSys.filter(sysCfg => sysCfg.sysAlias !== action.payload.sysAlias && sysCfg.sysChineseNme !== action.payload.sysChineseNme ) })
+            return Object.assign({}, state, { allSys: state.allSys.filter(sysCfg => sysCfg.sysAlias !== action.payload.sysAlias && sysCfg.sysChineseNme !== action.payload.sysChineseNme) })
         },
 
     },
