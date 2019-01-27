@@ -3,6 +3,7 @@ import React from 'react';
 import { Form, Row, Col, Input, Button, Radio } from 'antd';
 import { CommonDataField } from './CommonDataField';
 import { CommonAddField } from './CommonAddField';
+import {info} from '../SysCfgQueryFieldAlert';
 const FormItem = Form.Item;
 const RadioGroup = Radio.Group;
 
@@ -12,8 +13,31 @@ class AdvancedSearchForm extends React.Component {
     super();
     this.state = {
       queryParm: props.data.queryParm,
+      ohsPagination: {
+        current: props.data[props.queryFields.dataName].number + 1,
+        pageSize: props.data[props.queryFields.dataName].size,
+        onChange: this.doPagination,
+        total: props.data[props.queryFields.dataName].totalElements,
+      },
     }
-    console.log(props);
+    
+    if (props.data[props.queryFields.dataName].content.length === 0) {
+      info("无数据显示，请点击查询按钮查询！");
+    }
+    
+
+    console.log(this.state)
+  }
+
+  doPagination = (page, pageSize) => {
+    let querySys = {};
+    const queryFields = this.props.queryFields;
+    for (let i = 0; i < queryFields.fieldNames.length; i++) {
+      querySys[queryFields.fieldNames[i]] = this.state.queryParm[queryFields.fieldNames[i]];
+    }
+    querySys['current'] = page;
+    querySys['pageSize'] = pageSize;
+    this.props.query(querySys);
   }
 
   handleSearch = (e) => {
@@ -24,6 +48,8 @@ class AdvancedSearchForm extends React.Component {
       for (let i = 0; i < queryFields.fieldNames.length; i++) {
         querySys[queryFields.fieldNames[i]] = values[queryFields.fieldNames[i]];
       }
+      querySys['current'] = this.state.ohsPagination.current;
+      querySys['pageSize'] = this.state.ohsPagination.pageSize;
       this.props.query(querySys);
     });
   }
@@ -120,7 +146,7 @@ class AdvancedSearchForm extends React.Component {
         <br />
         <CommonDataField data={this.props.data} columns={this.props.columns}
           onDelete={this.handleDelete} onUpdate={this.props.update}
-          queryFields={this.props.queryFields}
+          queryFields={this.props.queryFields} ohsPagination={this.state.ohsPagination}
         />
 
       </Form>

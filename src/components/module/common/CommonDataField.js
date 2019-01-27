@@ -18,7 +18,7 @@ export function CommonDataField(props) {
     });
 
     if (props.data != null) {
-        (props.data[props.queryFields['dataName']] || []).map((sysConfig, index) => {
+        (props.data[props.queryFields['dataName']].content || []).map((sysConfig, index) => {
             sysConfig.key = sysConfig.id;
             sysConfig.createUser = sysConfig.createUser;
             sysConfig.createDate = sysConfig.createDate;
@@ -28,6 +28,6 @@ export function CommonDataField(props) {
         })
     }
 
-    return <Table columns={columns} dataSource={props.data != null?props.data[props.queryFields['dataName']]:null} 
-    bordered scroll={props.queryFields.scroll}/>;
+    return <Table columns={columns} dataSource={props.data != null ? props.data[props.queryFields['dataName']].content : null}
+        bordered scroll={props.queryFields.scroll} pagination={props.ohsPagination} />;
 }

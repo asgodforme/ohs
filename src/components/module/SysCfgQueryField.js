@@ -18,28 +18,21 @@ class AdvancedSearchForm extends React.Component {
         onChange: this.doPagination,
         total: props.data.systemConfig.totalElements,
       },
-      sysAlias: '',
-      sysChineseNme: '',
-      schemaName: '',
     }
 
     if (props.data.systemConfig.content.length === 0) {
       info("无数据显示，请点击查询按钮查询！");
     }
+    
 
-    console.log('constructor')
-    console.log(props);
-    console.log('state...')
     console.log(this.state)
   }
 
   doPagination = (page, pageSize) => {
-    console.log(page)
-    console.log(pageSize)
     let querySys = {
-      sysAlias: this.state.sysAlias,
-      sysChineseNme: this.state.sysChineseNme,
-      schemaName: this.state.schemaName,
+      sysAlias: this.state.queryParm.sysAlias,
+      sysChineseNme: this.state.queryParm.sysChineseNme,
+      schemaName: this.state.queryParm.schemaName,
       current: page,
       pageSize: pageSize,
     }
@@ -48,9 +41,7 @@ class AdvancedSearchForm extends React.Component {
 
   handleSearch = (e) => {
     e.preventDefault();
-    console.log(e);
     this.props.form.validateFields((err, values) => {
-      console.log(values);
       let querySys = {
         sysAlias: values['sysAlias'],
         sysChineseNme: values['sysChineseNme'],

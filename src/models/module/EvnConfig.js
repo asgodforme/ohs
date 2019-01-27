@@ -8,24 +8,28 @@ export default {
 
     state: {
         allSys: [],
-        evnConfig: [],
-
+        evnConfig: {
+            content: [],
+            number: 0,
+            totalElements: 0,
+            size: 5,
+        },
     },
 
     subscriptions: {
         setup({ dispatch, history }) {
-            
+
         },
     },
 
     effects: {
         *getAllEvn({ payload }, { call, put }) {
-            console.log('111111');
             const evnCfg = yield call(getAllEvn, payload);
             if (evnCfg.data.status === 500) {
                 error(evnCfg.data.statusText);
             } else {
                 yield put({ type: 'save', payload: evnCfg });
+                yield put({ type: 'saveQueryParm', payload: payload });
             }
         },
         *saveEvnConfig({ payload }, { call, put }) {
@@ -64,12 +68,16 @@ export default {
     },
 
     reducers: {
+        saveQueryParm(state, action) {
+            return { ...state, queryParm: action.payload };
+        },
         save(state, action) {
             return { ...state, evnConfig: action.payload.data };
         },
         saveOne(state, action) {
-            let listData = [...state.evnConfig, action.payload];
-            return Object.assign({}, state, { evnConfig: listData })
+            let listData = [...state.evnConfig.content, action.payload];
+            let totalElements = state.evnConfig.totalElements;
+            return Object.assign({}, state, { evnConfig: Object.assign({}, state.evnConfig, { content: listData, totalElements: totalElements + 1 }) })
         },
         saveAllSys(state, action) {
             return { ...state, allSys: action.payload.data };
@@ -79,22 +87,29 @@ export default {
             return Object.assign({}, state, { allSys: listData });
         },
         delete(state, action) {
-            return Object.assign({}, state, { evnConfig: state.evnConfig.filter(moduleCfg => moduleCfg.id !== action.payload.id) })
+            let totalElements = state.evnConfig.totalElements;
+            let number = 0;
+            if (totalElements > state.evnConfig.size) {
+                number = (totalElements - 1) % state.evnConfig.size === 0 ? state.evnConfig.number - 1 : state.evnConfig.number;
+            } else {
+                number = state.evnConfig.number;
+            }
+            return Object.assign({}, state, { evnConfig: Object.assign({}, state.evnConfig, { content: state.evnConfig.content.filter(evnCfg => evnCfg.id !== action.payload.id), totalElements: totalElements - 1, number: number }) })
         },
         update(state, action) {
-            let listData = [...state.evnConfig];
+            let listData = [...state.evnConfig.content];
             listData = (listData || []).map((item, index) => {
                 if (item.id === action.payload.id) {
                     return action.payload;
                 }
                 return item;
             });
-            return Object.assign({}, state, { evnConfig: listData })
-        }, 
+            return Object.assign({}, state, { evnConfig: Object.assign({}, state.evnConfig, { content: listData }) })
+        },
         deleteSysDelSys(state, action) {
             console.log(state)
             console.log(action)
-            return Object.assign({}, state, { allSys: state.allSys.filter(sysCfg => sysCfg.sysAlias !== action.payload.sysAlias && sysCfg.sysChineseNme !== action.payload.sysChineseNme ) })
+            return Object.assign({}, state, { allSys: state.allSys.filter(sysCfg => sysCfg.sysAlias !== action.payload.sysAlias && sysCfg.sysChineseNme !== action.payload.sysChineseNme) })
         },
     },
 
