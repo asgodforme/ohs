@@ -4,24 +4,24 @@ export default {
   namespace: 'products1',
   state: [],
   reducers: {
-    'delete'(state, { payload: id }) {
+    delete(state, { payload: id }) {
       return state.filter(item => item.id !== id);
     },
-    save(state, action) {
-      console.log(1);
-      console.log(state);
-      console.log(action.payload.data)
-      return state.concat(action.payload.data);
-    },
+    // save(state, action) {
+    //   console.log(1);
+    //   console.log(state);
+    //   console.log(action.payload.data)
+    //   return state.concat(action.payload.data);
+    // },
     
   },
 
-  effects: {
-    *fetch({ payload }, { call, put }) {  // eslint-disable-line
-      const data = yield call(getAllMenu);
-      return data;
-    },
-  },
+  // effects: {
+  //   *fetch({ payload }, { call, put }) {  // eslint-disable-line
+  //     const data = yield call(getAllMenu);
+  //     return data;
+  //   },
+  // },
 
   subscriptions: {
     setup({ dispatch, history }) { 

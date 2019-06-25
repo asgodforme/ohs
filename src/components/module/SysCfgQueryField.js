@@ -20,12 +20,12 @@ class AdvancedSearchForm extends React.Component {
       },
     }
 
-    if (props.data.systemConfig.content.length === 0) {
-      info("无数据显示，请点击查询按钮查询！");
-    }
+    // if (props.data.systemConfig.content.length === 0) {
+    //   info("无数据显示，请点击查询按钮查询！");
+    // }
     
 
-    console.log(this.state)
+    // console.log(this.state)
   }
 
   doPagination = (page, pageSize) => {

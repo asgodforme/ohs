@@ -12,12 +12,20 @@ const Products = ({ dispatch, products1 }) => {
   return (
     <div>
       <h2>List of Products</h2>
-      <ProductList onDelete={handleDelete()} products={products1} />
+      <ProductList onDelete={handleDelete} products={products1} />
     </div>
   );
 };
 
 // export default Products;
-export default connect(({ products1 }) => ({
-  products1,
-}))(Products);
+function a({products1}) {
+  return {
+    products1: products1
+  }
+}
+
+export default connect(a)(Products);
+
+// export default connect(({ products1 }) => ({
+//   products1: products1
+// }))(Products);

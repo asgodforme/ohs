@@ -19,7 +19,7 @@ const app = dva({
 // app.use({});
 
 // 3. Model
-// app.model(require('./models/example').default);
+app.model(require('./models/example').default);
 app.model(require('./models/products').default);
 app.model(require('./models/todos').default);
 app.model(require('./models/menu/menu').default)
