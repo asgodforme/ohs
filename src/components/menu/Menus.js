@@ -10,6 +10,7 @@ import TableConfig from '../../routes/module/data/TableConfig';
 import ColumnConfig from '../../routes/module/data/ColumnConfig';
 import EnumValueConfig from '../../routes/module/data/EnumValueConfig';
 import SingleSqlConfig from '../../routes/module/data/SingleSqlConfig';
+import DataQuery from '../../routes/dataQuery/DataQuery';
 
 const { SubMenu } = Menu;
 const { Header, Sider, Footer } = Layout;
@@ -23,6 +24,7 @@ const componentMapping = {
     columnConfig: <ColumnConfig />,
     enumValueConfig: <EnumValueConfig />,
     singleSqlConfig: <SingleSqlConfig />,
+    dataQuery: "dataQuery",
 };
 
 export class Menus extends React.Component {
@@ -54,10 +56,15 @@ export class Menus extends React.Component {
                 }
             }
         }
-        if (currentSubItem != null) {
+        if (currentSubItem != null && typeof(componentMapping[currentSubItem.subMenuUrl]) !== 'string') {
             this.setState({
                 activeKey: currentSubItem.id,
                 panes: [{ title: currentSubItem.subMenuName, content: currentSubItem.subMenuName, key: currentSubItem.id, component: componentMapping[currentSubItem.subMenuUrl] }]
+            });
+        } else if (currentSubItem != null && componentMapping[currentSubItem.subMenuUrl] === 'dataQuery') {
+            this.setState({
+                activeKey: currentSubItem.id,
+                panes: [{ title: currentSubItem.subMenuName, content: currentSubItem.subMenuName, key: currentSubItem.id, component: <DataQuery currentSysAlias={currentSubItem.subMenuName}/>}]
             });
         }
 

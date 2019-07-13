@@ -1,4 +1,4 @@
-import { getAllModule, saveModuleConfig, deleteById, updateById } from '../../services/moduleConfig';
+import { getAllModule, saveModuleConfig, deleteById, updateById, getModuleBySysAlias } from '../../services/moduleConfig';
 import { getAllSysWhenInit } from '../../services/moduleConfig';
 import { error, success } from '../../components/module/SysCfgQueryFieldAlert'
 
@@ -82,6 +82,7 @@ export default {
         *deleteSys({ payload }, { call, put }) {
             yield put({ type: 'deleteSysDelSys', payload: payload });
         },
+        
     },
 
     reducers: {

@@ -7,8 +7,8 @@ const queryFields = {
   dataName: 'evnConfig',
   updateTitle: '修改环境',
   addTitle: '新增环境',
-  fieldDescs: ['归属系统码', '归属系统名', '环境别名', '环境名', '环境类型', 'IP地址', '端口号', '接口名', 'DB用户名', 'DB密码'],
-  fieldNames: ['sysAlias', 'sysChineseNme', 'evnAlias', 'evnName', 'evnTyp', 'evnIp', 'evnPort', 'interfaceNme', 'dbNme', 'dbPwd'],
+  fieldDescs: ['归属系统码', '归属系统名', '环境别名', '环境名', '环境类型', 'IP地址', '端口号', '接口名', 'DB名称', 'DB用户名', 'DB密码', 'DB类型'],
+  fieldNames: ['sysAlias', 'sysChineseNme', 'evnAlias', 'evnName', 'evnTyp', 'evnIp', 'evnPort', 'interfaceNme', 'dbSchema', 'dbNme', 'dbPwd', 'dbType'],
 }
 
 const columns = [{
@@ -48,6 +48,10 @@ const columns = [{
   dataIndex: 'interfaceNme',
   key: 'interfaceNme',
 }, {
+  title: 'DB名称',
+  dataIndex: 'dbSchema',
+  key: 'dbSchema',
+}, {
   title: 'DB用户名',
   dataIndex: 'dbNme',
   key: 'dbNme',
@@ -55,6 +59,10 @@ const columns = [{
   title: 'DB密码',
   dataIndex: 'dbPwd',
   key: 'dbPwd',
+}, {
+  title: 'DB类型',
+  dataIndex: 'dbType',
+  key: 'dbType',
 }, {
   title: '创建者',
   dataIndex: 'createUser',

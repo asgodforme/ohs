@@ -3,6 +3,7 @@ import { connect } from 'dva';
 import SysCfgQueryField from '../../components/module/SysCfgQueryField'
 
 const SystemConfig = ({ dispatch, systemConfig }) => {
+
   function getAllSys(sys) {
     dispatch({
       type: 'systemConfig/getAllSys',

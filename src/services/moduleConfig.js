@@ -28,3 +28,7 @@ export function deleteById(payload) {
 export function updateById(payload) {
   return request(`/api/moduleConfig/updateById?${stringify(payload)}`);
 }
+
+export function getModuleBySysAlias(payload) {
+  return request(`/api/moduleConfig/getModuleBySysAlias?${stringify(payload)}`);
+}

@@ -31,6 +31,8 @@ app.model(require('./models/module/data/TableConfig').default)
 app.model(require('./models/module/data/ColumnConfig').default)
 app.model(require('./models/module/data/EnumValueConfig').default)
 app.model(require('./models/module/data/SingleSqlConfig').default)
+app.model(require('./models/dataQuery/DataQuery').default)
+
 // 4. Router
 app.router(require('./router').default);
 
