@@ -1,7 +1,6 @@
 import React from 'react';
 import { connect } from 'dva';
 import DataQueryForm from '../../components/DataQueryFields.js'
-import DataTableFields from '../../components/DataTableFields.js'
 
 
 class DataQuery extends React.Component {
@@ -28,7 +27,6 @@ class DataQuery extends React.Component {
 
             <div>
                 <DataQueryForm data={this.props.dataQuery} currentSysAlias={this.props.currentSysAlias} querySubmit={this.querySubmit}/>
-                <DataTableFields/>
             </div>
         );
     }

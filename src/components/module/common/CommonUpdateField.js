@@ -6,6 +6,20 @@ const Option = Select.Option;
 const RadioGroup = Radio.Group;
 const CheckboxGroup = Checkbox.Group;
 
+const dataBaseTypMapping = {
+    "MYSQL": "0",
+    "ORACLE": "1",
+    "DB2": "2",
+    "mysql": "0",
+    "oracle": "1",
+    "db2": "2",
+}
+
+const evnTypeMapping = {
+    "应用服务器": "0",
+    "数据库" : "1",
+}
+
 class UpdateCreateForm extends React.Component {
 
     constructor(props) {
@@ -160,7 +174,7 @@ class UpdateCreateForm extends React.Component {
     }
 
     render() {
-        const tableOptions = (this.state.tables || []).map(table => <Option key={table}>{table}</Option>);
+        // const tableOptions = (this.state.tables || []).map(table => <Option key={table}>{table}</Option>);
         const { visible, onCancel, onCreate, form, records, queryFields, allSys } = this.props;
         const { getFieldDecorator } = form;
 
@@ -243,7 +257,32 @@ class UpdateCreateForm extends React.Component {
                             </Select>
                         )}
                     </FormItem>)
-            } else {
+            } else if (queryFields.dataName === 'evnConfig' && queryFields.fieldNames[i] === 'evnTyp') {
+                formItem.push( 
+                    <FormItem label={queryFields.fieldDescs[i]}>
+                      {getFieldDecorator(queryFields.fieldNames[i], {
+                        initialValue: evnTypeMapping[records[queryFields.fieldNames[i]]],
+                      })(
+                        <RadioGroup>
+                          <Radio value={"1"}>{'数据库'}</Radio>
+                          <Radio value={"0"}>{'应用服务器'}</Radio>
+                        </RadioGroup>
+                      )}
+                    </FormItem> );
+              } else if (queryFields.dataName === 'evnConfig' && queryFields.fieldNames[i] === 'dbType') {
+                formItem.push( 
+                    <FormItem  label={queryFields.fieldDescs[i]}>
+                      {getFieldDecorator(queryFields.fieldNames[i], {
+                        initialValue: dataBaseTypMapping[records[queryFields.fieldNames[i]]],
+                      })(
+                        <Select>
+                          <Option value={"0"}>{'MYSQL'}</Option>
+                          <Option value={"1"}>{'ORACLE'}</Option>
+                          <Option value={"2"}>{'DB2'}</Option>
+                        </Select>
+                      )}
+                    </FormItem> );
+              } else {
                 if (((queryFields.fieldNames[i] === 'columnAlias' || queryFields.fieldNames[i] === 'columnName')
                     && queryFields.dataName === 'singleSqlConfig')) {
                     formItem.push(

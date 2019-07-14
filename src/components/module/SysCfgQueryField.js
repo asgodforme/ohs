@@ -3,7 +3,6 @@ import React from 'react';
 import { Form, Row, Col, Input, Button } from 'antd';
 import { SysCfgDataField } from './SysCfgDataField';
 import { SysCfgAddField } from './SysCfgAddField';
-import { info } from './SysCfgQueryFieldAlert';
 const FormItem = Form.Item;
 
 class AdvancedSearchForm extends React.Component {

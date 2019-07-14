@@ -7,8 +7,8 @@ const queryFields = {
   dataName: 'evnConfig',
   updateTitle: '修改环境',
   addTitle: '新增环境',
-  fieldDescs: ['归属系统码', '归属系统名', '环境别名', '环境名', '环境类型', 'IP地址', '端口号', '接口名', 'DB名称', 'DB用户名', 'DB密码', 'DB类型'],
-  fieldNames: ['sysAlias', 'sysChineseNme', 'evnAlias', 'evnName', 'evnTyp', 'evnIp', 'evnPort', 'interfaceNme', 'dbSchema', 'dbNme', 'dbPwd', 'dbType'],
+  fieldDescs: ['归属系统码', '归属系统名', '环境类型', '环境别名', '环境名', 'IP地址', '端口号', 'DB用户名', 'DB密码', 'DB类型'],
+  fieldNames: ['sysAlias', 'sysChineseNme', 'evnTyp', 'evnAlias', 'evnName', 'evnIp', 'evnPort', 'dbNme', 'dbPwd', 'dbType'],
 }
 
 const columns = [{
@@ -24,6 +24,10 @@ const columns = [{
   dataIndex: 'sysChineseNme',
   key: 'sysChineseNme',
 }, {
+  title: '环境类型',
+  dataIndex: 'evnTyp',
+  key: 'evnTyp',
+}, {
   title: '环境别名',
   dataIndex: 'evnAlias',
   key: 'evnAlias',
@@ -32,10 +36,6 @@ const columns = [{
   dataIndex: 'evnName',
   key: 'evnName',
 }, {
-  title: '环境类型',
-  dataIndex: 'evnTyp',
-  key: 'evnTyp',
-}, {
   title: 'IP地址',
   dataIndex: 'evnIp',
   key: 'evnIp',
@@ -43,14 +43,6 @@ const columns = [{
   title: '端口号',
   dataIndex: 'evnPort',
   key: 'evnPort',
-}, {
-  title: '接口名',
-  dataIndex: 'interfaceNme',
-  key: 'interfaceNme',
-}, {
-  title: 'DB名称',
-  dataIndex: 'dbSchema',
-  key: 'dbSchema',
 }, {
   title: 'DB用户名',
   dataIndex: 'dbNme',
@@ -83,7 +75,6 @@ const columns = [{
 
 const EvnConfig = ({ dispatch, evnConfig }) => {
   function getAllEnv(evn) {
-    console.log("12222");
     dispatch({
       type: 'evnConfig/getAllEvn',
       payload: evn,
@@ -117,7 +108,7 @@ const EvnConfig = ({ dispatch, evnConfig }) => {
     <div>
       <CommonQueryField query={getAllEnv} data={evnConfig}
         save={saveEnvConfig} delete={deleteEnvConfig} update={updateEnv}
-        queryFields={queryFields} columns={columns}  getAllSys={getAllSys}
+        queryFields={queryFields} columns={columns} getAllSys={getAllSys}
       />
     </div>
   );

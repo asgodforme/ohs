@@ -1,4 +1,4 @@
-import { getAllMenu } from '../services/example';
+// import { getAllMenu } from '../services/example';
 
 export default {
   namespace: 'products1',

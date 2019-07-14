@@ -5,8 +5,12 @@ export function getAllTable(payload) {
   return request(`/api/tableConfig/getAllTable?${stringify(payload)}`);
 }
 
+// export function saveTableConfig(payload) {
+//   return request(`/api/tableConfig/saveTableConfig?${stringify(payload)}`);
+// }
+
 export function saveTableConfig(payload) {
-  return request(`/api/tableConfig/saveTableConfig?${stringify(payload)}`);
+  return request(`/api/tableConfig/saveTableConfig`, { method: 'POST', body: payload });
 }
 
 export function deleteById(payload) {

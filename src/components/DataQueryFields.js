@@ -1,5 +1,6 @@
 import React from 'react';
 import { Form, Row, Col, Input, Button, Select } from 'antd';
+import DataTableFields from './DataTableFields.js'
 
 const { Option } = Select;
 
@@ -7,7 +8,6 @@ class AdvancedSearchForm extends React.Component {
 
     constructor(props) {
         super(props);
-       
         let selectModules;
         let selectEnvs;
         if (this.props.modules.modules != null) {
@@ -15,18 +15,19 @@ class AdvancedSearchForm extends React.Component {
 
                 if (module.envInfo != null) {
                     selectEnvs = module.envInfo.map(envInf => {
-                        return <Option key={envInf} value={envInf.envId}> {envInf.envAlias}</Option>
+                        return (<Option key={envInf} value={envInf.envId}> {envInf.envAlias}</Option>)
                     });
                 }
 
-                return <Option key={module} value={module.moduleAlias}> {module.moduleName}</Option>
+                return (<Option key={module} value={module.moduleAlias}> {module.moduleName}</Option>)
             })
 
 
         }
+
         this.state = {
             modules: selectModules,
-            whereInfo: null,
+            whereInfo: this.props.data.querySubmitData != null ? this.props.data.querySubmitData[0].requestParam.moduleAlias : null,
             envInfos: selectEnvs,
 
         }
@@ -51,6 +52,7 @@ class AdvancedSearchForm extends React.Component {
                                 <Form.Item label={whereInf['keyChnInfo']}>
                                     {getFieldDecorator(whereInf['keyInfo'], {
                                         rules: [{ required: true, message: '请输入' + whereInf['keyChnInfo'] }],
+                                        initialValue: this.props.data.querySubmitData != null ? this.props.data.querySubmitData[0].requestParam[whereInf['keyInfo']] : null
                                     })(<Input placeholder={'请输入' + whereInf['keyChnInfo']} />)}
                                 </Form.Item>
                             </Col>
@@ -102,6 +104,7 @@ class AdvancedSearchForm extends React.Component {
                 <Form.Item label={itemList[2]}>
                     {getFieldDecorator(itemAliasList[2], {
                         rules: [{ required: true, message: '请选择模块！' }],
+                        initialValue: this.props.data.querySubmitData != null ? this.props.data.querySubmitData[0].requestParam.moduleAlias : null
                     })(
                         <Select
                             showSearch
@@ -109,9 +112,6 @@ class AdvancedSearchForm extends React.Component {
                             placeholder="请选择模块"
                             optionFilterProp="children"
                             onChange={this.onChange}
-                            filterOption={(input, option) =>
-                                option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
-                            }
                         >
                             {this.state.modules}
                         </Select>
@@ -126,15 +126,12 @@ class AdvancedSearchForm extends React.Component {
                 <Form.Item label={itemList[3]}>
                     {getFieldDecorator(itemAliasList[3], {
                         rules: [{ required: true, message: '请选择环境！' }],
+                        initialValue: this.props.data.querySubmitData != null ? this.props.data.querySubmitData[0].requestParam.envInfo : null
                     })(
                         <Select
                             showSearch
                             style={{ width: 200 }}
                             placeholder="请选择环境"
-                            optionFilterProp="children"
-                            filterOption={(input, option) =>
-                                option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
-                            }
                         >
                             {this.state.envInfos}
                         </Select>
@@ -154,8 +151,6 @@ class AdvancedSearchForm extends React.Component {
             if (err) {
                 return;
             }
-            // console.log('Received values of form: ', values);
-            console.log(this.props)
             this.props.querySubmit(values)
         });
     };
@@ -165,18 +160,20 @@ class AdvancedSearchForm extends React.Component {
     };
 
     render() {
-
         return (
-            <Form className="ant-advanced-search-form" onSubmit={this.handleSearch}>
-                <Row gutter={24}>{this.getFields()}{this.getSelectWhereInfo(this.state.whereInfo)}</Row>
-                <Row>
-                    <Col span={24} style={{ textAlign: 'right' }}>
-                        <Button type="primary" htmlType="submit">
-                            查询
-                        </Button>
-                    </Col>
-                </Row>
-            </Form>
+            <div>
+                <Form className="ant-advanced-search-form" onSubmit={this.handleSearch}>
+                    <Row gutter={24}>{this.getFields()}{this.getSelectWhereInfo(this.state.whereInfo)}</Row>
+                    <Row>
+                        <Col span={24} style={{ textAlign: 'right' }}>
+                            <Button type="primary" htmlType="submit">
+                                查询
+                            </Button>
+                        </Col>
+                    </Row>
+                    <DataTableFields data={this.props.data} />
+                </Form>
+            </div>
         );
     }
 }
@@ -184,10 +181,9 @@ class AdvancedSearchForm extends React.Component {
 
 const DataQueryForm = (props) => {
     const WrappedAdvancedSearchForm = Form.create()(AdvancedSearchForm);
-    console.log(props)
     return (
         <div>
-            <WrappedAdvancedSearchForm currentSysAlias={props.currentSysAlias} modules={props.data} querySubmit={props.querySubmit} />
+            <WrappedAdvancedSearchForm currentSysAlias={props.currentSysAlias} modules={props.data} querySubmit={props.querySubmit} data={props.data} />
         </div>
     );
 }

@@ -1,5 +1,5 @@
 import { getModuleBySysAlias, querySubmit } from '../../services/dataQuery';
-import { error, success } from '../../components/module/SysCfgQueryFieldAlert'
+import { error } from '../../components/module/SysCfgQueryFieldAlert'
 
 
 export default {
@@ -27,13 +27,20 @@ export default {
             }
         },
         *querySubmit({payload}, {call, put}) {
-            console.log(payload);
             const result = yield call(querySubmit, payload);
-            console.log(result);
+            if (result.data.status === 500) {
+                error(result.data.statusText);
+            } else {
+                yield put({ type: 'saveQuerySubmit', payload: result.data });
+            }
+            
         }
     },
 
     reducers: {
+        saveQuerySubmit(state, action) {
+            return { ...state, querySubmitData: action.payload };
+        },
         saveModuleBySysAlias(state, action) {
             return { ...state, modules: action.payload };
         },

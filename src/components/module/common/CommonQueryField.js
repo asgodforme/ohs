@@ -1,11 +1,11 @@
 import React from 'react';
 
-import { Form, Row, Col, Input, Button, Radio } from 'antd';
+import { Form, Row, Col, Input, Button, Radio, Select } from 'antd';
 import { CommonDataField } from './CommonDataField';
 import { CommonAddField } from './CommonAddField';
-import {info} from '../SysCfgQueryFieldAlert';
 const FormItem = Form.Item;
 const RadioGroup = Radio.Group;
+const Option = Select.Option;
 
 class AdvancedSearchForm extends React.Component {
 
@@ -20,11 +20,11 @@ class AdvancedSearchForm extends React.Component {
         total: props.data[props.queryFields.dataName].totalElements,
       },
     }
-    
+
     // if (props.data[props.queryFields.dataName].content.length === 0) {
     //   info("无数据显示，请点击查询按钮查询！");
     // }
-    
+
 
     // console.log(this.state)
   }
@@ -100,6 +100,35 @@ class AdvancedSearchForm extends React.Component {
                   <Radio value={"1"}>{'是'}</Radio>
                   <Radio value={"0"}>{'否'}</Radio>
                 </RadioGroup>
+              )}
+            </FormItem>
+          </Col>);
+      } else if (queryFields.dataName === 'evnConfig' && queryFields.fieldNames[i] === 'evnTyp') {
+        children.push(
+          <Col span={6} key={i}>
+            <FormItem {...formItemLayout} label={queryFields.fieldDescs[i]}>
+              {getFieldDecorator(queryFields.fieldNames[i], {
+                initialValue: this.state.queryParm ? this.state.queryParm[queryFields.fieldNames[i]] : null,
+              })(
+                <RadioGroup>
+                  <Radio value={"1"}>{'数据库'}</Radio>
+                  <Radio value={"0"}>{'应用服务器'}</Radio>
+                </RadioGroup>
+              )}
+            </FormItem>
+          </Col>);
+      } else if (queryFields.dataName === 'evnConfig' && queryFields.fieldNames[i] === 'dbType') {
+        children.push(
+          <Col span={6} key={i}>
+            <FormItem {...formItemLayout} label={queryFields.fieldDescs[i]}>
+              {getFieldDecorator(queryFields.fieldNames[i], {
+                initialValue: this.state.queryParm ? this.state.queryParm[queryFields.fieldNames[i]] : null,
+              })(
+                <Select>
+                  <Option value={"0"}>{'MYSQL'}</Option>
+                  <Option value={"1"}>{'ORACLE'}</Option>
+                  <Option value={"2"}>{'DB2'}</Option>
+                </Select>
               )}
             </FormItem>
           </Col>);

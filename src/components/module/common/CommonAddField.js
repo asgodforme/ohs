@@ -286,6 +286,33 @@ class addCreateForm extends React.Component {
               <Input disabled={true} />
             )}
           </FormItem>)
+      } else if (queryFields.dataName === 'evnConfig' && queryFields.fieldNames[i] === 'evnTyp') {
+        formItem.push(
+            <FormItem label={queryFields.fieldDescs[i]}>
+              {getFieldDecorator(queryFields.fieldNames[i], {
+                rules: [{ required: true, message: '请输入' + queryFields.fieldDescs[i] + '!' }],
+                initialValue: this.state.queryParm ? this.state.queryParm[queryFields.fieldNames[i]] : null,
+              })(
+                <RadioGroup>
+                  <Radio value={"1"}>{'数据库'}</Radio>
+                  <Radio value={"0"}>{'应用服务器'}</Radio>
+                </RadioGroup>
+              )}
+            </FormItem>);
+      } else if (queryFields.dataName === 'evnConfig' && queryFields.fieldNames[i] === 'dbType') {
+        formItem.push(
+            <FormItem label={queryFields.fieldDescs[i]}>
+              {getFieldDecorator(queryFields.fieldNames[i], {
+                rules: [{ required: true, message: '请选择' + queryFields.fieldDescs[i] + '!' }],
+                initialValue: this.state.queryParm ? this.state.queryParm[queryFields.fieldNames[i]] : null,
+              })(
+                <Select>
+                  <Option value={"0"}>{'MYSQL'}</Option>
+                  <Option value={"1"}>{'ORACLE'}</Option>
+                  <Option value={"2"}>{'DB2'}</Option>
+                </Select>
+              )}
+            </FormItem>);
       } else {
         formItem.push(
           <FormItem key={i} label={queryFields.fieldDescs[i]}>

@@ -17,16 +17,24 @@ export function getAllSysWhenInit(payload) {
   return request(`/api/sysConfig/getAllSysWhenInit?${stringify(payload)}`);
 }
 
+// export function saveModuleConfig(payload) {
+//   return request(`/api/moduleConfig/saveModuleConfig?${stringify(payload)}`);
+// }
+
 export function saveModuleConfig(payload) {
-  return request(`/api/moduleConfig/saveModuleConfig?${stringify(payload)}`);
+  return request(`/api/moduleConfig/saveModuleConfig?`, {method: 'POST', body: payload});
 }
 
 export function deleteById(payload) {
   return request(`/api/moduleConfig/deleteById/${payload}`, { method: 'DELETE' });
 }
 
+// export function updateById(payload) {
+//   return request(`/api/moduleConfig/updateById?${stringify(payload)}`);
+// }
+
 export function updateById(payload) {
-  return request(`/api/moduleConfig/updateById?${stringify(payload)}`);
+  return request(`/api/moduleConfig/updateById`, {method: 'PUT', body: payload});
 }
 
 export function getModuleBySysAlias(payload) {

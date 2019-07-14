@@ -1,52 +1,75 @@
 import React from 'react';
 import { Table } from 'antd';
 
+class DataTableFields extends React.Component {
 
-const columns = [
-    {
-        title: 'Name',
-        dataIndex: 'name',
-        render: text => <a href="javascript:;">{text}</a>,
-    },
-    {
-        title: 'Cash Assets',
-        className: 'column-money',
-        dataIndex: 'money',
-    },
-    {
-        title: 'Address',
-        dataIndex: 'address',
-    },
-];
+    constructor(props) {
+        super(props);
+        const columns = [];
+        const datas = [];
+        const titles = [];
+        if (props.data.querySubmitData != null) {
+            const querySubmitData = props.data.querySubmitData;
+            for (var i = 0; i < querySubmitData.length; i++) {
+                const dataFields = querySubmitData[i].dataFields;
+                const dataHeader = querySubmitData[i].dataHeader;
+                titles.push(querySubmitData[i].title);
+                const column = [];
+                columns.push(column);
+                if (dataHeader != null) {
+                    dataHeader.map((value, key) => {
+                        for (var j in value) {
+                            column.push({
+                                title: value[j],
+                                dataIndex: j,
+                            });
+                        }
+                        return null;
+                    });
+                }
 
-const data = [
-    {
-        key: '1',
-        name: 'John Brown',
-        money: '￥300,000.00',
-        address: 'New York No. 1 Lake Park',
-    },
-    {
-        key: '2',
-        name: 'Jim Green',
-        money: '￥1,256,000.00',
-        address: 'London No. 1 Lake Park',
-    },
-    {
-        key: '3',
-        name: 'Joe Black',
-        money: '￥120,000.00',
-        address: 'Sidney No. 1 Lake Park',
-    },
-];
+                const data = [];
+                datas.push(data);
+                if (dataFields != null) {
+                    dataFields.map((value, key) => {
+                        let dat = { key };
+                        for (var j in value) {
+                            dat[j] = value[j];
+                        }
+                        data.push(dat);
+                        return null;
+                    })
+                }
+            }
 
-const DataTableFields = () => {
-    return (<Table
-        columns={columns}
-        dataSource={data}
-        bordered
-        title={() => '批量开户批次信息'}
-    />)
+        }
+
+        this.state = {
+            columns: columns,
+            datas: datas,
+            titles: titles,
+        }
+    }
+
+    render() {
+
+        let tables;
+        if (this.state.columns.length > 0) {
+            tables = this.state.columns.map((value, key) => {
+                return (
+                    <Table key={key}
+                        columns={value}
+                        dataSource={this.state.datas[key]}
+                        bordered
+                        title={() => this.state.titles[key]}
+                    />
+                )
+            })
+        }
+        return (
+            <div>{tables}</div>
+        )
+    }
 }
 
 export default DataTableFields;
