@@ -118,7 +118,6 @@ class addCreateForm extends React.Component {
     }));
   }
   onSecondCityChange = (value) => {
-    console.log(this.state.tableChns)
     let sysTableColumnInfos = this.state.sysTableColumnInfos;
     let sysTableColumnChnInfos = this.state.sysTableColumnChnInfos;
     this.setState({
@@ -288,7 +287,7 @@ class addCreateForm extends React.Component {
           </FormItem>)
       } else if (queryFields.dataName === 'evnConfig' && queryFields.fieldNames[i] === 'evnTyp') {
         formItem.push(
-            <FormItem label={queryFields.fieldDescs[i]}>
+            <FormItem key={i} label={queryFields.fieldDescs[i]}>
               {getFieldDecorator(queryFields.fieldNames[i], {
                 rules: [{ required: true, message: '请输入' + queryFields.fieldDescs[i] + '!' }],
                 initialValue: this.state.queryParm ? this.state.queryParm[queryFields.fieldNames[i]] : null,
@@ -301,7 +300,7 @@ class addCreateForm extends React.Component {
             </FormItem>);
       } else if (queryFields.dataName === 'evnConfig' && queryFields.fieldNames[i] === 'dbType') {
         formItem.push(
-            <FormItem label={queryFields.fieldDescs[i]}>
+            <FormItem key={i} label={queryFields.fieldDescs[i]}>
               {getFieldDecorator(queryFields.fieldNames[i], {
                 rules: [{ required: true, message: '请选择' + queryFields.fieldDescs[i] + '!' }],
                 initialValue: this.state.queryParm ? this.state.queryParm[queryFields.fieldNames[i]] : null,
@@ -377,7 +376,6 @@ export class CommonAddField extends React.Component {
   handleCreate = () => {
     const form = this.form;
     form.validateFields((err, values) => {
-      console.log(values);
       if (err) {
         error(err);
         return;

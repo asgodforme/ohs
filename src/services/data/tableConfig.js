@@ -17,6 +17,10 @@ export function deleteById(payload) {
   return request(`/api/tableConfig/deleteById/${payload}`, { method: 'DELETE' });
 }
 
+// export function updateById(payload) {
+//   return request(`/api/tableConfig/updateById?${stringify(payload)}`);
+// }
+
 export function updateById(payload) {
-  return request(`/api/tableConfig/updateById?${stringify(payload)}`);
+  return request(`/api/tableConfig/updateById`, { method: "PUT", body: payload });
 }

@@ -5,14 +5,23 @@ export function getAllEnumValue(payload) {
   return request(`/api/enumValueConfig/getAllEnumValue?${stringify(payload)}`);
 }
 
+// export function saveEnumValueConfig(payload) {
+//   return request(`/api/enumValueConfig/saveEnumValueConfig?${stringify(payload)}`);
+// }
+
 export function saveEnumValueConfig(payload) {
-  return request(`/api/enumValueConfig/saveEnumValueConfig?${stringify(payload)}`);
+  return request(`/api/enumValueConfig/saveEnumValueConfig`, { method: "POST", body: payload });
 }
+
 
 export function deleteById(payload) {
   return request(`/api/enumValueConfig/deleteById/${payload}`, { method: 'DELETE' });
 }
 
+// export function updateById(payload) {
+//   return request(`/api/enumValueConfig/updateById?${stringify(payload)}`);
+// }
+
 export function updateById(payload) {
-  return request(`/api/enumValueConfig/updateById?${stringify(payload)}`);
+  return request(`/api/enumValueConfig/updateById`, { method: "PUT", body: payload });
 }

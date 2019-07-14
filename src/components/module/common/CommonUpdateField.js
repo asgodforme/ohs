@@ -259,7 +259,7 @@ class UpdateCreateForm extends React.Component {
                     </FormItem>)
             } else if (queryFields.dataName === 'evnConfig' && queryFields.fieldNames[i] === 'evnTyp') {
                 formItem.push( 
-                    <FormItem label={queryFields.fieldDescs[i]}>
+                    <FormItem key={i} label={queryFields.fieldDescs[i]}>
                       {getFieldDecorator(queryFields.fieldNames[i], {
                         initialValue: evnTypeMapping[records[queryFields.fieldNames[i]]],
                       })(
@@ -271,7 +271,7 @@ class UpdateCreateForm extends React.Component {
                     </FormItem> );
               } else if (queryFields.dataName === 'evnConfig' && queryFields.fieldNames[i] === 'dbType') {
                 formItem.push( 
-                    <FormItem  label={queryFields.fieldDescs[i]}>
+                    <FormItem key={i} label={queryFields.fieldDescs[i]}>
                       {getFieldDecorator(queryFields.fieldNames[i], {
                         initialValue: dataBaseTypMapping[records[queryFields.fieldNames[i]]],
                       })(
