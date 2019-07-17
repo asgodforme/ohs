@@ -29,6 +29,7 @@ export default {
                 dispatch({ type: 'enumValueConfig/saveAllSys', payload: result });
                 dispatch({ type: 'columnConfig/saveAllSys', payload: result });
                 dispatch({ type: 'singleSqlConfig/saveAllSys', payload: result });
+                dispatch({ type: 'interfaceConfig/saveAllSys', payload: result });
                 dispatch({ type: 'saveAllSys', payload: result });
             });
         },

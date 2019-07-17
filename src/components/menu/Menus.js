@@ -11,6 +11,7 @@ import ColumnConfig from '../../routes/module/data/ColumnConfig';
 import EnumValueConfig from '../../routes/module/data/EnumValueConfig';
 import SingleSqlConfig from '../../routes/module/data/SingleSqlConfig';
 import DataQuery from '../../routes/dataQuery/DataQuery';
+import InterfaceConfig from '../../routes/module/InterfaceConfig';
 
 const { SubMenu } = Menu;
 const { Header, Sider, Footer } = Layout;
@@ -24,6 +25,7 @@ const componentMapping = {
     columnConfig: <ColumnConfig />,
     enumValueConfig: <EnumValueConfig />,
     singleSqlConfig: <SingleSqlConfig />,
+    interfaceConfig: <InterfaceConfig />,
     dataQuery: "dataQuery",
 };
 
