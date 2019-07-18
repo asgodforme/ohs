@@ -165,7 +165,7 @@ class addCreateForm extends React.Component {
   onModuleAliasChange = (value) => {
     const { form, queryFields } = this.props;
     let fieldsValues = {};
-    if (queryFields.dataName === 'singleSqlConfig' && queryFields.fieldNames.indexOf('moduleAlias') > -1) {
+    if ((queryFields.dataName === 'singleSqlConfig' || queryFields.dataName === 'interfaceConfig') && queryFields.fieldNames.indexOf('moduleAlias') > -1) {
       fieldsValues.moduleName = this.state.moduleChns[value];
     }
     form.setFieldsValue(fieldsValues);
@@ -253,7 +253,7 @@ class addCreateForm extends React.Component {
               </RadioGroup>
             )}
           </FormItem>)
-      } else if (queryFields.dataName === 'singleSqlConfig' && queryFields.fieldNames[i] === 'moduleAlias') {
+      } else if ((queryFields.dataName === 'singleSqlConfig' || queryFields.dataName === 'interfaceConfig') && queryFields.fieldNames[i] === 'moduleAlias') {
         formItem.push(
           <FormItem key={i} label={queryFields.fieldDescs[i]}>
             {getFieldDecorator(queryFields.fieldNames[i], {
@@ -312,6 +312,34 @@ class addCreateForm extends React.Component {
                 </Select>
               )}
             </FormItem>);
+      } else if (queryFields.dataName === 'interfaceConfig' && queryFields.fieldNames[i] === 'method') {
+        formItem.push(
+          <FormItem key={i} label={queryFields.fieldDescs[i]}>
+            {getFieldDecorator(queryFields.fieldNames[i], {
+              rules: [{ required: true, message: '请选择' + queryFields.fieldDescs[i] + '!' }],
+              initialValue: this.state.queryParm ? this.state.queryParm[queryFields.fieldNames[i]] : null,
+            })(
+              <Select>
+                <Option value={"POST"}>{'POST'}</Option>
+                <Option value={"GET"}>{'GET'}</Option>
+                <Option value={"PUT"}>{'PUT'}</Option>
+                <Option value={"DELETE"}>{'DELETE'}</Option>
+              </Select>
+            )}
+          </FormItem>);
+      } else if (queryFields.dataName === 'interfaceConfig' && queryFields.fieldNames[i] === 'interfaceType') {
+        formItem.push(
+          <FormItem key={i} label={queryFields.fieldDescs[i]}>
+            {getFieldDecorator(queryFields.fieldNames[i], {
+              rules: [{ required: true, message: '请选择' + queryFields.fieldDescs[i] + '!' }],
+              initialValue: this.state.queryParm ? this.state.queryParm[queryFields.fieldNames[i]] : null,
+            })(
+              <Select>
+                <Option value={"WEBSERVICE"}>{'WEBSERVICE'}</Option>
+                <Option value={"RESETFUL"}>{'RESETFUL'}</Option>
+              </Select>
+            )}
+          </FormItem>);
       } else {
         formItem.push(
           <FormItem key={i} label={queryFields.fieldDescs[i]}>
@@ -325,6 +353,7 @@ class addCreateForm extends React.Component {
                   || (queryFields.fieldNames[i] === 'tableChnName' && queryFields.dataName === 'columnConfig')
                   || (queryFields.fieldNames[i] === 'tableChnName' && queryFields.dataName === 'enumValueConfig')
                   || (queryFields.fieldNames[i] === 'moduleName' && queryFields.dataName === 'singleSqlConfig')
+                  || (queryFields.fieldNames[i] === 'moduleName' && queryFields.dataName === 'interfaceConfig')
                   || (queryFields.fieldNames[i] === 'columnName' && queryFields.dataName === 'singleSqlConfig')
                   || (queryFields.fieldNames[i] === 'columnAlias' && queryFields.dataName === 'enumValueConfig')
                 )

@@ -4,9 +4,9 @@ import CommonQueryField from '../../components/module/common/CommonQueryField'
 
 const queryFields = {
     scroll: {},
-    dataName: 'interfaceConfig',
-    updateTitle: '修改接口信息',
-    addTitle: '新增接口信息',
+    dataName: 'testsuitConfig',
+    updateTitle: '修改测试案例信息',
+    addTitle: '新增测试案例信息',
     fieldDescs: ['系统码', '系统名', '模块码', '模块名', '访问路径', '方法', '接口类型', '接口名', '接口别名'],
     fieldNames: ['sysAlias', 'sysChineseNme', 'moduleAlias', 'moduleName', 'urlPath', 'method', 'interfaceType', 'interfaceName', 'interfaceAlias'],
 }
@@ -69,29 +69,29 @@ const columns = [{
     key: 'updateDate',
 }];
 
-const InterfaceConfig = ({ dispatch, interfaceConfig }) => {
-    function getAllInterface(interfaceConfig) {
+const InterfaceConfig = ({ dispatch, testsuitConfig }) => {
+    function getAllInterface(testsuitConfig) {
         dispatch({
-            type: 'interfaceConfig/getAllInterface',
-            payload: interfaceConfig,
+            type: 'testsuitConfig/getAllInterface',
+            payload: testsuitConfig,
         });
     }
-    function saveInterfaceConfig(interfaceConfig) {
+    function saveInterfaceConfig(testsuitConfig) {
         dispatch({
-            type: 'interfaceConfig/saveInterfaceConfig',
-            payload: interfaceConfig,
+            type: 'testsuitConfig/saveInterfaceConfig',
+            payload: testsuitConfig,
         });
     }
-    function deleteInterfaceConfig(interfaceConfig) {
+    function deleteInterfaceConfig(testsuitConfig) {
         dispatch({
-            type: 'interfaceConfig/deleteById',
-            payload: interfaceConfig,
+            type: 'testsuitConfig/deleteById',
+            payload: testsuitConfig,
         });
     }
-    function updateInterface(interfaceConfig) {
+    function updateInterface(testsuitConfig) {
         dispatch({
-            type: 'interfaceConfig/updateById',
-            payload: interfaceConfig,
+            type: 'testsuitConfig/updateById',
+            payload: testsuitConfig,
         })
     }
     function getAllSys() {
@@ -103,7 +103,7 @@ const InterfaceConfig = ({ dispatch, interfaceConfig }) => {
 
     return (
         <div>
-            <CommonQueryField query={getAllInterface} data={interfaceConfig}
+            <CommonQueryField query={getAllInterface} data={testsuitConfig}
                 save={saveInterfaceConfig} delete={deleteInterfaceConfig} update={updateInterface}
                 queryFields={queryFields} columns={columns} getAllSys={getAllSys}
             />
@@ -112,6 +112,6 @@ const InterfaceConfig = ({ dispatch, interfaceConfig }) => {
 };
 
 // export default Products;
-export default connect(({ interfaceConfig }) => ({
-    interfaceConfig,
+export default connect(({ testsuitConfig }) => ({
+    testsuitConfig,
 }))(InterfaceConfig);

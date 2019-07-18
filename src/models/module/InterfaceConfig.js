@@ -1,5 +1,4 @@
 import { getAllInterface, saveInterfaceConfig, deleteById, updateById } from '../../services/interfaceConfig';
-import { getAllSysWhenInit } from '../../services/moduleConfig';
 import { error, success } from '../../components/module/SysCfgQueryFieldAlert'
 
 

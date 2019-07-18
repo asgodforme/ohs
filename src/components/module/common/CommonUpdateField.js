@@ -282,6 +282,32 @@ class UpdateCreateForm extends React.Component {
                         </Select>
                       )}
                     </FormItem> );
+              } else if (queryFields.dataName === 'interfaceConfig' && queryFields.fieldNames[i] === 'method') {
+                formItem.push( 
+                    <FormItem key={i} label={queryFields.fieldDescs[i]}>
+                      {getFieldDecorator(queryFields.fieldNames[i], {
+                        initialValue: records[queryFields.fieldNames[i]] ,
+                      })(
+                        <Select>
+                          <Option value={"POST"}>{'POST'}</Option>
+                          <Option value={"GET"}>{'GET'}</Option>
+                          <Option value={"PUT"}>{'PUT'}</Option>
+                          <Option value={"DELETE"}>{'DELETE'}</Option>
+                        </Select>
+                      )}
+                    </FormItem> );
+              }  else if (queryFields.dataName === 'interfaceConfig' && queryFields.fieldNames[i] === 'interfaceType') {
+                formItem.push( 
+                    <FormItem key={i} label={queryFields.fieldDescs[i]}>
+                      {getFieldDecorator(queryFields.fieldNames[i], {
+                        initialValue: records[queryFields.fieldNames[i]],
+                      })(
+                        <Select>
+                          <Option value={"WEBSERVICE"}>{'WEBSERVICE'}</Option>
+                          <Option value={"RESTFUL"}>{'RESTFUL'}</Option>
+                        </Select>
+                      )}
+                    </FormItem> );
               } else {
                 if (((queryFields.fieldNames[i] === 'columnAlias' || queryFields.fieldNames[i] === 'columnName')
                     && queryFields.dataName === 'singleSqlConfig')) {
