@@ -20,6 +20,10 @@ const evnTypeMapping = {
     "数据库" : "1",
 }
 
+const notRequires = [
+    'preOprUrl', 'preReqOprData', 'preRspDataRegx', 'afterOperUrl', 'afterReqOprData', 'afterRspDataRegx'
+  ];
+
 class UpdateCreateForm extends React.Component {
 
     constructor(props) {
@@ -319,6 +323,15 @@ class UpdateCreateForm extends React.Component {
                       )}
                     </FormItem> );
             
+              } else if (queryFields.dataName === 'testsuitConfig' && notRequires.indexOf(queryFields.fieldNames[i]) > -1) {
+                formItem.push( 
+                    <FormItem key={i} label={queryFields.fieldDescs[i]}>
+                      {getFieldDecorator(queryFields.fieldNames[i], {
+                        initialValue: records[queryFields.fieldNames[i]],
+                      })(
+                        <Input />
+                      )}
+                    </FormItem> );
               } else {
                 if (((queryFields.fieldNames[i] === 'columnAlias' || queryFields.fieldNames[i] === 'columnName')
                     && queryFields.dataName === 'singleSqlConfig')) {
@@ -447,6 +460,8 @@ export class CommonUpdateField extends React.Component {
                     <Button>删除<Icon type="delete" /></Button>
                     <span className="ant-divider" />
                 </Popconfirm>
+                <Button type="primary" onClick={this.showModal}>添加<Icon type="edit" /></Button>
+                <span className="ant-divider" />
                 <CollectionCreateForm
                     ref={this.saveFormRef}
                     visible={this.state.visible}

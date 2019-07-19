@@ -7,6 +7,11 @@ const FormItem = Form.Item;
 const RadioGroup = Radio.Group;
 const Option = Select.Option;
 
+
+const notQueryKey = [
+  'requestTemplate', 'responseTemplate', 'preOprUrl', 'preReqOprData', 'preRspDataRegx', 'afterOperUrl', 'afterReqOprData', 'afterRspDataRegx'
+];
+
 class AdvancedSearchForm extends React.Component {
 
   constructor(props) {
@@ -133,7 +138,7 @@ class AdvancedSearchForm extends React.Component {
             </FormItem>
           </Col>);
       } else {
-        if (queryFields.fieldNames[i] !== 'requestTemplate' && queryFields.fieldNames[i] !== 'responseTemplate') {
+        if (notQueryKey.indexOf(queryFields.fieldNames[i]) == -1) {
           children.push(
             <Col span={6} key={i}>
               <FormItem {...formItemLayout} label={queryFields.fieldDescs[i]}>

@@ -5,6 +5,10 @@ const FormItem = Form.Item;
 const Option = Select.Option;
 const RadioGroup = Radio.Group;
 
+const notRequires = [
+  'preOprUrl', 'preReqOprData', 'preRspDataRegx', 'afterOperUrl', 'afterReqOprData', 'afterRspDataRegx'
+];
+
 class addCreateForm extends React.Component {
   constructor(props) {
     super();
@@ -344,6 +348,15 @@ class addCreateForm extends React.Component {
                 <Option value={"WEBSERVICE"}>{'WEBSERVICE'}</Option>
                 <Option value={"RESETFUL"}>{'RESETFUL'}</Option>
               </Select>
+            )}
+          </FormItem>);
+      } else if (queryFields.dataName === 'testsuitConfig' && notRequires.indexOf(queryFields.fieldNames[i]) > -1) {
+        formItem.push(
+          <FormItem key={i} label={queryFields.fieldDescs[i]}>
+            {getFieldDecorator(queryFields.fieldNames[i], {
+              initialValue: this.state.queryParm ? this.state.queryParm[queryFields.fieldNames[i]] : null,
+            })(
+              <Input />
             )}
           </FormItem>);
       } else {

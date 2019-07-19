@@ -7,7 +7,7 @@ const queryFields = {
     dataName: 'testsuitConfig',
     updateTitle: '修改测试案例信息',
     addTitle: '新增测试案例信息',
-    fieldDescs: ['系统码', '系统名', '模块码', '模块名', '测试案例名称', '版本号', 
+    fieldDescs: ['系统码', '系统名', '模块码', '模块名', '案例名称', '版本号', 
                 '前置操作', '前置操作请求模板', '前置响应解析正则',
                 '后置操作', '后置操作请求模板', '后置响应解析正则'],    
     fieldNames: ['sysAlias', 'sysChineseNme', 'moduleAlias', 'moduleName',  'testsuitName', 'versionNo', 
@@ -36,7 +36,7 @@ const columns = [{
     dataIndex: 'moduleName',
     key: 'moduleName',
 }, {
-    title: '测试案例名称',
+    title: '案例名称',
     dataIndex: 'testsuitName',
     key: 'testsuitName',
 }, {
