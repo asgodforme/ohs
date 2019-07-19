@@ -30,6 +30,7 @@ export default {
                 dispatch({ type: 'columnConfig/saveAllSys', payload: result });
                 dispatch({ type: 'singleSqlConfig/saveAllSys', payload: result });
                 dispatch({ type: 'interfaceConfig/saveAllSys', payload: result });
+                dispatch({ type: 'testsuitConfig/saveAllSys', payload: result });
                 dispatch({ type: 'saveAllSys', payload: result });
             });
         },

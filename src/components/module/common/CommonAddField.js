@@ -165,7 +165,10 @@ class addCreateForm extends React.Component {
   onModuleAliasChange = (value) => {
     const { form, queryFields } = this.props;
     let fieldsValues = {};
-    if ((queryFields.dataName === 'singleSqlConfig' || queryFields.dataName === 'interfaceConfig') && queryFields.fieldNames.indexOf('moduleAlias') > -1) {
+    if ((queryFields.dataName === 'singleSqlConfig' 
+    || queryFields.dataName === 'interfaceConfig'
+    || queryFields.dataName === 'testsuitConfig') 
+    && queryFields.fieldNames.indexOf('moduleAlias') > -1) {
       fieldsValues.moduleName = this.state.moduleChns[value];
     }
     form.setFieldsValue(fieldsValues);
@@ -253,14 +256,17 @@ class addCreateForm extends React.Component {
               </RadioGroup>
             )}
           </FormItem>)
-      } else if ((queryFields.dataName === 'singleSqlConfig' || queryFields.dataName === 'interfaceConfig') && queryFields.fieldNames[i] === 'moduleAlias') {
+      } else if ((queryFields.dataName === 'singleSqlConfig' 
+      || queryFields.dataName === 'interfaceConfig'
+      || queryFields.dataName === 'testsuitConfig') 
+      && queryFields.fieldNames[i] === 'moduleAlias') {
         formItem.push(
           <FormItem key={i} label={queryFields.fieldDescs[i]}>
             {getFieldDecorator(queryFields.fieldNames[i], {
               rules: [{ required: true, message: '请输入' + queryFields.fieldDescs[i] + '!' }],
               onChange: this.onModuleAliasChange
             })(
-              <Select placeholder="请选择模块名" notFoundContent="该表下不存在模块信息，请在“模块配置”中先添加对应系统的模块信息！">
+              <Select placeholder="请选择模块码" notFoundContent="该表下不存在模块信息，请在“模块配置”中先添加对应系统的模块信息！">
                 {
                   moduleOptions
                 }
@@ -341,27 +347,41 @@ class addCreateForm extends React.Component {
             )}
           </FormItem>);
       } else {
-        formItem.push(
-          <FormItem key={i} label={queryFields.fieldDescs[i]}>
-            {getFieldDecorator(queryFields.fieldNames[i], {
-              rules: [{ required: true, message: '请输入' + queryFields.fieldDescs[i] + '!' }],
-            })(
-              <Input disabled={
-                (
-                  queryFields.fieldNames[i] === 'sysChineseNme' || queryFields.fieldNames[i] === 'schemaName'
-                  || (queryFields.fieldNames[i] === 'tableChnName' && queryFields.dataName === 'singleSqlConfig')
-                  || (queryFields.fieldNames[i] === 'tableChnName' && queryFields.dataName === 'columnConfig')
-                  || (queryFields.fieldNames[i] === 'tableChnName' && queryFields.dataName === 'enumValueConfig')
-                  || (queryFields.fieldNames[i] === 'moduleName' && queryFields.dataName === 'singleSqlConfig')
-                  || (queryFields.fieldNames[i] === 'moduleName' && queryFields.dataName === 'interfaceConfig')
-                  || (queryFields.fieldNames[i] === 'columnName' && queryFields.dataName === 'singleSqlConfig')
-                  || (queryFields.fieldNames[i] === 'columnAlias' && queryFields.dataName === 'enumValueConfig')
-                )
-                  ? true : false}
-              />
-            )}
-          </FormItem>
-        )
+        if (queryFields.fieldNames[i] !== 'requestTemplate' && queryFields.fieldNames[i] !== 'responseTemplate') {
+          formItem.push(
+            <FormItem key={i} label={queryFields.fieldDescs[i]}>
+              {getFieldDecorator(queryFields.fieldNames[i], {
+                rules: [{ required: true, message: '请输入' + queryFields.fieldDescs[i] + '!' }],
+              })(
+                <Input disabled={
+                  (
+                    queryFields.fieldNames[i] === 'sysChineseNme' || queryFields.fieldNames[i] === 'schemaName'
+                    || (queryFields.fieldNames[i] === 'tableChnName' && queryFields.dataName === 'singleSqlConfig')
+                    || (queryFields.fieldNames[i] === 'tableChnName' && queryFields.dataName === 'columnConfig')
+                    || (queryFields.fieldNames[i] === 'tableChnName' && queryFields.dataName === 'enumValueConfig')
+                    || (queryFields.fieldNames[i] === 'moduleName' && queryFields.dataName === 'singleSqlConfig')
+                    || (queryFields.fieldNames[i] === 'moduleName' && queryFields.dataName === 'interfaceConfig')
+                    || (queryFields.fieldNames[i] === 'moduleName' && queryFields.dataName === 'testsuitConfig')
+                    || (queryFields.fieldNames[i] === 'columnName' && queryFields.dataName === 'singleSqlConfig')
+                    || (queryFields.fieldNames[i] === 'columnAlias' && queryFields.dataName === 'enumValueConfig')
+                  )
+                    ? true : false}
+                />
+              )}
+            </FormItem>
+          )
+        } else {
+          formItem.push(
+            <FormItem key={i} label={queryFields.fieldDescs[i]}>
+              {getFieldDecorator(queryFields.fieldNames[i], {
+                rules: [{ required: true, message: '请输入' + queryFields.fieldDescs[i] + '!' }],
+              })(
+                <Input.TextArea rows= {25}/>
+              )}
+            </FormItem>
+          )
+
+        }
       }
     }
     return (

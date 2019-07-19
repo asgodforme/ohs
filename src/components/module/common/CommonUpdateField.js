@@ -308,6 +308,17 @@ class UpdateCreateForm extends React.Component {
                         </Select>
                       )}
                     </FormItem> );
+              } else if (queryFields.dataName === 'interfaceConfig' 
+              && (queryFields.fieldNames[i] === 'requestTemplate' || queryFields.fieldNames[i] === 'responseTemplate')) {
+                formItem.push( 
+                    <FormItem key={i} label={queryFields.fieldDescs[i]}>
+                      {getFieldDecorator(queryFields.fieldNames[i], {
+                        initialValue: records[queryFields.fieldNames[i]] != null? records[queryFields.fieldNames[i]].props.content : records[queryFields.fieldNames[i]],
+                      })(
+                        <Input.TextArea rows={25} />
+                      )}
+                    </FormItem> );
+            
               } else {
                 if (((queryFields.fieldNames[i] === 'columnAlias' || queryFields.fieldNames[i] === 'columnName')
                     && queryFields.dataName === 'singleSqlConfig')) {
@@ -324,27 +335,28 @@ class UpdateCreateForm extends React.Component {
                         </FormItem>
                     );
                 } else {
-                    formItem.push(
-                        <FormItem key={i} label={queryFields.fieldDescs[i]}>
-                            {getFieldDecorator(queryFields.fieldNames[i], {
-                                initialValue: records[queryFields.fieldNames[i]], //这是用来初始化表单数据的
-                                rules: [{ required: true, message: '请输入' + queryFields.fieldDescs[i] + '!' }],
-                            })(
-                                <Input disabled={
-                                    (
-                                        queryFields.fieldNames[i] === 'sysChineseNme' || queryFields.fieldNames[i] === 'schemaName'
-                                        || (queryFields.fieldNames[i] === 'tableChnName' && queryFields.dataName === 'singleSqlConfig')
-                                        || (queryFields.fieldNames[i] === 'tableChnName' && queryFields.dataName === 'columnConfig')
-                                        || (queryFields.fieldNames[i] === 'tableChnName' && queryFields.dataName === 'enumValueConfig')
-                                        || (queryFields.fieldNames[i] === 'moduleName' && queryFields.dataName === 'singleSqlConfig')
-                                        || (queryFields.fieldNames[i] === 'moduleAlias' && queryFields.dataName === 'singleSqlConfig')
-                                        || (queryFields.fieldNames[i] === 'columnAlias' && queryFields.dataName === 'enumValueConfig')
-                                    )
-                                        ? true : false} />
-                            )}
-                        </FormItem>
-                    )
-                }
+               
+                        formItem.push(
+                            <FormItem key={i} label={queryFields.fieldDescs[i]}>
+                                {getFieldDecorator(queryFields.fieldNames[i], {
+                                    initialValue: records[queryFields.fieldNames[i]], //这是用来初始化表单数据的
+                                    rules: [{ required: true, message: '请输入' + queryFields.fieldDescs[i] + '!' }],
+                                })(
+                                    <Input disabled={
+                                        (
+                                            queryFields.fieldNames[i] === 'sysChineseNme' || queryFields.fieldNames[i] === 'schemaName'
+                                            || (queryFields.fieldNames[i] === 'tableChnName' && queryFields.dataName === 'singleSqlConfig')
+                                            || (queryFields.fieldNames[i] === 'tableChnName' && queryFields.dataName === 'columnConfig')
+                                            || (queryFields.fieldNames[i] === 'tableChnName' && queryFields.dataName === 'enumValueConfig')
+                                            || (queryFields.fieldNames[i] === 'moduleName' && queryFields.dataName === 'singleSqlConfig')
+                                            || (queryFields.fieldNames[i] === 'moduleAlias' && queryFields.dataName === 'singleSqlConfig')
+                                            || (queryFields.fieldNames[i] === 'columnAlias' && queryFields.dataName === 'enumValueConfig')
+                                        )
+                                            ? true : false} />
+                                )}
+                            </FormItem>
+                        )
+                    }
             }
         }
 

@@ -12,6 +12,7 @@ import EnumValueConfig from '../../routes/module/data/EnumValueConfig';
 import SingleSqlConfig from '../../routes/module/data/SingleSqlConfig';
 import DataQuery from '../../routes/dataQuery/DataQuery';
 import InterfaceConfig from '../../routes/module/InterfaceConfig';
+import TestsuitConfig from '../../routes/module/TestsuitConfig';
 
 const { SubMenu } = Menu;
 const { Header, Sider, Footer } = Layout;
@@ -26,6 +27,7 @@ const componentMapping = {
     enumValueConfig: <EnumValueConfig />,
     singleSqlConfig: <SingleSqlConfig />,
     interfaceConfig: <InterfaceConfig />,
+    testsuitConfig: <TestsuitConfig />,
     dataQuery: "dataQuery",
 };
 

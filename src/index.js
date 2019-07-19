@@ -33,7 +33,7 @@ app.model(require('./models/module/data/EnumValueConfig').default)
 app.model(require('./models/module/data/SingleSqlConfig').default)
 app.model(require('./models/dataQuery/DataQuery').default)
 app.model(require('./models/module/InterfaceConfig').default)
-
+app.model(require('./models/module/TestsuitConfig').default)
 // 4. Router
 app.router(require('./router').default);
 

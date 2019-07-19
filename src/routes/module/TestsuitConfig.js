@@ -7,8 +7,12 @@ const queryFields = {
     dataName: 'testsuitConfig',
     updateTitle: '修改测试案例信息',
     addTitle: '新增测试案例信息',
-    fieldDescs: ['系统码', '系统名', '模块码', '模块名', '访问路径', '方法', '接口类型', '接口名', '接口别名'],
-    fieldNames: ['sysAlias', 'sysChineseNme', 'moduleAlias', 'moduleName', 'urlPath', 'method', 'interfaceType', 'interfaceName', 'interfaceAlias'],
+    fieldDescs: ['系统码', '系统名', '模块码', '模块名', '测试案例名称', '版本号', 
+                '前置操作', '前置操作请求模板', '前置响应解析正则',
+                '后置操作', '后置操作请求模板', '后置响应解析正则'],    
+    fieldNames: ['sysAlias', 'sysChineseNme', 'moduleAlias', 'moduleName',  'testsuitName', 'versionNo', 
+                'preOprUrl', 'preReqOprData', 'preRspDataRegx', 
+                'afterOperUrl', 'afterReqOprData', 'afterRspDataRegx'],
 }
 
 const columns = [{
@@ -32,26 +36,38 @@ const columns = [{
     dataIndex: 'moduleName',
     key: 'moduleName',
 }, {
-    title: '访问路径',
-    dataIndex: 'urlPath',
-    key: 'urlPath',
+    title: '测试案例名称',
+    dataIndex: 'testsuitName',
+    key: 'testsuitName',
 }, {
-    title: '方法',
-    dataIndex: 'method',
-    key: 'method',
+    title: '版本号',
+    dataIndex: 'versionNo',
+    key: 'versionNo',
 },{
-    title: '接口类型',
-    dataIndex: 'interfaceType',
-    key: 'interfaceType',
+    title: '前置操作',
+    dataIndex: 'preOprUrl',
+    key: 'preOprUrl',
 },{
-    title: '接口名',
-    dataIndex: 'interfaceName',
-    key: 'interfaceName',
+    title: '前置操作请求模板',
+    dataIndex: 'preReqOprData',
+    key: 'preReqOprData',
 },{
-    title: '接口别名',
-    dataIndex: 'interfaceAlias',
-    key: 'interfaceAlias',
-}, {
+    title: '前置响应解析正则',
+    dataIndex: 'preRspDataRegx',
+    key: 'preRspDataRegx',
+},{
+    title: '后置操作',
+    dataIndex: 'afterOprUrl',
+    key: 'afterOprUrl',
+},{
+    title: '后置操作请求模板',
+    dataIndex: 'afterReqOprData',
+    key: 'afterReqOprData',
+},{
+    title: '后置响应解析正则',
+    dataIndex: 'afterRspDataRegx',
+    key: 'afterRspDataRegx',
+},  {
     title: '创建者',
     dataIndex: 'createUser',
     key: 'createUser',
@@ -69,26 +85,26 @@ const columns = [{
     key: 'updateDate',
 }];
 
-const InterfaceConfig = ({ dispatch, testsuitConfig }) => {
-    function getAllInterface(testsuitConfig) {
+const TestsuitConfig = ({ dispatch, testsuitConfig }) => {
+    function getAllTestsuit(testsuitConfig) {
         dispatch({
-            type: 'testsuitConfig/getAllInterface',
+            type: 'testsuitConfig/getAllTestsuit',
             payload: testsuitConfig,
         });
     }
-    function saveInterfaceConfig(testsuitConfig) {
+    function saveTestsuitConfig(testsuitConfig) {
         dispatch({
-            type: 'testsuitConfig/saveInterfaceConfig',
+            type: 'testsuitConfig/saveTestsuitConfig',
             payload: testsuitConfig,
         });
     }
-    function deleteInterfaceConfig(testsuitConfig) {
+    function deleteTestsuitConfig(testsuitConfig) {
         dispatch({
             type: 'testsuitConfig/deleteById',
             payload: testsuitConfig,
         });
     }
-    function updateInterface(testsuitConfig) {
+    function updateTestsuit(testsuitConfig) {
         dispatch({
             type: 'testsuitConfig/updateById',
             payload: testsuitConfig,
@@ -103,8 +119,8 @@ const InterfaceConfig = ({ dispatch, testsuitConfig }) => {
 
     return (
         <div>
-            <CommonQueryField query={getAllInterface} data={testsuitConfig}
-                save={saveInterfaceConfig} delete={deleteInterfaceConfig} update={updateInterface}
+            <CommonQueryField query={getAllTestsuit} data={testsuitConfig}
+                save={saveTestsuitConfig} delete={deleteTestsuitConfig} update={updateTestsuit}
                 queryFields={queryFields} columns={columns} getAllSys={getAllSys}
             />
         </div>
@@ -114,4 +130,4 @@ const InterfaceConfig = ({ dispatch, testsuitConfig }) => {
 // export default Products;
 export default connect(({ testsuitConfig }) => ({
     testsuitConfig,
-}))(InterfaceConfig);
+}))(TestsuitConfig);

@@ -133,17 +133,20 @@ class AdvancedSearchForm extends React.Component {
             </FormItem>
           </Col>);
       } else {
-        children.push(
-          <Col span={6} key={i}>
-            <FormItem {...formItemLayout} label={queryFields.fieldDescs[i]}>
-              {getFieldDecorator(queryFields.fieldNames[i], {
-                initialValue: this.state.queryParm ? this.state.queryParm[queryFields.fieldNames[i]] : null,
-              })(
-                <Input placeholder={"请输入" + queryFields.fieldDescs[i]} />
-              )}
-            </FormItem>
-          </Col>
-        );
+        if (queryFields.fieldNames[i] !== 'requestTemplate' && queryFields.fieldNames[i] !== 'responseTemplate') {
+          children.push(
+            <Col span={6} key={i}>
+              <FormItem {...formItemLayout} label={queryFields.fieldDescs[i]}>
+                {getFieldDecorator(queryFields.fieldNames[i], {
+                  initialValue: this.state.queryParm ? this.state.queryParm[queryFields.fieldNames[i]] : null,
+                })(
+                  <Input placeholder={"请输入" + queryFields.fieldDescs[i]} />
+                )}
+              </FormItem>
+            </Col>
+          );
+        }
+        
       }
     }
 
