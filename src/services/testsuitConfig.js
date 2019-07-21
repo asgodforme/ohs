@@ -18,6 +18,10 @@ export function deleteById(payload) {
   return request(`/api/testsuitConfig/deleteById/${payload}`, { method: 'DELETE' });
 }
 
+export function deleteRecordsById(payload) {
+  return request(`/api/testsuitRecordsConfig/deleteById/${payload}`, { method: 'DELETE' });
+}
+
 // export function updateById(payload) {
 //   return request(`/api/testsuitConfig/updateById?${stringify(payload)}`);
 // }

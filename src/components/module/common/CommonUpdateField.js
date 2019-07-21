@@ -1,6 +1,7 @@
 import React from 'react';
-import { Button, Modal, Form, Input, Icon, Popconfirm, Select, Radio, Card, Checkbox } from 'antd';
+import { Button, Modal, Form, Input, Icon, Popconfirm, Select, Radio, Card, Checkbox, Table } from 'antd';
 import { warning, error } from '../SysCfgQueryFieldAlert';
+import { TestsuitUpdateField } from '../TestsuitUpdateField';
 const FormItem = Form.Item;
 const Option = Select.Option;
 const RadioGroup = Radio.Group;
@@ -17,12 +18,12 @@ const dataBaseTypMapping = {
 
 const evnTypeMapping = {
     "应用服务器": "0",
-    "数据库" : "1",
+    "数据库": "1",
 }
 
 const notRequires = [
     'preOprUrl', 'preReqOprData', 'preRspDataRegx', 'afterOperUrl', 'afterReqOprData', 'afterRspDataRegx'
-  ];
+];
 
 class UpdateCreateForm extends React.Component {
 
@@ -262,77 +263,77 @@ class UpdateCreateForm extends React.Component {
                         )}
                     </FormItem>)
             } else if (queryFields.dataName === 'evnConfig' && queryFields.fieldNames[i] === 'evnTyp') {
-                formItem.push( 
+                formItem.push(
                     <FormItem key={i} label={queryFields.fieldDescs[i]}>
-                      {getFieldDecorator(queryFields.fieldNames[i], {
-                        initialValue: evnTypeMapping[records[queryFields.fieldNames[i]]],
-                      })(
-                        <RadioGroup>
-                          <Radio value={"1"}>{'数据库'}</Radio>
-                          <Radio value={"0"}>{'应用服务器'}</Radio>
-                        </RadioGroup>
-                      )}
-                    </FormItem> );
-              } else if (queryFields.dataName === 'evnConfig' && queryFields.fieldNames[i] === 'dbType') {
-                formItem.push( 
+                        {getFieldDecorator(queryFields.fieldNames[i], {
+                            initialValue: evnTypeMapping[records[queryFields.fieldNames[i]]],
+                        })(
+                            <RadioGroup>
+                                <Radio value={"1"}>{'数据库'}</Radio>
+                                <Radio value={"0"}>{'应用服务器'}</Radio>
+                            </RadioGroup>
+                        )}
+                    </FormItem>);
+            } else if (queryFields.dataName === 'evnConfig' && queryFields.fieldNames[i] === 'dbType') {
+                formItem.push(
                     <FormItem key={i} label={queryFields.fieldDescs[i]}>
-                      {getFieldDecorator(queryFields.fieldNames[i], {
-                        initialValue: dataBaseTypMapping[records[queryFields.fieldNames[i]]],
-                      })(
-                        <Select>
-                          <Option value={"0"}>{'MYSQL'}</Option>
-                          <Option value={"1"}>{'ORACLE'}</Option>
-                          <Option value={"2"}>{'DB2'}</Option>
-                        </Select>
-                      )}
-                    </FormItem> );
-              } else if (queryFields.dataName === 'interfaceConfig' && queryFields.fieldNames[i] === 'method') {
-                formItem.push( 
+                        {getFieldDecorator(queryFields.fieldNames[i], {
+                            initialValue: dataBaseTypMapping[records[queryFields.fieldNames[i]]],
+                        })(
+                            <Select>
+                                <Option value={"0"}>{'MYSQL'}</Option>
+                                <Option value={"1"}>{'ORACLE'}</Option>
+                                <Option value={"2"}>{'DB2'}</Option>
+                            </Select>
+                        )}
+                    </FormItem>);
+            } else if (queryFields.dataName === 'interfaceConfig' && queryFields.fieldNames[i] === 'method') {
+                formItem.push(
                     <FormItem key={i} label={queryFields.fieldDescs[i]}>
-                      {getFieldDecorator(queryFields.fieldNames[i], {
-                        initialValue: records[queryFields.fieldNames[i]] ,
-                      })(
-                        <Select>
-                          <Option value={"POST"}>{'POST'}</Option>
-                          <Option value={"GET"}>{'GET'}</Option>
-                          <Option value={"PUT"}>{'PUT'}</Option>
-                          <Option value={"DELETE"}>{'DELETE'}</Option>
-                        </Select>
-                      )}
-                    </FormItem> );
-              }  else if (queryFields.dataName === 'interfaceConfig' && queryFields.fieldNames[i] === 'interfaceType') {
-                formItem.push( 
+                        {getFieldDecorator(queryFields.fieldNames[i], {
+                            initialValue: records[queryFields.fieldNames[i]],
+                        })(
+                            <Select>
+                                <Option value={"POST"}>{'POST'}</Option>
+                                <Option value={"GET"}>{'GET'}</Option>
+                                <Option value={"PUT"}>{'PUT'}</Option>
+                                <Option value={"DELETE"}>{'DELETE'}</Option>
+                            </Select>
+                        )}
+                    </FormItem>);
+            } else if (queryFields.dataName === 'interfaceConfig' && queryFields.fieldNames[i] === 'interfaceType') {
+                formItem.push(
                     <FormItem key={i} label={queryFields.fieldDescs[i]}>
-                      {getFieldDecorator(queryFields.fieldNames[i], {
-                        initialValue: records[queryFields.fieldNames[i]],
-                      })(
-                        <Select>
-                          <Option value={"WEBSERVICE"}>{'WEBSERVICE'}</Option>
-                          <Option value={"RESTFUL"}>{'RESTFUL'}</Option>
-                        </Select>
-                      )}
-                    </FormItem> );
-              } else if (queryFields.dataName === 'interfaceConfig' 
-              && (queryFields.fieldNames[i] === 'requestTemplate' || queryFields.fieldNames[i] === 'responseTemplate')) {
-                formItem.push( 
+                        {getFieldDecorator(queryFields.fieldNames[i], {
+                            initialValue: records[queryFields.fieldNames[i]],
+                        })(
+                            <Select>
+                                <Option value={"WEBSERVICE"}>{'WEBSERVICE'}</Option>
+                                <Option value={"RESTFUL"}>{'RESTFUL'}</Option>
+                            </Select>
+                        )}
+                    </FormItem>);
+            } else if (queryFields.dataName === 'interfaceConfig'
+                && (queryFields.fieldNames[i] === 'requestTemplate' || queryFields.fieldNames[i] === 'responseTemplate')) {
+                formItem.push(
                     <FormItem key={i} label={queryFields.fieldDescs[i]}>
-                      {getFieldDecorator(queryFields.fieldNames[i], {
-                        initialValue: records[queryFields.fieldNames[i]] != null? records[queryFields.fieldNames[i]].props.content : records[queryFields.fieldNames[i]],
-                      })(
-                        <Input.TextArea rows={25} />
-                      )}
-                    </FormItem> );
-            
-              } else if (queryFields.dataName === 'testsuitConfig' && notRequires.indexOf(queryFields.fieldNames[i]) > -1) {
-                formItem.push( 
+                        {getFieldDecorator(queryFields.fieldNames[i], {
+                            initialValue: records[queryFields.fieldNames[i]] != null ? records[queryFields.fieldNames[i]].props.content : records[queryFields.fieldNames[i]],
+                        })(
+                            <Input.TextArea rows={25} />
+                        )}
+                    </FormItem>);
+
+            } else if (queryFields.dataName === 'testsuitConfig' && notRequires.indexOf(queryFields.fieldNames[i]) > -1) {
+                formItem.push(
                     <FormItem key={i} label={queryFields.fieldDescs[i]}>
-                      {getFieldDecorator(queryFields.fieldNames[i], {
-                        initialValue: records[queryFields.fieldNames[i]],
-                      })(
-                        <Input />
-                      )}
-                    </FormItem> );
-              } else {
+                        {getFieldDecorator(queryFields.fieldNames[i], {
+                            initialValue: records[queryFields.fieldNames[i]],
+                        })(
+                            <Input />
+                        )}
+                    </FormItem>);
+            } else {
                 if (((queryFields.fieldNames[i] === 'columnAlias' || queryFields.fieldNames[i] === 'columnName')
                     && queryFields.dataName === 'singleSqlConfig')) {
                     formItem.push(
@@ -348,28 +349,28 @@ class UpdateCreateForm extends React.Component {
                         </FormItem>
                     );
                 } else {
-               
-                        formItem.push(
-                            <FormItem key={i} label={queryFields.fieldDescs[i]}>
-                                {getFieldDecorator(queryFields.fieldNames[i], {
-                                    initialValue: records[queryFields.fieldNames[i]], //这是用来初始化表单数据的
-                                    rules: [{ required: true, message: '请输入' + queryFields.fieldDescs[i] + '!' }],
-                                })(
-                                    <Input disabled={
-                                        (
-                                            queryFields.fieldNames[i] === 'sysChineseNme' || queryFields.fieldNames[i] === 'schemaName'
-                                            || (queryFields.fieldNames[i] === 'tableChnName' && queryFields.dataName === 'singleSqlConfig')
-                                            || (queryFields.fieldNames[i] === 'tableChnName' && queryFields.dataName === 'columnConfig')
-                                            || (queryFields.fieldNames[i] === 'tableChnName' && queryFields.dataName === 'enumValueConfig')
-                                            || (queryFields.fieldNames[i] === 'moduleName' && queryFields.dataName === 'singleSqlConfig')
-                                            || (queryFields.fieldNames[i] === 'moduleAlias' && queryFields.dataName === 'singleSqlConfig')
-                                            || (queryFields.fieldNames[i] === 'columnAlias' && queryFields.dataName === 'enumValueConfig')
-                                        )
-                                            ? true : false} />
-                                )}
-                            </FormItem>
-                        )
-                    }
+
+                    formItem.push(
+                        <FormItem key={i} label={queryFields.fieldDescs[i]}>
+                            {getFieldDecorator(queryFields.fieldNames[i], {
+                                initialValue: records[queryFields.fieldNames[i]], //这是用来初始化表单数据的
+                                rules: [{ required: true, message: '请输入' + queryFields.fieldDescs[i] + '!' }],
+                            })(
+                                <Input disabled={
+                                    (
+                                        queryFields.fieldNames[i] === 'sysChineseNme' || queryFields.fieldNames[i] === 'schemaName'
+                                        || (queryFields.fieldNames[i] === 'tableChnName' && queryFields.dataName === 'singleSqlConfig')
+                                        || (queryFields.fieldNames[i] === 'tableChnName' && queryFields.dataName === 'columnConfig')
+                                        || (queryFields.fieldNames[i] === 'tableChnName' && queryFields.dataName === 'enumValueConfig')
+                                        || (queryFields.fieldNames[i] === 'moduleName' && queryFields.dataName === 'singleSqlConfig')
+                                        || (queryFields.fieldNames[i] === 'moduleAlias' && queryFields.dataName === 'singleSqlConfig')
+                                        || (queryFields.fieldNames[i] === 'columnAlias' && queryFields.dataName === 'enumValueConfig')
+                                    )
+                                        ? true : false} />
+                            )}
+                        </FormItem>
+                    )
+                }
             }
         }
 
@@ -409,9 +410,8 @@ export class CommonUpdateField extends React.Component {
     handleCreate = () => {
         const form = this.form;
         form.validateFields((err, values) => {
-            console.log(values);
             if (this.props.queryFields.dataName === 'singleSqlConfig') {
-                let columnAliasArray =  values.columnAlias;
+                let columnAliasArray = values.columnAlias;
                 let columnAliasStr = '';
                 let columnNameStr = '';
                 columnAliasArray.filter(d => d).map((col, i) => {
@@ -428,6 +428,7 @@ export class CommonUpdateField extends React.Component {
                 error(err);
                 return;
             }
+            console.log(values)
             const records = this.props.records;
             const queryFields = this.props.queryFields;
             let isChange;
@@ -451,6 +452,10 @@ export class CommonUpdateField extends React.Component {
         this.form = form;
     }
     render() {
+        let testsuitConfig;
+        if (this.props.queryFields.dataName === 'testsuitConfig') {
+            testsuitConfig = <TestsuitUpdateField {...this.props}/>
+        }
         return (
             <div>
                 <Button type="primary" onClick={this.showModal}>修改<Icon type="edit" /></Button>
@@ -460,8 +465,6 @@ export class CommonUpdateField extends React.Component {
                     <Button>删除<Icon type="delete" /></Button>
                     <span className="ant-divider" />
                 </Popconfirm>
-                <Button type="primary" onClick={this.showModal}>添加<Icon type="edit" /></Button>
-                <span className="ant-divider" />
                 <CollectionCreateForm
                     ref={this.saveFormRef}
                     visible={this.state.visible}
@@ -471,6 +474,7 @@ export class CommonUpdateField extends React.Component {
                     queryFields={this.props.queryFields}
                     allSys={this.props.allSys}
                 />
+                {testsuitConfig}
             </div>
         );
     }

@@ -15,7 +15,7 @@ const notQueryKey = [
 class AdvancedSearchForm extends React.Component {
 
   constructor(props) {
-    super();
+    super(props);
     this.state = {
       queryParm: props.data.queryParm,
       ohsPagination: {
@@ -138,7 +138,7 @@ class AdvancedSearchForm extends React.Component {
             </FormItem>
           </Col>);
       } else {
-        if (notQueryKey.indexOf(queryFields.fieldNames[i]) == -1) {
+        if (notQueryKey.indexOf(queryFields.fieldNames[i]) === -1) {
           children.push(
             <Col span={6} key={i}>
               <FormItem {...formItemLayout} label={queryFields.fieldDescs[i]}>
@@ -186,6 +186,7 @@ class AdvancedSearchForm extends React.Component {
         <CommonDataField data={this.props.data} columns={this.props.columns}
           onDelete={this.handleDelete} onUpdate={this.props.update}
           queryFields={this.props.queryFields} ohsPagination={this.state.ohsPagination}
+          deleteRecordsById={this.props.deleteRecordsById}
         />
 
       </Form>
@@ -201,6 +202,7 @@ const CommonQueryField = (props) => {
       <WrappedAdvancedSearchForm query={props.query} data={props.data}
         save={props.save} delete={props.delete} update={props.update}
         queryFields={props.queryFields} columns={props.columns} getAllSys={props.getAllSys}
+        deleteRecordsById = {props.deleteRecordsById}
       />
     </div>
   );

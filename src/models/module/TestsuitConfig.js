@@ -1,4 +1,4 @@
-import { getAllTestsuit, saveTestsuitConfig, deleteById, updateById } from '../../services/testsuitConfig';
+import { getAllTestsuit, saveTestsuitConfig, deleteById, updateById, deleteRecordsById } from '../../services/testsuitConfig';
 import { error, success } from '../../components/module/SysCfgQueryFieldAlert'
 
 
@@ -73,6 +73,12 @@ export default {
         // },
         *deleteSys({ payload }, { call, put }) {
             yield put({ type: 'deleteSysDelSys', payload: payload });
+        },
+        *deleteRecordsById({ payload }, { call, put }) {
+            const result = yield call(deleteRecordsById, payload.id);
+            if (result.data.status === 500) {
+                error(result.data.statusText);
+            }
         },
     },
 

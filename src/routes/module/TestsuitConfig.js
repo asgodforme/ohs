@@ -67,22 +67,6 @@ const columns = [{
     title: '后置响应解析正则',
     dataIndex: 'afterRspDataRegx',
     key: 'afterRspDataRegx',
-},  {
-    title: '创建者',
-    dataIndex: 'createUser',
-    key: 'createUser',
-}, {
-    title: '创建时间',
-    dataIndex: 'createDate',
-    key: 'createDate',
-}, {
-    title: '修改者',
-    dataIndex: 'updateUser',
-    key: 'updateUser',
-}, {
-    title: '修改时间',
-    dataIndex: 'updateDate',
-    key: 'updateDate',
 }];
 
 const TestsuitConfig = ({ dispatch, testsuitConfig }) => {
@@ -117,11 +101,18 @@ const TestsuitConfig = ({ dispatch, testsuitConfig }) => {
         });
     }
 
+    function deleteRecordsById(testsuitConfig) {
+        dispatch({
+            type: 'testsuitConfig/deleteRecordsById',
+            payload: testsuitConfig,
+        });
+    }
+
     return (
         <div>
             <CommonQueryField query={getAllTestsuit} data={testsuitConfig}
                 save={saveTestsuitConfig} delete={deleteTestsuitConfig} update={updateTestsuit}
-                queryFields={queryFields} columns={columns} getAllSys={getAllSys}
+                queryFields={queryFields} columns={columns} getAllSys={getAllSys} deleteRecordsById={deleteRecordsById}
             />
         </div>
     );
