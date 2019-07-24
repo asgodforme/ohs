@@ -186,7 +186,8 @@ class AdvancedSearchForm extends React.Component {
         <CommonDataField data={this.props.data} columns={this.props.columns}
           onDelete={this.handleDelete} onUpdate={this.props.update}
           queryFields={this.props.queryFields} ohsPagination={this.state.ohsPagination}
-          deleteRecordsById={this.props.deleteRecordsById}
+          deleteRecordsById={this.props.deleteRecordsById} save={this.props.save} 
+          saveTestsuitRecords={this.props.saveTestsuitRecords}
         />
 
       </Form>
@@ -202,7 +203,7 @@ const CommonQueryField = (props) => {
       <WrappedAdvancedSearchForm query={props.query} data={props.data}
         save={props.save} delete={props.delete} update={props.update}
         queryFields={props.queryFields} columns={props.columns} getAllSys={props.getAllSys}
-        deleteRecordsById = {props.deleteRecordsById}
+        deleteRecordsById = {props.deleteRecordsById} saveTestsuitRecords={props.saveTestsuitRecords}
       />
     </div>
   );

@@ -15,6 +15,7 @@ export function CommonDataField(props) {
         <span>
           <CommonUpdateField onDelete={props.onDelete} records={record} onUpdate={props.onUpdate}
             queryFields={props.queryFields} allSys={props.data.allSys} deleteRecordsById={props.deleteRecordsById}
+            save={props.save} saveTestsuitRecords={props.saveTestsuitRecords}
           />
         </span>
       ),

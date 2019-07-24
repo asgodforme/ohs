@@ -24,24 +24,8 @@ export class TestsuitUpdateField extends React.Component {
                 error(err);
                 return;
             }
-            console.log(values)
-            const records = this.props.records;
-            const queryFields = this.props.queryFields;
-            let isChange;
-            for (let i = 0; i < queryFields.fieldNames.length; i++) {
-                if (records[queryFields.fieldNames[i]] !== values[queryFields.fieldNames[i]]) {
-                    isChange = true;
-                    break;
-                }
-            }
-            if (isChange) {
-                form.resetFields();
-                this.setState({ visible: false });
-                values.id = records.id;
-                this.props.onUpdate(values);
-            } else {
-                warning("数据未发生任何修改！");
-            }
+            this.props.saveTestsuitRecords(values);
+            this.setState({ visible: false });
         });
     }
 
@@ -107,21 +91,29 @@ class TestsuitCreateForm extends React.Component {
     constructor(props) {
         super(props);
         let notInInterface;
+        let interfaceMapping = {};
         if (props.records.notInInterface != null) {
             notInInterface = props.records.notInInterface.map((notInInter, index) => {
-                return (<Option key={index} value={notInInter.interfaceAlias}>{notInInter.interfaceName}</Option>);
+                if (notInInter) {
+                    if (notInInter.interfaceAlias) {
+                        interfaceMapping[notInInter.interfaceAlias] = notInInter.interfaceName;
+                    }
+                    return (<Option key={index} value={notInInter.interfaceAlias}>{notInInter.interfaceAlias}</Option>);
+                }
             })
         }
         let inInterface = [];
         if (props.records.inInterfaces != null) {
             props.records.inInterfaces.map((inInter, index) => {
-                inInterface.push({
-                    key: index,
-                    id: inInter.id,
-                    testSeq: inInter.testSeq,
-                    interfaceAlias: inInter.interfaceAlias,
-                    interfaceName: inInter.interfaceName,
-                });
+                if (inInter) {
+                    inInterface.push({
+                        key: index,
+                        id: inInter.id,
+                        testSeq: inInter.testSeq,
+                        interfaceAlias: inInter.interfaceAlias,
+                        interfaceName: inInter.interfaceName,
+                    });
+                }
                 return null;
             })
 
@@ -129,6 +121,8 @@ class TestsuitCreateForm extends React.Component {
         this.state = {
             notInInterface: notInInterface,
             inInterface: inInterface,
+            interfaceName: null,
+            interfaceMapping: interfaceMapping,
         }
         columns[4].render = (text, record) => (
             <span>
@@ -139,48 +133,69 @@ class TestsuitCreateForm extends React.Component {
             </span>
         );
         this.deleteTestsuit = this.deleteTestsuit.bind(this)
+        this.doOnChange = this.doOnChange.bind(this)
 
     }
 
     deleteTestsuit(value) {
         this.props.deleteRecordsById(value);
-        let result = this.state.inInterface.map(inter =>　{
-            if (inter.id !== value.id) {
-                return inter;
+        let result = [];
+        this.state.inInterface.map(inter => {
+            if (inter) {
+                if (inter.id !== value.id) {
+                    result.push(inter);
+                }
             }
         });
-
-        if (result[0] === undefined) {
-            result = [];
-        }
-
         let copyNotInInterface = [];
-        this.props.records.notInInterface.map((notInInter) => {
-            copyNotInInterface.push(Object.assign({}, notInInter));
+        (this.props.records.notInInterface || []).map((notInInter) => {
+            if (notInInter) {
+                copyNotInInterface.push(Object.assign({}, notInInter));
+            }
             return null;
         })
         copyNotInInterface.push({
             id: value.id,
             interfaceAlias: value.interfaceAlias,
             interfaceName: value.interfaceName,
-
+            
         })
+        let interfaceMapping = {};
         let notInInterface = copyNotInInterface.map((notInInter, index) => {
-            return (<Option key={index} value={notInInter.interfaceAlias}>{notInInter.interfaceName}</Option>);
+            if (notInInter) {
+                interfaceMapping[notInInter.interfaceAlias] = notInInter.interfaceName;
+                return (<Option key={index} value={notInInter.interfaceAlias}>{notInInter.interfaceAlias}</Option>);
+            }
         });
 
         this.setState({
-            inInterface : result,
+            inInterface: result,
             notInInterface: notInInterface,
+            interfaceMapping : interfaceMapping
         });
     }
 
+    doOnChange(value) {
+        this.setState({
+            interfaceName: this.state.interfaceMapping[value]
+        })
+    }
 
     render() {
         const { visible, onCancel, onCreate, form, records } = this.props;
         const { getFieldDecorator } = form;
 
         const formItem = [];
+
+        formItem.push(
+            <FormItem key={0} label={'当前测试案例'}>
+                {getFieldDecorator('id', {
+                    initialValue: records['id'],
+                })(
+                    <Input readOnly />
+                )}
+            </FormItem>
+        );
 
         formItem.push(
             <FormItem key={1} label={'系统码'}>
@@ -211,8 +226,8 @@ class TestsuitCreateForm extends React.Component {
         );
         formItem.push(
             <FormItem key={4} label={'模块名'}>
-                {getFieldDecorator('sysChineseNme', {
-                    initialValue: records['sysChineseNme'],
+                {getFieldDecorator('moduleName', {
+                    initialValue: records['moduleName'],
                 })(
                     <Input readOnly />
                 )}
@@ -224,12 +239,24 @@ class TestsuitCreateForm extends React.Component {
             </FormItem>
         );
         formItem.push(
-            <FormItem key={5} label={'可选接口'}>
-                {getFieldDecorator('alternativeInter', {
-                    rules: [{ required: true, message: '请选择可选接口!' }],
+            <FormItem key={5} label={'接口别名'}>
+                {getFieldDecorator('interfaceAlias', {
+                    rules: [{ required: true, message: '请选择可选接口别名!' }],
+                    onChange: this.doOnChange,
                 })(
                     <Select placeholder="请选择对应接口">{this.state.notInInterface}</Select>
-                    
+
+                )}
+            </FormItem>
+        );
+        formItem.push(
+            <FormItem key={8} label={'接口名称'}>
+                {getFieldDecorator('interfaceName', {
+                    rules: [{ required: true, message: '请选择可选接口名称!' }],
+                    initialValue: this.state.interfaceName,
+                })(
+                    <Input readOnly />
+
                 )}
             </FormItem>
         );
@@ -238,7 +265,7 @@ class TestsuitCreateForm extends React.Component {
                 {getFieldDecorator('testSeq', {
                     rules: [{ required: true, message: '请输入顺序号!' }],
                 })(
-                    <InputNumber min={1} max={10}/>
+                    <InputNumber min={1} max={10} />
                 )}
             </FormItem>
         );

@@ -13,6 +13,9 @@ export function saveTestsuitConfig(payload) {
   return request(`/api/testsuitConfig/saveTestsuitConfig`, { method: "POST", body: payload });
 }
 
+export function saveTestsuitRecords(payload) {
+  return request(`/api/testsuitRecordsConfig/saveTestsuitRecords`, { method: "POST", body: payload });
+}
 
 export function deleteById(payload) {
   return request(`/api/testsuitConfig/deleteById/${payload}`, { method: 'DELETE' });

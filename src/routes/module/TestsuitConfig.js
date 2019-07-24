@@ -82,6 +82,13 @@ const TestsuitConfig = ({ dispatch, testsuitConfig }) => {
             payload: testsuitConfig,
         });
     }
+
+    function saveTestsuitRecords(testsuitRecords) {
+        dispatch({
+            type: 'testsuitConfig/saveTestsuitRecords',
+            payload: testsuitRecords,
+        });
+    }
     function deleteTestsuitConfig(testsuitConfig) {
         dispatch({
             type: 'testsuitConfig/deleteById',
@@ -113,6 +120,7 @@ const TestsuitConfig = ({ dispatch, testsuitConfig }) => {
             <CommonQueryField query={getAllTestsuit} data={testsuitConfig}
                 save={saveTestsuitConfig} delete={deleteTestsuitConfig} update={updateTestsuit}
                 queryFields={queryFields} columns={columns} getAllSys={getAllSys} deleteRecordsById={deleteRecordsById}
+                saveTestsuitRecords={saveTestsuitRecords}
             />
         </div>
     );

@@ -1,4 +1,4 @@
-import { getAllTestsuit, saveTestsuitConfig, deleteById, updateById, deleteRecordsById } from '../../services/testsuitConfig';
+import { getAllTestsuit, saveTestsuitConfig, deleteById, updateById, deleteRecordsById, saveTestsuitRecords } from '../../services/testsuitConfig';
 import { error, success } from '../../components/module/SysCfgQueryFieldAlert'
 
 
@@ -19,7 +19,7 @@ export default {
 
     subscriptions: {
         setup({ dispatch, history }) {
-          
+
         },
     },
 
@@ -78,11 +78,62 @@ export default {
             const result = yield call(deleteRecordsById, payload.id);
             if (result.data.status === 500) {
                 error(result.data.statusText);
+            } else {
+                yield put({ type: 'deleteRecords', payload: result.data });
+            }
+        },
+        *saveTestsuitRecords({ payload }, { call, put }) {
+            const result = yield call(saveTestsuitRecords, payload);
+            if (result.data.status === 500) {
+                error(result.data.statusText);
+            } else {
+                success("新增接口成功！");
+                yield put({ type: 'saveTestsuitRec', payload: result.data });
             }
         },
     },
 
     reducers: {
+        saveTestsuitRec(state, action) {
+            let content = [...state.testsuitConfig.content];
+            console.log(content);
+            content.map((cont) => {
+                if (cont.id == action.payload.testsuitId) {
+                    console.log(1)
+                    let notInInters = cont.notInInterface.map(notInInter => {
+                        if (notInInter) {
+                            if (notInInter.interfaceAlias !== action.payload.interfaceAlias 
+                                || notInInter.interfaceName !== action.payload.interfaceName) {
+                                return notInInter
+                            }
+                        }
+                    });
+                    cont.notInInterface = [...notInInters];
+                    cont.inInterfaces = [...cont.inInterfaces, { id: action.payload.id, interfaceAlias: action.payload.interfaceAlias, interfaceName: action.payload.interfaceName, testSeq: action.payload.testSeq }]
+                }
+                return cont;
+            })
+            console.log(content);
+            return Object.assign({}, state, { content: content });
+        },
+        deleteRecords(state, action) {
+            let content = [...state.testsuitConfig.content];
+            content.map((cont) => {
+                if (cont.id == action.payload.testsuitId) {
+                    let inInters = cont.inInterfaces.map(inInter => {
+                        if (inInter) {
+                            if (inInter.id != action.payload.id) {
+                                return inInter
+                            }
+                        }
+                    });
+                    cont.inInterfaces = [...inInters];
+                    cont.notInInterface = [...cont.notInInterface, { id: action.payload.id, interfaceAlias: action.payload.interfaceAlias, interfaceName: action.payload.interfaceName }]
+                }
+                return cont;
+            })
+            return Object.assign({}, state, { content: content });
+        },
         saveQueryParm(state, action) {
             return { ...state, queryParm: action.payload };
         },
