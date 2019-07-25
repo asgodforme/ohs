@@ -1,5 +1,5 @@
 import React from 'react';
-import { Button, Modal, Form, Input, Icon, Popconfirm, Select, Radio, Card, Checkbox, Table } from 'antd';
+import { Button, Modal, Form, Input, Icon, Popconfirm, Select, Radio, Card, Checkbox } from 'antd';
 import { warning, error } from '../SysCfgQueryFieldAlert';
 import { TestsuitUpdateField } from '../TestsuitUpdateField';
 const FormItem = Form.Item;
@@ -428,7 +428,6 @@ export class CommonUpdateField extends React.Component {
                 error(err);
                 return;
             }
-            console.log(values)
             const records = this.props.records;
             const queryFields = this.props.queryFields;
             let isChange;

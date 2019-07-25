@@ -9,7 +9,8 @@ const Option = Select.Option;
 
 
 const notQueryKey = [
-  'requestTemplate', 'responseTemplate', 'preOprUrl', 'preReqOprData', 'preRspDataRegx', 'afterOperUrl', 'afterReqOprData', 'afterRspDataRegx'
+  'requestTemplate', 'responseTemplate', 'preOprUrl', 'preReqOprData', 'preRspDataRegx', 'afterOperUrl', 'afterReqOprData', 'afterRspDataRegx',
+  'request', 'response',
 ];
 
 class AdvancedSearchForm extends React.Component {
@@ -151,7 +152,7 @@ class AdvancedSearchForm extends React.Component {
             </Col>
           );
         }
-        
+
       }
     }
 
@@ -165,6 +166,14 @@ class AdvancedSearchForm extends React.Component {
       }
     }
 
+    const addEle = queryFields.isHideAddBtn !== 'Y'? (
+      <Col span={6} style={{ textAlign: 'center' }}>
+        <CommonAddField save={this.props.save} queryFields={this.props.queryFields}
+          data={this.props.data} getAllSys={this.props.getAllSys}
+        />
+      </Col>
+    ) : null;
+
     return (
       <Form
         className="ant-advanced-search-form"
@@ -176,17 +185,13 @@ class AdvancedSearchForm extends React.Component {
             <Button type="primary" htmlType="submit">查询</Button>
             <Button style={{ marginLeft: 8 }} onClick={this.handleReset}>清空查询条件</Button>
           </Col>
-          <Col span={6} style={{ textAlign: 'center' }}>
-            <CommonAddField save={this.props.save} queryFields={this.props.queryFields}
-              data={this.props.data} getAllSys={this.props.getAllSys}
-            />
-          </Col>
+          {addEle}
         </Row>
         <br />
         <CommonDataField data={this.props.data} columns={this.props.columns}
           onDelete={this.handleDelete} onUpdate={this.props.update}
           queryFields={this.props.queryFields} ohsPagination={this.state.ohsPagination}
-          deleteRecordsById={this.props.deleteRecordsById} save={this.props.save} 
+          deleteRecordsById={this.props.deleteRecordsById} save={this.props.save}
           saveTestsuitRecords={this.props.saveTestsuitRecords}
         />
 
@@ -203,7 +208,7 @@ const CommonQueryField = (props) => {
       <WrappedAdvancedSearchForm query={props.query} data={props.data}
         save={props.save} delete={props.delete} update={props.update}
         queryFields={props.queryFields} columns={props.columns} getAllSys={props.getAllSys}
-        deleteRecordsById = {props.deleteRecordsById} saveTestsuitRecords={props.saveTestsuitRecords}
+        deleteRecordsById={props.deleteRecordsById} saveTestsuitRecords={props.saveTestsuitRecords}
       />
     </div>
   );

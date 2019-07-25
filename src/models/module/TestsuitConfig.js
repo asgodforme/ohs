@@ -79,6 +79,7 @@ export default {
             if (result.data.status === 500) {
                 error(result.data.statusText);
             } else {
+                success("删除接口成功！");
                 yield put({ type: 'deleteRecords', payload: result.data });
             }
         },
@@ -98,7 +99,7 @@ export default {
             let content = [...state.testsuitConfig.content];
             console.log(content);
             content.map((cont) => {
-                if (cont.id == action.payload.testsuitId) {
+                if (cont.id + "" === action.payload.testsuitId + "") {
                     console.log(1)
                     let notInInters = cont.notInInterface.map(notInInter => {
                         if (notInInter) {
@@ -107,6 +108,7 @@ export default {
                                 return notInInter
                             }
                         }
+                        return null;
                     });
                     cont.notInInterface = [...notInInters];
                     cont.inInterfaces = [...cont.inInterfaces, { id: action.payload.id, interfaceAlias: action.payload.interfaceAlias, interfaceName: action.payload.interfaceName, testSeq: action.payload.testSeq }]
@@ -119,13 +121,14 @@ export default {
         deleteRecords(state, action) {
             let content = [...state.testsuitConfig.content];
             content.map((cont) => {
-                if (cont.id == action.payload.testsuitId) {
+                if (cont.id + "" === action.payload.testsuitId + "") {
                     let inInters = cont.inInterfaces.map(inInter => {
                         if (inInter) {
-                            if (inInter.id != action.payload.id) {
+                            if (inInter.id + ""  !== action.payload.id + "" ) {
                                 return inInter
                             }
                         }
+                        return null;
                     });
                     cont.inInterfaces = [...inInters];
                     cont.notInInterface = [...cont.notInInterface, { id: action.payload.id, interfaceAlias: action.payload.interfaceAlias, interfaceName: action.payload.interfaceName }]

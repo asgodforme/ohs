@@ -5,20 +5,21 @@ import { CommonUpdateField } from './CommonUpdateField';
 export function CommonDataField(props) {
   let columns;
   if (props.columns != null) {
+    const operation = props.queryFields.isExeButton === 'Y' ?
+      ((text, record) => (<span><ExeButton /></span>)) : ((text, record) => (
+        <span>
+          <CommonUpdateField onDelete={props.onDelete} records={record} onUpdate={props.onUpdate}
+            queryFields={props.queryFields} allSys={props.data.allSys} deleteRecordsById={props.deleteRecordsById}
+            save={props.save} saveTestsuitRecords={props.saveTestsuitRecords}
+          />
+        </span>));
     columns = props.columns.concat();
     columns.push({
       title: '操作',
       key: 'action',
       fixed: 'right',
       width: 220,
-      render: (text, record) => (
-        <span>
-          <CommonUpdateField onDelete={props.onDelete} records={record} onUpdate={props.onUpdate}
-            queryFields={props.queryFields} allSys={props.data.allSys} deleteRecordsById={props.deleteRecordsById}
-            save={props.save} saveTestsuitRecords={props.saveTestsuitRecords}
-          />
-        </span>
-      ),
+      render: operation,
     });
 
   }
@@ -49,6 +50,28 @@ export function CommonDataField(props) {
 
   return <Table columns={columns} dataSource={props.data != null ? props.data[props.queryFields['dataName']].content : null}
     bordered scroll={props.queryFields.scroll} pagination={props.ohsPagination} />;
+}
+
+class ExeButton extends React.Component {
+  constructor(props) {
+    super(props);
+  }
+
+  render() {
+    return (
+      <div>
+        <Button type="primary">
+          填写参数
+        </Button>
+        &nbsp;&nbsp;
+        <Button type="primary">
+          执行接口
+        </Button>
+      </div>
+    );
+  }
+
+
 }
 
 

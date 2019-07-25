@@ -13,6 +13,7 @@ import SingleSqlConfig from '../../routes/module/data/SingleSqlConfig';
 import DataQuery from '../../routes/dataQuery/DataQuery';
 import InterfaceConfig from '../../routes/module/InterfaceConfig';
 import TestsuitConfig from '../../routes/module/TestsuitConfig';
+import InterfaceTest from '../../routes/module/InterfaceTest';
 
 const { SubMenu } = Menu;
 const { Header, Sider, Footer } = Layout;
@@ -29,6 +30,7 @@ const componentMapping = {
     interfaceConfig: <InterfaceConfig />,
     testsuitConfig: <TestsuitConfig />,
     dataQuery: "dataQuery",
+    interfaceTest: <InterfaceTest />,
 };
 
 export class Menus extends React.Component {

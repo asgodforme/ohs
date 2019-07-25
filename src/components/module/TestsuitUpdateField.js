@@ -1,6 +1,6 @@
 import React from 'react';
-import { Button, Modal, Form, Input, Icon, Popconfirm, Select, Radio, Card, Checkbox, Table, InputNumber } from 'antd';
-import { warning, error } from './SysCfgQueryFieldAlert';
+import { Button, Modal, Form, Input, Icon, Popconfirm, Select, Table, InputNumber } from 'antd';
+import { error } from './SysCfgQueryFieldAlert';
 const FormItem = Form.Item;
 const Option = Select.Option;
 
@@ -100,6 +100,7 @@ class TestsuitCreateForm extends React.Component {
                     }
                     return (<Option key={index} value={notInInter.interfaceAlias}>{notInInter.interfaceAlias}</Option>);
                 }
+                return null;
             })
         }
         let inInterface = [];
@@ -146,6 +147,7 @@ class TestsuitCreateForm extends React.Component {
                     result.push(inter);
                 }
             }
+            return null;
         });
         let copyNotInInterface = [];
         (this.props.records.notInInterface || []).map((notInInter) => {
@@ -166,6 +168,7 @@ class TestsuitCreateForm extends React.Component {
                 interfaceMapping[notInInter.interfaceAlias] = notInInter.interfaceName;
                 return (<Option key={index} value={notInInter.interfaceAlias}>{notInInter.interfaceAlias}</Option>);
             }
+            return null;
         });
 
         this.setState({
