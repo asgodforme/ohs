@@ -4,7 +4,7 @@ import CommonQueryField from '../../components/module/common/CommonQueryField'
 
 const queryFields = {
     scroll: {},
-    dataName: 'interfaceConfig',
+    dataName: 'interfaceTest',
     isHideAddBtn: "Y",
     isExeButton: "Y",
     updateTitle: '修改接口信息',
@@ -63,29 +63,29 @@ const columns = [{
     key: 'response',
 }];
 
-const InterfaceConfig = ({ dispatch, interfaceConfig }) => {
-    function getAllInterface(interfaceConfig) {
+const InterfaceTest = ({ dispatch, interfaceTest }) => {
+    function getAllInterface(interfaceTest) {
         dispatch({
-            type: 'interfaceConfig/getAllInterface',
-            payload: interfaceConfig,
+            type: 'interfaceTest/getAllInterface',
+            payload: interfaceTest,
         });
     }
-    function saveInterfaceConfig(interfaceConfig) {
+    function saveInterfaceTest(interfaceTest) {
         dispatch({
-            type: 'interfaceConfig/saveInterfaceConfig',
-            payload: interfaceConfig,
+            type: 'interfaceTest/saveInterfaceTest',
+            payload: interfaceTest,
         });
     }
-    function deleteInterfaceConfig(interfaceConfig) {
+    function deleteInterfaceTest(interfaceTest) {
         dispatch({
-            type: 'interfaceConfig/deleteById',
-            payload: interfaceConfig,
+            type: 'interfaceTest/deleteById',
+            payload: interfaceTest,
         });
     }
-    function updateInterface(interfaceConfig) {
+    function updateInterface(interfaceTest) {
         dispatch({
-            type: 'interfaceConfig/updateById',
-            payload: interfaceConfig,
+            type: 'interfaceTest/updateById',
+            payload: interfaceTest,
         })
     }
     function getAllSys() {
@@ -94,18 +94,25 @@ const InterfaceConfig = ({ dispatch, interfaceConfig }) => {
             payload: { sysAlias: '', sysChineseNme: '' }
         });
     }
+    function saveParameterValue(interfaceTest) {
+        dispatch({
+            type: 'interfaceTest/saveParameterValue',
+            payload: interfaceTest,
+        })
+    }
 
     return (
         <div>
-            <CommonQueryField query={getAllInterface} data={interfaceConfig}
-                save={saveInterfaceConfig} delete={deleteInterfaceConfig} update={updateInterface}
+            <CommonQueryField query={getAllInterface} data={interfaceTest}
+                save={saveInterfaceTest} delete={deleteInterfaceTest} update={updateInterface}
                 queryFields={queryFields} columns={columns} getAllSys={getAllSys}
+                saveParameterValue={saveParameterValue}
             />
         </div>
     );
 };
 
 // export default Products;
-export default connect(({ interfaceConfig }) => ({
-    interfaceConfig,
-}))(InterfaceConfig);
+export default connect(({ interfaceTest }) => ({
+    interfaceTest,
+}))(InterfaceTest);

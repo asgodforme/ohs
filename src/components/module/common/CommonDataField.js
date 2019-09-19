@@ -1,12 +1,14 @@
 import React from 'react';
-import { Table, Button, Modal } from 'antd';
+import { Form, Col, Input, Table, Button, Modal } from 'antd';
+import { error } from '../SysCfgQueryFieldAlert';
 import { CommonUpdateField } from './CommonUpdateField';
+const FormItem = Form.Item;
 
 export function CommonDataField(props) {
   let columns;
   if (props.columns != null) {
     const operation = props.queryFields.isExeButton === 'Y' ?
-      ((text, record) => (<span><ExeButton /></span>)) : ((text, record) => (
+      ((text, record) => (<span><ExeButton content={record} saveParameterValue={props.saveParameterValue} /></span>)) : ((text, record) => (
         <span>
           <CommonUpdateField onDelete={props.onDelete} records={record} onUpdate={props.onUpdate}
             queryFields={props.queryFields} allSys={props.data.allSys} deleteRecordsById={props.deleteRecordsById}
@@ -53,25 +55,122 @@ export function CommonDataField(props) {
 }
 
 class ExeButton extends React.Component {
-  constructor(props) {
-    super(props);
-  }
 
   render() {
     return (
       <div>
-        <Button type="primary">
-          填写参数
-        </Button>
-        &nbsp;&nbsp;
+        <WriteParameters title="填写参数" content={this.props.content.parameters} id={this.props.content.id} saveParameterValue={this.props.saveParameterValue} />
         <Button type="primary">
           执行接口
         </Button>
       </div>
     );
   }
+}
+
+class WriteParametersForm extends React.Component {
+
+  render() {
+    const formItemLayout = {
+      labelCol: { span: 5 },
+      wrapperCol: { span: 19 },
+    };
+    const { getFieldDecorator } = this.props.form;
+    const { content } = this.props.content;
+    const children = [];
+    if (content != null) {
+      for (let i = 0; i < content.length; i++) {
+        children.push(
+          <Col span={25} key={i}>
+            <FormItem {...formItemLayout} label={content[i]}>
+              {getFieldDecorator(content[i], {
+                rules: [{ required: true, message: '请输入' + content[i] + '!' }],
+              })(
+                <Input placeholder={"请输入" + content[i] + "参数！"} />
+              )}
+            </FormItem>
+          </Col>
+        );
+      }
+    }
+    return (
+      <Modal
+        title={this.props.title}
+        visible={this.props.visible}
+        onOk={this.props.handleOk}
+        closable={false}
+        okText={'确定'}
+        cancelText={'退出'}
+        onCancel={this.props.handleCancel}
+      >
+        <Form layout="vertical">
+          {
+            children.map((item) => {
+              return item;
+            })
+          }
+        </Form>
+      </Modal >
+    )
+  }
+}
+
+class WriteParameters extends React.Component {
+
+  constructor(props) {
+    super(props);
+    this.state = { visible: false };
+  }
 
 
+  showModal = () => {
+    this.setState({
+      visible: true,
+    });
+  };
+
+  handleOk = () => {
+    const form = this.form;
+    form.validateFields((err, values) => {
+      if (err) {
+        error(err);
+        return;
+      }
+      values.id = this.props.id;
+      this.setState({ visible: false });
+      this.props.saveParameterValue(values);
+    });
+
+  };
+
+  handleCancel = e => {
+    this.setState({
+      visible: false,
+    });
+  };
+
+  saveFormRef = (form) => {
+    this.form = form;
+  }
+
+  render() {
+    const WriteParametersCreateForm = Form.create()(WriteParametersForm);
+    return (
+      <div>
+        <Button type="primary" onClick={this.showModal}>
+          填写参数
+          </Button>
+        <WriteParametersCreateForm
+          ref={this.saveFormRef}
+          content={this.props}
+          title={this.props.title}
+          visible={this.state.visible}
+          handleOk={this.handleOk}
+          handleCancel={this.handleCancel}
+        />
+      </div>
+    );
+  }
 }
 
 

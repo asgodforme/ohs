@@ -193,6 +193,7 @@ class AdvancedSearchForm extends React.Component {
           queryFields={this.props.queryFields} ohsPagination={this.state.ohsPagination}
           deleteRecordsById={this.props.deleteRecordsById} save={this.props.save}
           saveTestsuitRecords={this.props.saveTestsuitRecords}
+          saveParameterValue={this.props.saveParameterValue}
         />
 
       </Form>
@@ -209,6 +210,7 @@ const CommonQueryField = (props) => {
         save={props.save} delete={props.delete} update={props.update}
         queryFields={props.queryFields} columns={props.columns} getAllSys={props.getAllSys}
         deleteRecordsById={props.deleteRecordsById} saveTestsuitRecords={props.saveTestsuitRecords}
+        saveParameterValue={props.saveParameterValue}
       />
     </div>
   );

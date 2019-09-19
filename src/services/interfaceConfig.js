@@ -25,3 +25,7 @@ export function deleteById(payload) {
 export function updateById(payload) {
   return request(`/api/interfaceConfig/updateById`, { method: "PUT", body: payload });
 }
+
+export function saveInterfaceSingleRecords(payload) {
+  return request(`/api/interfaceSingleRecords/saveInterfaceSingleRecords`, { method: "POST", body: payload });
+}
