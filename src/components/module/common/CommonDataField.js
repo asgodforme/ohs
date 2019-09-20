@@ -5,6 +5,7 @@ import { CommonUpdateField } from './CommonUpdateField';
 const FormItem = Form.Item;
 
 export function CommonDataField(props) {
+  console.log(props);
   let columns;
   if (props.columns != null) {
     const operation = props.queryFields.isExeButton === 'Y' ?
@@ -29,7 +30,7 @@ export function CommonDataField(props) {
   if (props.data != null) {
     (props.data[props.queryFields['dataName']].content || []).map((sysConfig, index) => {
 
-      if (props.queryFields['dataName'] === 'interfaceConfig') {
+      if (props.queryFields['dataName'] === 'interfaceConfig' || props.queryFields['dataName'] === 'interfaceTest') {
         if (sysConfig.requestTemplate != null && sysConfig.requestTemplate.type == null) {
           sysConfig.requestTemplate = <Reader title="请求报文模板" content={sysConfig.requestTemplate} />;
         }

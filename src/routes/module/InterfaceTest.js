@@ -10,7 +10,7 @@ const queryFields = {
     updateTitle: '修改接口信息',
     addTitle: '新增接口信息',
     fieldDescs: ['系统码', '系统名', '模块码', '模块名', '访问路径', '方法', '接口类型', '接口名', '接口别名', '请求报文', '响应报文'],
-    fieldNames: ['sysAlias', 'sysChineseNme', 'moduleAlias', 'moduleName', 'urlPath', 'method', 'interfaceType', 'interfaceName', 'interfaceAlias', 'request', 'response'],
+    fieldNames: ['sysAlias', 'sysChineseNme', 'moduleAlias', 'moduleName', 'urlPath', 'method', 'interfaceType', 'interfaceName', 'interfaceAlias', 'requestTemplate', 'responseTemplate'],
 }
 
 const columns = [{
@@ -55,12 +55,12 @@ const columns = [{
     key: 'interfaceAlias',
 }, {
     title: '请求报文',
-    dataIndex: 'request',
-    key: 'request',
+    dataIndex: 'requestTemplate',
+    key: 'requestTemplate',
 },{
     title: '响应报文',
-    dataIndex: 'response',
-    key: 'response',
+    dataIndex: 'responseTemplate',
+    key: 'responseTemplate',
 }];
 
 const InterfaceTest = ({ dispatch, interfaceTest }) => {
