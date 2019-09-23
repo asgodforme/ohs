@@ -175,7 +175,7 @@ class WriteParameters extends React.Component {
 }
 
 
-class Reader extends React.Component {
+export class Reader extends React.Component {
 
   constructor(props) {
     super(props);

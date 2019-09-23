@@ -1,6 +1,6 @@
 import { getAllInterface, saveInterfaceTest, deleteById, updateById, saveInterfaceSingleRecords } from '../../services/interfaceConfig';
-import { error, success } from '../../components/module/SysCfgQueryFieldAlert'
-
+import { error, success } from '../../components/module/SysCfgQueryFieldAlert';
+import { Reader } from '../../components/module/common/CommonDataField';
 
 export default {
 
@@ -81,15 +81,21 @@ export default {
                 error(result.data.statusText);
             } else {
                 success("保存成功！");
-                yield put({ type: 'saveParameterValueLocal', payload: payload });
+                yield put({ type: 'saveParameterValueLocal', payload: result.data });
             }
         }
     },
 
     reducers: {
         saveParameterValueLocal(state, action) {
-            console.log(state);
-            return  { ...state, parameterMaps: action.payload };
+            let content = [...state.interfaceTest.content];
+            content.map(item => {
+                if (action.payload.interfaceId === parseInt(item.id)) {
+                    item.requestTemplate = <Reader title="请求报文模板" content={action.payload.requestData} />;
+                }
+                return item;
+            });
+            return Object.assign({}, state, { ...state.interfaceTest, content: content });
         },
         saveQueryParm(state, action) {
             return { ...state, queryParm: action.payload };
