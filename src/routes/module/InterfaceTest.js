@@ -9,7 +9,7 @@ const queryFields = {
     isExeButton: "Y",
     updateTitle: '修改接口信息',
     addTitle: '新增接口信息',
-    fieldDescs: ['系统码', '系统名', '模块码', '模块名', '访问路径', '方法', '接口类型', '接口名', '接口别名', '请求报文', '响应报文'],
+    fieldDescs: ['系统码', '系统名', '模块码', '模块名', '访问路径', '方法',  '接口类型', '接口名', '接口别名', '请求报文', '响应报文'],
     fieldNames: ['sysAlias', 'sysChineseNme', 'moduleAlias', 'moduleName', 'urlPath', 'method', 'interfaceType', 'interfaceName', 'interfaceAlias', 'requestTemplate', 'responseTemplate'],
 }
 
@@ -100,13 +100,19 @@ const InterfaceTest = ({ dispatch, interfaceTest }) => {
             payload: interfaceTest,
         })
     }
+    function executeInterface(interfaceTest) {
+        dispatch({
+            type: 'interfaceTest/executeInterface',
+            payload: interfaceTest,
+        })
+    }
 
     return (
         <div>
             <CommonQueryField query={getAllInterface} data={interfaceTest}
                 save={saveInterfaceTest} delete={deleteInterfaceTest} update={updateInterface}
                 queryFields={queryFields} columns={columns} getAllSys={getAllSys}
-                saveParameterValue={saveParameterValue}
+                saveParameterValue={saveParameterValue} executeInterface={executeInterface}
             />
         </div>
     );

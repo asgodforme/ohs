@@ -29,3 +29,7 @@ export function updateById(payload) {
 export function saveInterfaceSingleRecords(payload) {
   return request(`/api/interfaceSingleRecords/saveInterfaceSingleRecords`, { method: "POST", body: payload });
 }
+
+export function executeInterface(payload) {
+  return request(`/api/interfaceConfig/executeInterface`, { method: "POST", body: payload });
+}

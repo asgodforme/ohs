@@ -1,4 +1,4 @@
-import { getAllInterface, saveInterfaceTest, deleteById, updateById, saveInterfaceSingleRecords } from '../../services/interfaceConfig';
+import { getAllInterface, saveInterfaceTest, deleteById, updateById, saveInterfaceSingleRecords, executeInterface } from '../../services/interfaceConfig';
 import { error, success } from '../../components/module/SysCfgQueryFieldAlert';
 import { Reader } from '../../components/module/common/CommonDataField';
 
@@ -83,15 +83,24 @@ export default {
                 success("保存成功！");
                 yield put({ type: 'saveParameterValueLocal', payload: result.data });
             }
-        }
+        },
+        *executeInterface({ payload }, { call, put }) {
+            const result = yield call(executeInterface, payload);
+            if (result.data.status === 500) {
+                error(result.data.statusText);
+            } else {
+                success("保存成功！");
+            }
+        },
     },
 
     reducers: {
         saveParameterValueLocal(state, action) {
             let content = [...state.interfaceTest.content];
             content.map(item => {
-                if (action.payload.interfaceId === parseInt(item.id)) {
+                if (action.payload.interfaceId === parseInt(item.id, 10)) {
                     item.requestTemplate = <Reader title="请求报文模板" content={action.payload.requestData} />;
+                    item.singleRecordsId = action.payload.id;
                 }
                 return item;
             });
