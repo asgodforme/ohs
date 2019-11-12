@@ -3,7 +3,7 @@ import { connect } from 'dva';
 import CommonQueryField from '../../components/module/common/CommonQueryField'
 
 const queryFields = {
-    scroll: {},
+    scroll:  { x: 3000, y: 500 },
     dataName: 'interfaceTest',
     isHideAddBtn: "Y",
     isExeButton: "Y",
@@ -16,6 +16,7 @@ const queryFields = {
 const columns = [{
     title: 'id',
     dataIndex: 'id',
+    fixed: 'left',
     key: 'id',
 }, {
     title: '系统码',

@@ -14,6 +14,7 @@ import DataQuery from '../../routes/dataQuery/DataQuery';
 import InterfaceConfig from '../../routes/module/InterfaceConfig';
 import TestsuitConfig from '../../routes/module/TestsuitConfig';
 import InterfaceTest from '../../routes/module/InterfaceTest';
+import TestsuitTest from '../../routes/module/TestsuitTest';
 
 const { SubMenu } = Menu;
 const { Header, Sider, Footer } = Layout;
@@ -31,6 +32,7 @@ const componentMapping = {
     testsuitConfig: <TestsuitConfig />,
     dataQuery: "dataQuery",
     interfaceTest: <InterfaceTest />,
+    testsuitTest: <TestsuitTest/>,
 };
 
 export class Menus extends React.Component {
