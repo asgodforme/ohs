@@ -49,7 +49,7 @@ const columns = [{
 },{
     title: '接口类型',
     dataIndex: 'interfaceType',
-    width: 100,
+    width: 200,
     key: 'interfaceType',
 },{
     title: '接口名',

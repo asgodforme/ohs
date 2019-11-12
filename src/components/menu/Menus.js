@@ -1,6 +1,6 @@
 import React from 'react';
 import SystemConfig from '../../routes/module/SystemConfig'
-import { Layout, Menu, Icon } from 'antd';
+import { Layout, Menu, Icon, Tag } from 'antd';
 import { MenuDesc } from './MenuDesc'
 import { SubMenuContent } from './SubMenuContent'
 import ModuleConfig from '../../routes/module/ModuleConfig';
@@ -15,6 +15,7 @@ import InterfaceConfig from '../../routes/module/InterfaceConfig';
 import TestsuitConfig from '../../routes/module/TestsuitConfig';
 import InterfaceTest from '../../routes/module/InterfaceTest';
 import TestsuitTest from '../../routes/module/TestsuitTest';
+import { LoginModel} from '../../components/LoginModel';
 
 const { SubMenu } = Menu;
 const { Header, Sider, Footer } = Layout;
@@ -39,7 +40,6 @@ export class Menus extends React.Component {
 
     constructor(props) {
         super();
-
         this.state = {
             current: '1',
             openKeys: ['1'],
@@ -49,6 +49,7 @@ export class Menus extends React.Component {
             panes: [
                 { title: '首页', content: '欢迎使用在线辅助系统', key: '0', closable: false },
             ],
+            user: null,
         }
 
     }
@@ -114,10 +115,15 @@ export class Menus extends React.Component {
         return map[key] || [];
     }
 
-    render() {
+    UNSAFE_componentWillReceiveProps(nextProps) {
+       this.setState({user: nextProps.menus.user});
+        
+    }
 
+    render() {
         return (
             <Layout>
+                <Tag color="#f50">欢迎你！ {this.state.user}</Tag>
                 <Header className="header">
                     <div className="logo" />
                     <Menu
@@ -131,10 +137,11 @@ export class Menus extends React.Component {
                             (this.props.menus.menu || []).map((item, index) => {
                                 return (<Menu.Item key={item.id}>{item.parentMenuName + "介绍"}</Menu.Item>);
                             })
-                        }
+                        } 
                     </Menu>
                 </Header>
                 <MenuDesc visible={this.state.menuItemDescVisible} currentMenuItem={this.state.currentMenuItem} handleOk={this.handleOk} handleCancel={this.handleCancel} />
+                <LoginModel title={'登录'} user={this.state.user} saveUserConfig={this.props.saveUserConfig}/>
                 <Layout>
                     <Sider width={200} style={{ background: '#fff' }}>
                         <Menu

@@ -89,7 +89,7 @@ export default {
             if (result.data.status === 500) {
                 error(result.data.statusText);
             } else {
-                success("保存成功！");
+                success("执行成功！");
             }
         },
     },

@@ -38,8 +38,12 @@ export default {
             if (result.data.status === 500) {
                 error(result.data.statusText);
             } else {
-                success("新增成功！");
-                yield put({ type: 'saveOne', payload: result.data });
+                if ("Y" === result.data.isFirstLogin) {
+                    success("登录成功！");
+                } else {
+                    success("新增成功！");
+                    yield put({ type: 'saveOne', payload: result.data });
+                }
             }
         },
         *deleteById({ payload }, { call, put }) {
@@ -72,7 +76,8 @@ export default {
         saveOne(state, action) {
             let listData = [...state.userConfig.content, action.payload];
             let totalElements = state.userConfig.totalElements;
-            return Object.assign({}, state, { userConfig: Object.assign({}, state.userConfig, { content: listData, totalElements: totalElements + 1 }) })
+            return  Object.assign({}, state, { userConfig: Object.assign({}, state.userConfig, { content: listData, totalElements: totalElements + 1}) })
+            
         },
         saveAllSys(state, action) {
             return { ...state, allSys: action.payload.data };

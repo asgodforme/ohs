@@ -6,7 +6,7 @@ export function getAllUser(payload) {
 }
 
 export function saveUserConfig(payload) {
-  return request(`/api/userConfig/saveUserConfig?${stringify(payload)}`);
+  return request(`/api/userConfig/saveUserConfig`, { method: "POST", body: payload });
 }
 
 export function deleteById(payload) {

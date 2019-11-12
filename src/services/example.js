@@ -9,6 +9,10 @@ export function getAllMenu() {
   return request('/api/menu/getAllMenu');
 }
 
+export function getUser() {
+  return request('/api/userConfig/getUser');
+}
+
 export function getAllSys(payload) {
   return request(`/api/sysConfig/getAllSys?${stringify(payload)}`);
 }

@@ -83,7 +83,6 @@ class ExecuteInterface extends React.Component {
   constructor(props) {
     super(props);
     this.state = { visible: false };
-    console.log(props);
   }
 
 

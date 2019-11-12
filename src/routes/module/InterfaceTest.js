@@ -3,7 +3,7 @@ import { connect } from 'dva';
 import CommonQueryField from '../../components/module/common/CommonQueryField'
 
 const queryFields = {
-    scroll:  { x: 3000, y: 500 },
+    scroll:  { x: 2500, y: 500 },
     dataName: 'interfaceTest',
     isHideAddBtn: "Y",
     isExeButton: "Y",
@@ -17,22 +17,27 @@ const columns = [{
     title: 'id',
     dataIndex: 'id',
     fixed: 'left',
+    width: 50,
     key: 'id',
 }, {
     title: '系统码',
     dataIndex: 'sysAlias',
+    width: 100,
     key: 'sysAlias',
 }, {
     title: '系统名',
     dataIndex: 'sysChineseNme',
+    width: 200,
     key: 'sysChineseNme',
 }, {
     title: '模块码',
     dataIndex: 'moduleAlias',
+    width: 100,
     key: 'moduleAlias',
 }, {
     title: '模块名',
     dataIndex: 'moduleName',
+    width: 200,
     key: 'moduleName',
 }, {
     title: '访问路径',
@@ -40,26 +45,32 @@ const columns = [{
     key: 'urlPath',
 }, {
     title: '方法',
+    width: 100,
     dataIndex: 'method',
     key: 'method',
 },{
     title: '接口类型',
+    width: 200,
     dataIndex: 'interfaceType',
     key: 'interfaceType',
 },{
     title: '接口名',
+    width: 100,
     dataIndex: 'interfaceName',
     key: 'interfaceName',
 },{
     title: '接口别名',
+    width: 100,
     dataIndex: 'interfaceAlias',
     key: 'interfaceAlias',
 }, {
     title: '请求报文',
+    width: 100,
     dataIndex: 'requestTemplate',
     key: 'requestTemplate',
 },{
     title: '响应报文',
+    width: 100,
     dataIndex: 'responseTemplate',
     key: 'responseTemplate',
 }];
