@@ -25,6 +25,7 @@ function checkStatus(response) {
 export default function request(url, options) {
   let new_options;
   if (options != null && (options.method === 'POST' || options.method === 'PUT')) {
+    options.body.tokenName = window.localStorage.getItem("tokenName");
     new_options = {
       method: options.method,
       body: JSON.stringify(options.body),
@@ -34,6 +35,11 @@ export default function request(url, options) {
     };
   } else {
     new_options = options;
+    if (url.indexOf("?") > -1) {
+      url = url + "&tokenName=" +  window.localStorage.getItem("tokenName");
+    } else {
+      url = url + "?tokenName=" +  window.localStorage.getItem("tokenName");
+    }
   }
   return fetch(url, new_options)
     .then(checkStatus)

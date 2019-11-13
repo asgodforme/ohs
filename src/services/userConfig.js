@@ -6,6 +6,7 @@ export function getAllUser(payload) {
 }
 
 export function saveUserConfig(payload) {
+  window.localStorage.setItem("tokenName", payload.name);
   return request(`/api/userConfig/saveUserConfig`, { method: "POST", body: payload });
 }
 

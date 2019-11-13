@@ -1,6 +1,6 @@
 import React from 'react';
 import SystemConfig from '../../routes/module/SystemConfig'
-import { Layout, Menu, Icon, Tag } from 'antd';
+import { Layout, Menu, Icon, Tag, Button } from 'antd';
 import { MenuDesc } from './MenuDesc'
 import { SubMenuContent } from './SubMenuContent'
 import ModuleConfig from '../../routes/module/ModuleConfig';
@@ -116,14 +116,21 @@ export class Menus extends React.Component {
     }
 
     UNSAFE_componentWillReceiveProps(nextProps) {
-       this.setState({user: nextProps.menus.user});
+       this.setState({user: nextProps.menus.user, users: nextProps.menus.users});
         
+    }
+
+    changeUser = () => {
+        this.setState({user : ''})
     }
 
     render() {
         return (
             <Layout>
-                <Tag color="#f50">欢迎你！ {this.state.user}</Tag>
+                <div>   
+                    <Tag color="#f50">欢迎你！ {this.state.user}</Tag>
+                    <Button type="danger" size="small" onClick={this.changeUser}>切换用户</Button>
+                </div>
                 <Header className="header">
                     <div className="logo" />
                     <Menu
@@ -141,7 +148,7 @@ export class Menus extends React.Component {
                     </Menu>
                 </Header>
                 <MenuDesc visible={this.state.menuItemDescVisible} currentMenuItem={this.state.currentMenuItem} handleOk={this.handleOk} handleCancel={this.handleCancel} />
-                <LoginModel title={'登录'} user={this.state.user} saveUserConfig={this.props.saveUserConfig}/>
+                <LoginModel title={'登录'} user={this.state.user} users={this.state.users} saveUserConfig={this.props.saveUserConfig}/>
                 <Layout>
                     <Sider width={200} style={{ background: '#fff' }}>
                         <Menu

@@ -1,18 +1,19 @@
 import React from 'react';
-import { Form, Col, Input, Modal } from 'antd';
+import { Form, Col, Input, Modal, Select } from 'antd';
 import { error, warning } from './module/SysCfgQueryFieldAlert';
-
+const Option = Select.Option;
 const FormItem = Form.Item;
 export class LoginModel extends React.Component {
 
     constructor(props) {
         super(props);
-        this.state = { visible: props.user ? false : true };
+        this.state = { visible: true };
     }
 
     UNSAFE_componentWillReceiveProps(nextProps) {
-        this.setState({ visible: nextProps.user ? false : true });
-
+        this.setState({
+            visible: nextProps.user ? false : true
+        });
     }
 
     handleOk = (e) => {
@@ -32,7 +33,7 @@ export class LoginModel extends React.Component {
 
     handleCancel = e => {
         e.preventDefault();
-        warning("随便输入你的大名！我将铭记一生~");
+        warning("随便选择输入你的大名！我将铭记一生~");
     };
 
     saveFormRef = (form) => {
@@ -65,18 +66,46 @@ export class LoginModelForm extends React.Component {
         };
         const { getFieldDecorator } = this.props.form;
         const children = [];
-
-        children.push(
-            <Col span={25} key={1}>
-                <FormItem {...formItemLayout} label={'用户名'}>
-                    {getFieldDecorator('name', {
-                        rules: [{ required: true, message: '请输入用户名!' }],
-                    })(
-                        <Input placeholder={"请输入用户名!"} />
-                    )}
-                </FormItem>
-            </Col>
-        );
+        if ((this.props.content.users || []).length >= 1) {
+            children.push(
+                <Col span={25} key={1}>
+                    <FormItem {...formItemLayout} label={'已有用户名'}>
+                        {getFieldDecorator('name', {
+                            rules: [{ required: true, message: '请输入用户名!' }],
+                        })(
+                            <Select>
+                                {
+                                    (this.props.content.users || []).map((column) => <Option key={column}>{column}</Option>)
+                                }
+                            </Select>
+                        )}
+                    </FormItem>
+                </Col>
+            );
+            children.push(
+                <Col span={25} key={2}>
+                    <FormItem {...formItemLayout} label={'选中用户名'}>
+                        {getFieldDecorator('name', {
+                            rules: [{ required: true, message: '请输入用户名!' }],
+                        })(
+                            <Input placeholder={"请输入用户名!"} />
+                        )}
+                    </FormItem>
+                </Col>
+            );
+        } else if ((this.props.content.users || []).length === 0) {
+            children.push(
+                <Col span={25} key={1}>
+                    <FormItem {...formItemLayout} label={'用户名'}>
+                        {getFieldDecorator('name', {
+                            rules: [{ required: true, message: '请输入用户名!' }],
+                        })(
+                            <Input placeholder={"请输入用户名!"} />
+                        )}
+                    </FormItem>
+                </Col>
+            );
+        }
 
         return (
             <Modal

@@ -31,7 +31,6 @@ export default {
       return user;
     },
     *saveLoginUser({payload}, {call, put}) {
-      console.log(payload);
       yield put({ type: 'saveLogin4User', payload: payload});
     }
   },
@@ -41,10 +40,21 @@ export default {
       return { ...state, menu: action.payload.data};
     },
     saveUser(state, action) {
-      return { ...state, user: action.payload.data.name};
+      let users = [];
+      if (action.payload.data.length > 0) {
+        for (let i = 0; i < action.payload.data.length; i++) {
+          users.push(action.payload.data[i].name);
+        }
+      }
+      if (users.length === 1) {
+        return { ...state, users: users, user: users[0]};
+      }
+      return { ...state, users: users};
     },
     saveLogin4User(state, action) {
-      return { ...state, user: action.payload.name};
+      let temp = state.users.filter(user => user !== action.payload.name);
+      temp.push(action.payload.name);
+      return { ...state, user: action.payload.name, users: temp};
     }
   },
 
