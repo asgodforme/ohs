@@ -12,7 +12,11 @@ const MainMenus = ({ dispatch, menu }) => {
     dispatch({
       type: 'menu/saveLoginUser',
       payload: userConfig
-    })
+    });
+    dispatch({
+      type: 'moduleConfig/getAllSysWhenInit',
+      payload: { sysAlias: '', sysChineseNme: '' }
+    });
   }
 
   return (

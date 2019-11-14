@@ -3,7 +3,7 @@ import { connect } from 'dva';
 import CommonQueryField from '../../components/module/common/CommonQueryField'
 
 const queryFields = {
-  scroll: {},
+  scroll:  { x: 2500, y: 500 },
   dataName: 'evnConfig',
   updateTitle: '修改环境',
   addTitle: '新增环境',
@@ -14,22 +14,27 @@ const queryFields = {
 const columns = [{
   title: 'id',
   dataIndex: 'id',
+  width: 50,
   key: 'id',
 }, {
   title: '归属系统码',
   dataIndex: 'sysAlias',
+  width: 100,
   key: 'sysAlias',
 }, {
   title: '归属系统名',
   dataIndex: 'sysChineseNme',
+  width: 150,
   key: 'sysChineseNme',
 }, {
   title: '环境类型',
   dataIndex: 'evnTyp',
+  width: 100,
   key: 'evnTyp',
 }, {
   title: '环境别名',
   dataIndex: 'evnAlias',
+  width: 200,
   key: 'evnAlias',
 }, {
   title: '环境名',
@@ -38,38 +43,47 @@ const columns = [{
 }, {
   title: 'IP地址',
   dataIndex: 'evnIp',
+  width: 200,
   key: 'evnIp',
 }, {
   title: '端口号',
   dataIndex: 'evnPort',
+  width: 100,
   key: 'evnPort',
 }, {
   title: 'DB用户名',
   dataIndex: 'dbNme',
+  width: 100,
   key: 'dbNme',
 }, {
   title: 'DB密码',
   dataIndex: 'dbPwd',
+  width: 100,
   key: 'dbPwd',
 }, {
   title: 'DB类型',
   dataIndex: 'dbType',
+  width: 100,
   key: 'dbType',
 }, {
   title: '创建者',
   dataIndex: 'createUser',
+  width: 150,
   key: 'createUser',
 }, {
   title: '创建时间',
   dataIndex: 'createDate',
+  width: 200,
   key: 'createDate',
 }, {
   title: '修改者',
   dataIndex: 'updateUser',
+  width: 150,
   key: 'updateUser',
 }, {
   title: '修改时间',
   dataIndex: 'updateDate',
+  width: 200,
   key: 'updateDate',
 }];
 
